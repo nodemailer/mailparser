@@ -1,7 +1,7 @@
 mailparser
 ==========
 
-**mailparser** is an asynchronous and non-blocking parser for mime encoded e-mail messages. Handles even large
+**mailparser** is an asynchronous and non-blocking parser for [node.js](http://nodejs.org) to parse mime encoded e-mail messages. Handles even large
 attachments with ease - attachments are parsed in chunks that can be saved into disk or sent to database while parsing.
 
 **mailparser** parses raw source of e-mail messages to convert mime-stream into a structured object.
@@ -9,7 +9,7 @@ attachments with ease - attachments are parsed in chunks that can be saved into 
 Requirements
 ------------
 
-You need to have (node-iconv)[http://github.com/bnoordhuis/node-iconv] installed. Update *mime.js* to point to the correct location.
+You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed. Update *mime.js* to point to the correct location.
 
 Usage
 -----
