@@ -95,3 +95,9 @@ Attachments are put directly into the *body* object if the attachments are textu
 are sent to the client as a stream that can be saved into disk if needed on events *"astream"* and *"aend"*.
 
 See *test.js* for an actual usega example (parses source from *mail.txt*)
+
+NB!
+---
+
+Messages with attachments can be formatted as *nested multipart* messages. This means that the main body *bodyText* and *bodyHTML*
+fields might be left blank. Search for a *multipart* attachment from the attachments object and use the bodytext and bodyHTML defined there instead.
