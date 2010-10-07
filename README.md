@@ -13,6 +13,8 @@ Requirements
 
 You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed. Update *mime.js* to point to the correct location.
 
+If node-iconv becoms a npm package, I'll make a package from mailparser too.
+
 Usage
 -----
 
