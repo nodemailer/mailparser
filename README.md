@@ -2,18 +2,18 @@ mailparser
 ==========
 
 **mailparser** is an asynchronous and non-blocking parser for [node.js](http://nodejs.org) to parse mime encoded e-mail messages. Handles even large
-attachments with ease - attachments are parsed in chunks that can be saved into disk or sent to database while parsing.
+attachments with ease - attachments are parsed in chunks that can be saved into disk or sent to database while parsing (tested with 16MB attachments).
 
 **mailparser** parses raw source of e-mail messages to convert mime-stream into a structured object.
 
-No need to worry about charsets or decoding *quoted-printable* or *base64* data, *mailparser* (with the help of *node-iconv*) does it for you. All the textual output from *mailparser* (subject line, addressee names, message body) is always UTF-8.
+No need to worry about charsets or decoding *quoted-printable* or *base64* data, *mailparser* (with the help of *node-iconv*) does all of it for you. All the textual output from *mailparser* (subject line, addressee names, message body) is always UTF-8.
 
 Requirements
 ------------
 
 You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed. Update *mime.js* to point to the correct location.
 
-If node-iconv becoms a npm package, I'll make a package from mailparser too.
+If node-iconv becomes a npm package, I'll make a package from mailparser too.
 
 Usage
 -----
@@ -64,7 +64,7 @@ Finish the feeding
 Outcome
 -------
 
-Parser returns the headers object with *"header"* event and it is structured like this
+Parser returns the headers object with *"header"* event and it's structured like this
 
     { useMime: true
     , contentType: 'multipart/alternative'
@@ -87,7 +87,7 @@ Parser returns the headers object with *"header"* event and it is structured lik
     , priority: 3
     }
 
-Message body is returned with the *"body"* event an is structured like this
+Message body is returned with the *"body"* event and is structured like this
 
     { bodyText: 'Mail message as plain text',
     , bodyHTML: 'Mail message as HTML',
@@ -95,13 +95,17 @@ Message body is returned with the *"body"* event an is structured like this
     , attachments: ["list of attachments"]
     }
 
-Attachments are put directly into the *body* object if the attachments are textual. Binary attachments
-are sent to the client as a stream that can be saved into disk if needed on events *"astream"* and *"aend"*.
+Attachments are included full size in the *body* object if the attachments are textual. Binary attachments
+are sent to the client as a stream that can be saved into disk if needed (events *"astream"* and *"aend"*), only the attachment meta-data is included in the *body* object this way.
 
-See *test.js* for an actual usega example (parses source from *mail.txt*)
+See *test.js* for an actual usage example (parses the source from *mail.txt* and outputs to console)
+
+    node test.js
+
+You need to install node-iconv and update the path for it in mime.js before running the test!
 
 NB!
 ---
 
-Messages with attachments can be formatted as *nested multipart* messages. This means that the main body *bodyText* and *bodyHTML*
-fields might be left blank. Search for a *multipart* attachment from the attachments object and use the bodytext and bodyHTML defined there instead.
+Messages with attachments are typically formatted as *nested multipart* messages. This means that the *bodyText* and *bodyHTML*
+fields might be left blank. Search for an attachment with content-type *multipart* from the attachments array and use the bodyText and bodyHTML defined there instead.
