@@ -56,3 +56,42 @@ Feed the parser with data
 Finish the feeding
 
     mp.end();
+    
+Outcome
+-------
+
+Parser returns the headers object with *"header"* event and it is structured like this
+
+    { useMime: true
+    , contentType: 'multipart/alternative'
+    , charset: 'us-ascii'
+    , format: 'fixed'
+    , multipart: true
+    , mimeBoundary: 'Apple-Mail-2-1061547935'
+    , messageId: 'BAFE6D0E-AE53-4698-9072-AD1C9BF966AB@gmail.com'
+    , messageDate: 1286458909000
+    , contentTransferEncoding: '7bit'
+    , addressesFrom: 
+       [ { address: 'andris.reinman@gmail.com'
+         , name: 'Andris Reinman'
+         }
+       ]
+    , addressesReplyTo: []
+    , addressesTo: [ { address: 'andris@kreata.ee', name: false } ]
+    , addressesCc: []
+    , subject: 'Simple test message with special characters like  \u0161 and \u00f5'
+    , priority: 3
+    }
+
+Message body is returned with the *"body"* event an is structured like this
+
+    { bodyText: 'Mail message as plain text',
+    , bodyHTML: 'Mail message as HTML',
+    , bodyAlternate: ["list of additional text/* parts of the message"],
+    , attachments: ["list of attachments"]
+    }
+
+Attachments are put directly into the *body* object if the attachments are textual. Binary attachments
+are sent to the client as a stream that can be saved into disk if needed on events *"astream"* and *"aend"*.
+
+See *test.js* for an actual usega example (parses source from *mail.txt*)
