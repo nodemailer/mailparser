@@ -6,6 +6,8 @@ attachments with ease - attachments are parsed in chunks that can be saved into 
 
 **mailparser** parses raw source of e-mail messages to convert mime-stream into a structured object.
 
+No need to worry about charsets or decoding *quoted-printable* or *base64* data, *mailparser* (with the help of *node-iconv*) does it for you.
+
 Requirements
 ------------
 
