@@ -99,7 +99,7 @@ Message body is returned with the *"body"* event and is structured like this
 
     { bodyText: 'Mail message as plain text',
     , bodyHTML: 'Mail message as HTML',
-    , bodyAlternate: ["list of additional text/* parts of the message"],
+    , bodyAlternate: ["list of additional text/* and multipart/* parts of the message"],
     , attachments: ["list of attachments"]
     }
 
