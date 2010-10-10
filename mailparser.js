@@ -117,6 +117,8 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
     }
     headers.messageDate = parts.defaultValue && datetime.strtotime(parts.defaultValue)*1000 || Date.now();
     
+    headers.receivedDate = Date.now();
+    
     // content-transfer-encoding
     headersUsed.push("content-transfer-encoding");
     parts = {};
