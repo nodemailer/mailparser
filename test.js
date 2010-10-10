@@ -19,6 +19,12 @@ fs.readFile('mail.txt', function (err, data) {
         console.log(sys.inspect(body, false, 7));
     });
     
+    // callback for an attachment stream start with attachment headers
+    mp.on("astart", function(id, headers){
+        console.log("ATTACHMENT HEADERS FOR "+id);
+        console.log(sys.inspect(headers, false, 5));
+    });
+    
     // callback for an attachment stream (every attachment gets an unique ID)
     mp.on("astream", function(id, buffer){
         console.log("ATTACHMENT STREAM FOR "+id);

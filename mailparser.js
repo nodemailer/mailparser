@@ -268,7 +268,7 @@ MailParser.prototype.parseBody = function(data){
                         
                         // TEXT
                         if(this.body.headers.contentType.substr(0,"text/".length)=="text/"){
-                            this.body.ds = new DataStore("text", this.body.headers.contentTransferEncoding, this.body.headers.charset);
+                            this.body.ds = new DataStore("text", this.body.headers);
                             this.setUpDSCallback(this.body.headers);
                         }
                         
@@ -281,7 +281,7 @@ MailParser.prototype.parseBody = function(data){
                         
                         // BINARY
                         else{
-                            this.body.ds = new DataStore("binary", this.body.headers.contentTransferEncoding, this.body.headers.charset);
+                            this.body.ds = new DataStore("binary", this.body.headers);
                             this.setUpDSCallback(this.body.headers);
                         }
 
@@ -323,6 +323,11 @@ MailParser.prototype.parseBody = function(data){
 }
 
 MailParser.prototype.setUpDSCallback = function(headers){
+    
+    this.body.ds.on("astart", (function(id, data){
+        this.emit("astart",id, data);
+    }).bind(this));
+    
     this.body.ds.on("astream", (function(id, data){
         this.emit("astream",id, data);
     }).bind(this));
@@ -370,6 +375,11 @@ MailParser.prototype.setUpDSCallback = function(headers){
 
 
 MailParser.prototype.setUpMPCallback = function(headers){
+    
+    this.body.ds.on("astart", (function(id, data){
+        this.emit("astart",id, data);
+    }).bind(this));
+    
     this.body.ds.on("astream", (function(id, data){
         this.emit("astream",id, data);
     }).bind(this));
@@ -421,11 +431,11 @@ MailParser.prototype.parseBodyEnd = function(){
 
 // DataStore - load text into memory, put binary to Mongo GridStore
 // return a) text - fulltext, b) binary - key
-function DataStore(type, encoding, charset){
+function DataStore(type, headers){
     EventEmitter.call(this);
     this.type = type || "text";
-    this.encoding = encoding || "7bit";
-    this.charset = charset || "us-ascii";
+    this.encoding = headers && headers.contentTransferEncoding || "7bit";
+    this.charset = headers && headers.charset || "us-ascii";
     this.data = "";
     
     this.id = generateAttachmentId();
@@ -438,10 +448,22 @@ function DataStore(type, encoding, charset){
         this.stream.on("stream", this.onStream.bind(this));
         this.stream.on("end", this.onStreamEnd.bind(this));
     }
+    
+    this.started = false;
+    this.headers = {
+        contentType: headers.contentType,
+        contentDisposition: headers.contentDisposition,
+        contentId: headers.contentId,
+        filename: headers.filename
+    }
 }
 sys.inherits(DataStore, EventEmitter);
 
 DataStore.prototype.feed = function(data){
+    if(!this.started){
+        this.emit("astart", this.id, this.headers);
+        this.started++;
+    }
     if(this.type=="text")this.feedText(data);
     if(this.type=="binary")this.feedBinary(data);
 }
