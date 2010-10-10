@@ -391,7 +391,7 @@ MailParser.prototype.setUpMPCallback = function(headers){
     this.body.ds.on("headers", (function(data){}).bind(this));
     this.body.ds.on("body", (function(data){
         
-        this.bodyData.attachments.push({
+        this.bodyData.bodyAlternate.push({
             contentType: headers.contentType,
             body: data
         });

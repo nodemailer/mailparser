@@ -115,7 +115,7 @@ NB!
 ---
 
 Messages with attachments are typically formatted as *nested multipart* messages. This means that the *bodyText* and *bodyHTML*
-fields might be left blank. Search for an attachment with content-type *multipart* from the attachments array and use the bodyText and bodyHTML defined there instead.
+fields might be left blank. Search for an alternate with content-type *multipart* from the bodyAlternate array and use the bodyText and bodyHTML defined there instead.
 
 LICENSE
 -------
