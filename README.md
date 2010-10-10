@@ -81,6 +81,7 @@ Parser returns the headers object with *"header"* event and it's structured like
     , mimeBoundary: 'Apple-Mail-2-1061547935'
     , messageId: 'BAFE6D0E-AE53-4698-9072-AD1C9BF966AB@gmail.com'
     , messageDate: 1286458909000
+    , receivedDate: 1286743827944
     , contentTransferEncoding: '7bit'
     , addressesFrom: 
        [ { address: 'andris.reinman@gmail.com'
