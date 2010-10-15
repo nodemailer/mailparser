@@ -11,7 +11,7 @@ No need to worry about charsets or decoding *quoted-printable* or *base64* data,
 Requirements
 ------------
 
-You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed. Update *mime.js* to point to the correct location.
+You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed.
 
 If node-iconv becomes a npm package, I'll make a package from mailparser too.
 
@@ -110,7 +110,7 @@ See *test.js* for an actual usage example (parses the source from *mail.txt* and
 
     node test.js
 
-You need to install node-iconv and update the path for it in mime.js before running the test!
+You need to install node-iconv before running the test!
 
 NB!
 ---

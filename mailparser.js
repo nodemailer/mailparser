@@ -341,13 +341,13 @@ MailParser.prototype.setUpDSCallback = function(headers){
             switch(headers.contentType){
                 case "text/plain":
                     if(!this.bodyData.bodyText){
-                        this.bodyData.bodyText = data;
+                        this.bodyData.bodyText = data && data.body;
                         done = true;
                     }
                     break;
                 case "text/html":
                     if(!this.bodyData.bodyHTML){
-                        this.bodyData.bodyHTML = data;
+                        this.bodyData.bodyHTML = data && data.body;
                         done = true;
                     }
                     break;
@@ -422,8 +422,10 @@ MailParser.prototype.parseBodyEnd = function(){
         }
     }
     
+    console.log(this.bodyData)
+    
     if(this.bodyData.bodyText && !!this.bodyData.bodyHTML)
-        this.bodyData.bodyText = stripHTML(this.bodyData.bodyText);
+        this.bodyData.bodyText = stripHTML(this.bodyData.bodyHTML);
     
     this.emit("body",this.bodyData);
     return false;
@@ -462,7 +464,7 @@ function DataStore(type, headers){
 sys.inherits(DataStore, EventEmitter);
 
 DataStore.prototype.feed = function(data){
-    if(!this.started){
+    if(!this.started && this.type=="binary"){
         this.emit("astart", this.id, this.headers);
         this.started++;
     }
@@ -524,10 +526,17 @@ Base64Stream.prototype.end = function(){
 
 var attachment_id_counter = 0;
 function generateAttachmentId(){
-    return "#"+Date.now()+"-"+(++attachment_id_counter);
+    return Date.now()+"-"+(++attachment_id_counter);
 }
 
 function stripHTML(str){
+    if(!str)return str;
+    
+    console.log(sys.inspect(str));
+    str = str instanceof Buffer ? str.toString("utf-8"):str;
+    
+    console.log("TYPE: "+typeof str);
+    
     str = str.replace(/\r?\n/g," ");
     str = str.replace(/<(?:\/p|br|\/tr|\/table|\/div)>/g,"\n");
 

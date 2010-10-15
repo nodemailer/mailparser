@@ -1,6 +1,6 @@
 
 // see http://github.com/bnoordhuis/node-iconv for more info
-var Iconv = require("../node-iconv/build/default/iconv").Iconv;
+var Iconv = require("iconv").Iconv;
 
 /* mime related functions - encoding/decoding etc*/
 /* TODO: Only UTF-8 and Latin1 are allowed with encodeQuotedPrintable */
