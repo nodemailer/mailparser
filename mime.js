@@ -1,7 +1,12 @@
 
 // see http://github.com/bnoordhuis/node-iconv for more info
-var Iconv = require("iconv").Iconv;
-
+try{
+    var Iconv = require("iconv").Iconv;
+}catch(E){
+    var errmsg = "\n\nNB!\n - You need to install node-iconv in order to use "+
+                 "Mailparser!\n - See http://github.com/bnoordhuis/node-iconv\n"
+    throw new ReferenceError(errmsg);
+}
 /* mime related functions - encoding/decoding etc*/
 /* TODO: Only UTF-8 and Latin1 are allowed with encodeQuotedPrintable */
 /* TODO: Check if the input string even needs encoding                */

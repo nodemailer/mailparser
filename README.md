@@ -11,16 +11,20 @@ No need to worry about charsets or decoding *quoted-printable* or *base64* data,
 Requirements
 ------------
 
-You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed.
+You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed!
 
-If node-iconv becomes a npm package, I'll make a package from mailparser too.
+Installation
+------------
+
+    npm install mailparser
 
 Usage
 -----
 
 Create a new *mailparser* object
 
-    var mp = new MailParser();
+    var MailParser = require("mailparser").MailParser,
+        mp = new MailParser();
     
 Set up listener for different events
 
