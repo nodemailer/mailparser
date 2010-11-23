@@ -25,7 +25,7 @@ sys.inherits(MailParser, EventEmitter);
 exports.MailParser = MailParser;
 
 MailParser.prototype.feed = function(data){
-    data = data.replace(/\r\n\.\./g,"\r\n.");
+    data = data.replace(/\n\.\./g,"\n.");
     if(this.state == PARSE_HEADERS){
         data = this.parseHeaders(data);
         this.parseBodyStart(data);
@@ -47,9 +47,9 @@ MailParser.prototype.end = function(){
 
 MailParser.prototype.parseHeaders = function(data){
     var pos, body = "";
-    if((pos=data.indexOf("\r\n\r\n"))>=0){
+    if((pos=data.indexOf("\n\n"))>=0){
         this.headerStr += data.substr(0, pos);
-        body = data.substr(pos+4);
+        body = data.substr(pos+2);
         this.headerObj = mime.parseHeaders(this.headerStr);
         this.analyzeHeaders(this.headerObj, this.headers);
         delete this.headerObj; // not needed anymore
@@ -257,9 +257,9 @@ MailParser.prototype.parseBody = function(data){
                 
                 // handle headers
                 if(!this.body.headerStrComplete){
-                    if((pos2 = data.indexOf("\r\n\r\n", pos))>=0){
+                    if((pos2 = data.indexOf("\n\n", pos))>=0){
                         this.body.headerStr += data.substring(pos, pos2);
-                        pos = pos2+4;
+                        pos = pos2+2;
                         this.body.headerStrComplete = true;
                         this.body.headerObj = mime.parseHeaders(this.body.headerStr.trim());
                         
@@ -278,7 +278,7 @@ MailParser.prototype.parseBody = function(data){
                         else if(this.body.headers.contentType.substr(0,"multipart/".length)=="multipart/"){
                             this.body.ds = new MailParser();
                             this.setUpMPCallback(this.body.headers);
-                            this.body.ds.feed(this.body.headerStr.trim()+"\r\n\r\n");
+                            this.body.ds.feed(this.body.headerStr.trim()+"\n\n");
                         }
                         
                         // BINARY
