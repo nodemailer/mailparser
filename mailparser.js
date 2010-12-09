@@ -78,6 +78,8 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
     
     // charset
     headers.charset = parts.charset || "us-ascii";
+    // Some mails incorrectly quote the charset. Let's deal with that.
+    headers.charset = headers.charset.replace(/"/g, '');
 
     // format=fixed|flowed (RFC2646)
     headers.format = parts.format && parts.format.toLowerCase() || "fixed";

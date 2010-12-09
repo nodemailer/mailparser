@@ -34,7 +34,7 @@ Content-Type: multipart/related;
 
 --Apple-Mail-3-1061547936
 Content-Type: text/html;
-	charset=ISO-8859-4
+	charset="ISO-8859-4"
 Content-Transfer-Encoding: quoted-printable
 
 <html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
