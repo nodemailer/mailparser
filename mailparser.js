@@ -424,7 +424,7 @@ MailParser.prototype.parseBodyEnd = function(){
         }
     }
     
-    if(this.bodyData.bodyText && !!this.bodyData.bodyHTML)
+    if(!this.bodyData.bodyText && !!this.bodyData.bodyHTML)
         this.bodyData.bodyText = stripHTML(this.bodyData.bodyHTML);
     
     this.emit("body",this.bodyData);
