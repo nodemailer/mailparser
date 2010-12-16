@@ -424,8 +424,6 @@ MailParser.prototype.parseBodyEnd = function(){
         }
     }
     
-    console.log(this.bodyData)
-    
     if(this.bodyData.bodyText && !!this.bodyData.bodyHTML)
         this.bodyData.bodyText = stripHTML(this.bodyData.bodyHTML);
     
@@ -534,10 +532,7 @@ function generateAttachmentId(){
 function stripHTML(str){
     if(!str)return str;
     
-    console.log(sys.inspect(str));
     str = str instanceof Buffer ? str.toString("utf-8"):str;
-    
-    console.log("TYPE: "+typeof str);
     
     str = str.replace(/\r?\n/g," ");
     str = str.replace(/<(?:\/p|br|\/tr|\/table|\/div)>/g,"\n");
