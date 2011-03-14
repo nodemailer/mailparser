@@ -439,7 +439,7 @@ function DataStore(type, headers){
     EventEmitter.call(this);
     this.type = type || "text";
     this.encoding = headers && headers.contentTransferEncoding || "7bit";
-    this.charset = headers && headers.charset || "us-ascii";
+    this.charset = headers && headers.charset.replace(/"/g, '') || "us-ascii";
     this.data = "";
     
     this.id = generateAttachmentId();
