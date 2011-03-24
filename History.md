@@ -1,4 +1,7 @@
 
+  * Pass in options instead of mailFrom and rcptTo
+  * Allow option of not fixing up SMTP-style escapes
+
 0.1.1 / (In Git)
 ==================
 

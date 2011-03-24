@@ -122,6 +122,18 @@ NB!
 Messages with attachments are typically formatted as *nested multipart* messages. This means that the *bodyText* and *bodyHTML*
 fields might be left blank. Search for an alternate with content-type *multipart* from the bodyAlternate array and use the bodyText and bodyHTML defined there instead.
 
+Feeding Non-SMTP Data
+---------------------
+
+By default MailParser assumes an SMTP feed with "." at the start of the line
+replaced with "..". To disable this feature pass the following option to the
+constructor:
+
+    var mp = new MailParser({fix_smtp_escapes: 0});
+
+The default is to fixup those escape sequences, which isn't what you want if
+you already have a mail file on disk, or have already fixed those escapes up.
+
 LICENSE
 -------
 

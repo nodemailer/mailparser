@@ -6,10 +6,21 @@ var EventEmitter = require('events').EventEmitter,
 var PARSE_HEADERS = 1,
     PARSE_BODY = 2;
 
-MailParser = function(mailFrom, rcptTo){
+MailParser = function(){
     EventEmitter.call(this);
-    this.mailFrom = mailFrom;
-    this.rcptTo = rcptTo;
+    if (arguments.length === 1) {
+        // new MailParser(options)
+        var options = arguments[0];
+        this.mailFrom = options.mail_from;
+        this.rcptTo   = options.rcpt_to;
+        this.fix_smtp_escapes = options.hasOwnProperty('fix_smtp_escapes') ? options.fix_smtp_escapes : 1;
+    }
+    else {
+        // new MailParser(mailFrom, rcptTo)
+        this.mailFrom = arguments[0];
+        this.rcptTo = arguments[1];
+    }
+    
     this.headerStr = "";
  
     this.waitFor = 0;
@@ -25,7 +36,8 @@ sys.inherits(MailParser, EventEmitter);
 exports.MailParser = MailParser;
 
 MailParser.prototype.feed = function(data){
-    data = data.replace(/\r\n\.\./g,"\r\n.");
+    if (this.fix_smtp_escapes)
+        data = data.replace(/\r\n\.\./g,"\r\n.");
     if(this.state == PARSE_HEADERS){
         data = this.parseHeaders(data);
         this.parseBodyStart(data);
