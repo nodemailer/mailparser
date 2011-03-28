@@ -40,7 +40,6 @@ MailParser.prototype.feed = function(data){
         data = data.replace(/\r\n\.\./g,"\r\n.");
     if(this.state == PARSE_HEADERS){
         data = this.parseHeaders(data);
-        this.parseBodyStart(data);
     }else if(this.state == PARSE_BODY){
         data = this.parseBody(data);
     }
@@ -58,19 +57,20 @@ MailParser.prototype.end = function(){
 }
 
 MailParser.prototype.parseHeaders = function(data){
-    var pos, body = "";
-    if((pos=data.indexOf("\r\n\r\n"))>=0){
-        this.headerStr += data.substr(0, pos);
-        body = data.substr(pos+4);
+    var match;
+    this.headerStr += data;
+    if(match=this.headerStr.match(/^([\s\S]*?\r\n)[ \t]*\r\n/)){
+        var remainder = this.headerStr.slice(match[0].length);
+        this.headerStr = match[1];
         this.headerObj = mime.parseHeaders(this.headerStr);
         this.analyzeHeaders(this.headerObj, this.headers);
         delete this.headerObj; // not needed anymore
         delete this.headerStr; // just ditch it
         this.emit("headers", this.headers);
         this.state = PARSE_BODY;
-    }else
-        this.headerStr += data;
-    return body;
+        this.parseBodyStart(remainder);
+    }
+    return data; // this makes no sense as far as I can tell, but leaving it in.
 }
 
 MailParser.prototype.analyzeHeaders = function(headerObj, headers){
