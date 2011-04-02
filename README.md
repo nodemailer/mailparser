@@ -30,7 +30,7 @@ Set up listener for different events
 
   * Get mail headers as a structured object
     
-        mp.on("header", function(headers){
+        mp.on("headers", function(headers){
             console.log(headers);
         });
   
