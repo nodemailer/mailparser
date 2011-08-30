@@ -43,7 +43,7 @@ Set up listener for different events
   * Get info about binary attachment that is about to start streaming
     
         mp.on("astart", function(id, headers){
-            console.log("attachment id" + id +" started);
+            console.log("attachment id" + id + " started");
             console.log(headers);
         });
   
