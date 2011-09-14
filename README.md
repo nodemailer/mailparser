@@ -8,11 +8,6 @@ attachments with ease - attachments are parsed in chunks that can be saved into 
 
 No need to worry about charsets or decoding *quoted-printable* or *base64* data, *mailparser* (with the help of *node-iconv*) does all of it for you. All the textual output from *mailparser* (subject line, addressee names, message body) is always UTF-8.
 
-Requirements
-------------
-
-You need to have [node-iconv](http://github.com/bnoordhuis/node-iconv) installed!
-
 Installation
 ------------
 
