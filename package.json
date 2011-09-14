@@ -24,6 +24,6 @@
     ],
     "dependencies":{
         "iconv": "*"
-    }
+    },
     "keywords": ["e-mail", "mime", "parser"]
 }
