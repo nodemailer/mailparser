@@ -279,7 +279,6 @@ this.parseHeaders = function(headers){
  **/
 this.splitAddresses = function(addresses) {
     var quotedParts = addresses.split("\"");
-    console.log("quotedParts = ", quotedParts);
     var parts = [];
     var remainder = "";
     for (var i = 0; i < quotedParts.length; i++) {
@@ -304,8 +303,6 @@ this.splitAddresses = function(addresses) {
     }
 
     parts.push(remainder);
-
-    console.log("parts = ", parts);
 
     return parts;
 }
