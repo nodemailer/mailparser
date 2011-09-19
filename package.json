@@ -9,12 +9,12 @@
             "email":"andris@node.ee"
         }
     ],
-    
+
     "repository" : {
         "type" : "git",
         "url" : "http://github.com/andris9/mailparser"
     },
-    
+
     "main" : "./mailparser",
     "licenses" : [
         {
@@ -24,6 +24,12 @@
     ],
     "dependencies":{
         "iconv": "*"
+    },
+    "devDependencies":{
+        "expresso": "*"
+    },
+    "scripts":{
+        "test": "expresso test/*.js"
     },
     "keywords": ["e-mail", "mime", "parser"]
 }
