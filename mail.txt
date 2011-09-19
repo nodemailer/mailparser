@@ -4,7 +4,7 @@ Received: from andris-desktop.lan (87-119-170-102.tll.elisa.ee [87.119.170.102])
         (version=TLSv1/SSLv3 cipher=RC4-MD5);
         Thu, 07 Oct 2010 06:41:51 -0700 (PDT)
 Message-Id: <BAFE6D0E-AE53-4698-9072-AD1C9BF966AB@gmail.com>
-From: Andris Reinman <andris.reinman@gmail.com>
+From: Andris Reinman <andris.reinman@gmail.com>, "Pupkin, Vasya" <vasya.pupkin@example.com>
 To: andris@kreata.ee
 Content-Type: multipart/alternative; boundary=Apple-Mail-2-1061547935
 Mime-Version: 1.0 (Apple Message framework v936)
