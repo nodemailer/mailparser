@@ -110,8 +110,10 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
     // message ID
     headersUsed.push("message-id");
     parts = {};
-    if(headerObj["message-id"]){
-        headers.messageId = (headerObj["message-id"] || "").replace(/^</, '').replace(/>*$/, '');
+    if(headerObj["message-id"] && headerObj["message-id"][0]){
+        headers.messageId = headerObj["message-id"][0].replace(/^</, '').replace(/>*$/, '');
+    } else {
+        headers.messageId = "";
     }
 
     // content ID
