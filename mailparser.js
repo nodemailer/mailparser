@@ -20,15 +20,15 @@ MailParser = function(){
         this.mailFrom = arguments[0];
         this.rcptTo = arguments[1];
     }
-    
+
     this.headerStr = "";
- 
+
     this.waitFor = 0;
     this.receivedAll = false;
-    
+
     this.headers = {};
     this.bodyData = {bodyText:"", bodyHTML:"", bodyAlternate:[], attachments:[]};
-    
+
     this.state = PARSE_HEADERS;
 }
 sys.inherits(MailParser, EventEmitter);
@@ -48,11 +48,11 @@ MailParser.prototype.feed = function(data){
 MailParser.prototype.end = function(){
     if(this.headers.multipart && (this.waitFor || !this.receivedAll))
         return;
-    
+
     if(this.state == PARSE_BODY){
         this.parseBodyEnd();
     }
-    
+
     this.emit("end");
 }
 
@@ -75,11 +75,11 @@ MailParser.prototype.parseHeaders = function(data){
 
 MailParser.prototype.analyzeHeaders = function(headerObj, headers){
     var parts, headersUsed = [];
-    
+
     // mime version
     headersUsed.push("mime-version");
     headers.useMime = !!parseFloat(headerObj["mime-version"] && headerObj["mime-version"][0]);
-    
+
     // content type
     headersUsed.push("content-type");
     parts = {};
@@ -87,7 +87,7 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
         parts = mime.parseHeaderLine(headerObj["content-type"] && headerObj["content-type"][0]);
     }
     headers.contentType = parts.defaultValue && parts.defaultValue.toLowerCase() || "text/plain";
-    
+
     // charset
     headers.charset = parts.charset || "us-ascii";
     // Some mails incorrectly quote the charset. Let's deal with that.
@@ -95,10 +95,10 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
 
     // format=fixed|flowed (RFC2646)
     headers.format = parts.format && parts.format.toLowerCase() || "fixed";
-    
+
     // filename
     headers.filename = parts.name && mime.parseMimeWords(parts.name.replace(/^[\s"']+|[\s"']+$/g,"")).trim() || false;
-    
+
     // mime-boundary
     headers.multipart = false;
     headers.mimeBoundary = false;
@@ -106,14 +106,15 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
         headers.mimeBoundary = parts.boundary.replace(/^[\s"']+|[\s"']+$/g,"").trim();
         headers.multipart = true;
     }
-    
+
     // message ID
     headersUsed.push("message-id");
     parts = {};
-    if(headerObj["message-id"]){
-        parts = mime.parseHeaderLine(headerObj["message-id"] && headerObj["message-id"][0]);
+    if(headerObj["message-id"] && headerObj["message-id"][0]){
+        headers.messageId = headerObj["message-id"][0].replace(/^</, '').replace(/>*$/, '');
+    } else {
+        headers.messageId = "";
     }
-    headers.messageId = (parts.defaultValue || "").replace(/^</, '').replace(/>*$/, '');
 
     // content ID
     headersUsed.push("content-id");
@@ -122,7 +123,7 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
         parts = mime.parseHeaderLine(headerObj["content-id"] && headerObj["content-id"][0]);
     }
     headers.contentId = (parts.defaultValue || "").replace(/^</, '').replace(/>*$/, '');
-    
+
     // date
     headersUsed.push("date");
     parts = {};
@@ -130,9 +131,9 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
         parts = mime.parseHeaderLine(headerObj["date"] && headerObj["date"][0]);
     }
     headers.messageDate = parts.defaultValue && datetime.strtotime(parts.defaultValue)*1000 || Date.now();
-    
+
     headers.receivedDate = Date.now();
-    
+
     // content-transfer-encoding
     headersUsed.push("content-transfer-encoding");
     parts = {};
@@ -140,7 +141,7 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
         parts = mime.parseHeaderLine(headerObj["content-transfer-encoding"] && headerObj["content-transfer-encoding"][0]);
     }
     headers.contentTransferEncoding = parts.defaultValue || "7bit";
-    
+
     // from
     headersUsed.push("from");
     headers.addressesFrom = [];
@@ -149,7 +150,7 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
             headers.addressesFrom = headers.addressesFrom.concat(mime.parseAddresses(headerObj["from"][i]));
         }
     }
-    
+
     // reply-to
     headersUsed.push("reply-to");
     headers.addressesReplyTo = [];
@@ -158,7 +159,7 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
             headers.addressesReplyTo = headers.addressesReplyTo.concat(mime.parseAddresses(headerObj["reply-to"][i]));
         }
     }
-    
+
     // to
     headersUsed.push("to");
     headers.addressesTo = [];
@@ -167,7 +168,7 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
             headers.addressesTo = headers.addressesTo.concat(mime.parseAddresses(headerObj["to"][i]));
         }
     }
-    
+
     // cc
     headersUsed.push("cc");
     headers.addressesCc = [];
@@ -176,20 +177,20 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
             headers.addressesCc = headers.addressesCc.concat(mime.parseAddresses(headerObj["cc"][i]));
         }
     }
-    
+
     // subject
     headersUsed.push("subject");
     if(headers.useMime){
         headers.subject = mime.parseMimeWords(headerObj["subject"] && headerObj["subject"][0] || "");
     }else
         headers.subject = headerObj["subject"] && headerObj["subject"][0] || "";
-   
+
     // priority
     headersUsed.push("x-priority");
     headersUsed.push("priority");
     headersUsed.push("importance");
     headersUsed.push("x-msmail-priority");
-    
+
     headers.priority = 3;
     if(headerObj["x-priority"]){
         var nr = headerObj["x-priority"][0].match(/\d/);
@@ -223,9 +224,9 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
                 break;
         }
     }
-    
-    
-    
+
+
+
     // content-disposition
     headersUsed.push("content-disposition");
     parts = {};
@@ -233,10 +234,10 @@ MailParser.prototype.analyzeHeaders = function(headerObj, headers){
         parts = mime.parseHeaderLine(headerObj["content-disposition"] && headerObj["content-disposition"][0]);
     }
     headers.contentDisposition = parts.defaultValue || false;
-    
+
     if(!headers.filename && parts.filename)
         headers.filename = mime.parseMimeWords(parts.filename.replace(/^[\s"']+|[\s"']+$/g,"")).trim();
-    
+
     headers.secondary = [];
     var keys = Object.keys(headerObj);
     for(var i=0, len=keys.length; i<len; i++){
@@ -268,7 +269,7 @@ MailParser.prototype.parseBody = function(data){
         do{
             pos3=false;
             if(this.body.mimeContents){
-                
+
                 // handle headers
                 if(!this.body.headerStrComplete){
                     if((pos2 = data.indexOf("\r\n\r\n", pos))>=0){
@@ -276,32 +277,32 @@ MailParser.prototype.parseBody = function(data){
                         pos = pos2+4;
                         this.body.headerStrComplete = true;
                         this.body.headerObj = mime.parseHeaders(this.body.headerStr.trim());
-                        
+
                         this.body.headers = {};
                         this.analyzeHeaders(this.body.headerObj, this.body.headers);
-                        
+
                         this.waitFor++;
-                        
+
                         // TEXT
                         if(this.body.headers.contentType.substr(0,"text/".length)=="text/"){
                             this.body.ds = new DataStore("text", this.body.headers);
                             this.setUpDSCallback(this.body.headers);
                         }
-                        
+
                         // MULTIPART
                         else if(this.body.headers.contentType.substr(0,"multipart/".length)=="multipart/"){
                             this.body.ds = new MailParser();
                             this.setUpMPCallback(this.body.headers);
                             this.body.ds.feed(this.body.headerStr.trim()+"\r\n\r\n");
                         }
-                        
+
                         // BINARY
                         else{
                             this.body.ds = new DataStore("binary", this.body.headers);
                             this.setUpDSCallback(this.body.headers);
                         }
 
-                        
+
                         this.body.headerStr = "";
                     }else{
                         this.body.headerStr += data.substr(pos);
@@ -317,9 +318,9 @@ MailParser.prototype.parseBody = function(data){
                         this.body.ds = null;
                     }
                 }
-                
+
             }
-            
+
             pos = pos3!==false?pos3:data.indexOf("--"+this.headers.mimeBoundary, pos);
             if(pos>=0){
                 pos += ("--"+this.headers.mimeBoundary).length;
@@ -339,15 +340,15 @@ MailParser.prototype.parseBody = function(data){
 }
 
 MailParser.prototype.setUpDSCallback = function(headers){
-    
+
     this.body.ds.on("astart", (function(id, data){
         this.emit("astart",id, data);
     }).bind(this));
-    
+
     this.body.ds.on("astream", (function(id, data){
         this.emit("astream",id, data);
     }).bind(this));
-    
+
     this.body.ds.on("end", (function(data){
         var done = false;
         if(!headers.contentDisposition){
@@ -382,7 +383,7 @@ MailParser.prototype.setUpDSCallback = function(headers){
             });
             this.emit("aend",data.id);
         }
-        
+
         if(!(--this.waitFor)){
             this.end();
         }
@@ -391,27 +392,27 @@ MailParser.prototype.setUpDSCallback = function(headers){
 
 
 MailParser.prototype.setUpMPCallback = function(headers){
-    
+
     this.body.ds.on("astart", (function(id, data){
         this.emit("astart",id, data);
     }).bind(this));
-    
+
     this.body.ds.on("astream", (function(id, data){
         this.emit("astream",id, data);
     }).bind(this));
-    
+
     this.body.ds.on("aend", (function(id){
         this.emit("aend",id);
     }).bind(this));
-    
+
     this.body.ds.on("headers", (function(data){}).bind(this));
     this.body.ds.on("body", (function(data){
-        
+
         this.bodyData.bodyAlternate.push({
             contentType: headers.contentType,
             body: data
         });
-        
+
         if(!(--this.waitFor)){
             this.end();
         }
@@ -419,7 +420,7 @@ MailParser.prototype.setUpMPCallback = function(headers){
 }
 
 MailParser.prototype.parseBodyEnd = function(){
-    
+
     if(!this.headers.multipart && this.bodyData.bodyText){
         switch(this.headers.contentTransferEncoding.toLowerCase()){
             case "quoted-printable":
@@ -435,10 +436,10 @@ MailParser.prototype.parseBodyEnd = function(){
             this.bodyData.bodyText = false;
         }
     }
-    
+
     if(!this.bodyData.bodyText && !!this.bodyData.bodyHTML)
         this.bodyData.bodyText = stripHTML(this.bodyData.bodyHTML);
-    
+
     this.emit("body",this.bodyData);
     return false;
 }
@@ -453,9 +454,9 @@ function DataStore(type, headers){
     this.encoding = headers && headers.contentTransferEncoding || "7bit";
     this.charset = headers && headers.charset.replace(/"/g, '') || "us-ascii";
     this.data = "";
-    
+
     this.id = generateAttachmentId();
-    
+
     this.stream = false;
     if(this.type=="binary"){
         this.data = 0;
@@ -464,7 +465,7 @@ function DataStore(type, headers){
         this.stream.on("stream", this.onStream.bind(this));
         this.stream.on("end", this.onStreamEnd.bind(this));
     }
-    
+
     this.started = false;
     this.headers = {
         contentType: headers.contentType,
@@ -508,7 +509,7 @@ DataStore.prototype.end = function(){
             this.data = mime.decodeBase64(this.data, this.charset).trim();
 
         this.emit("end", {id:this.id, body:this.data});
-        
+
     }else{
         this.stream.end();
     }
@@ -543,22 +544,22 @@ function generateAttachmentId(){
 
 function stripHTML(str){
     if(!str)return str;
-    
+
     str = str instanceof Buffer ? str.toString("utf-8"):str;
-    
+
     str = str.replace(/\r?\n/g," ");
     str = str.replace(/<(?:\/p|br|\/tr|\/table|\/div)>/g,"\n");
 
     // hide newlines with two 00 chars (enables multiline matches)
     str = str.replace(/\r?\n/g,"-\u0000\u0000-");
-    
+
     // H1-H6, add underline
     str = str.replace(/<[hH]\d[^>]*>(.*?)<\/[hH]\d[^>]*>/g,function(a,b){
         var line = "";
         b = b.replace(/<[^>]*>/g," ");
         b = b.replace(/\s\s+/g," ");
         b = b.trim();
-        
+
         if(!b)
             return "";
         for(var i=0, len = b.length; i<len; i++){
@@ -572,7 +573,7 @@ function stripHTML(str){
         b = b.replace(/<[^>]*>/g," ");
         b = b.replace(/\s\s+/g," ");
         b = b.trim();
-        
+
         if(!b)
             return "";
         return "-®®®®-* "+b+"\n";
@@ -583,18 +584,18 @@ function stripHTML(str){
         b = b.replace(/<[^>]*>/g," ");
         b = b.replace(/\s\s+/g," ");
         b = b.trim();
-        
+
         if(!b)
             return "";
 
         b = b.replace(/[ \t]*\n[ \t]*/g,"\n-®®®®--®®®®-");
-        
+
         return "\n-®®®®--®®®®-"+b.trim()+"\n\n";
     });
 
-    // restore 
+    // restore
     str = str.replace(/\s*-\u0000\u0000-\s*/g,"\n");
-    
+
     // remove all remaining html tags
     str = str.replace(/<[^>]*>/g," ");
     // remove duplicate spaces
