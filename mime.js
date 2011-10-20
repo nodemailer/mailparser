@@ -119,7 +119,7 @@ this.decodeMimeWord = function(str){
     }
 
     if(encoding.toUpperCase()=="B"){
-        return this.decodeBase64(text);
+        return this.decodeBase64(text, charset);
     }
 
     return text;
@@ -190,7 +190,7 @@ this.decodeQuotedPrintable = function(str, mimeWord, charset){
     if(mimeWord){
         str = str.replace(/_/g," ");
     }else{
-        str = str.replace(/=\r\n/gm,'');
+        str = str.replace(/=\r?\n/gm,'');
         str = str.replace(/=$/,"");
     }
     if(charset == "UTF-8")
