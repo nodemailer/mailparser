@@ -190,7 +190,7 @@ this.decodeQuotedPrintable = function(str, mimeWord, charset){
     if(mimeWord){
         str = str.replace(/_/g," ");
     }else{
-        str = str.replace(/=\r\n/gm,'');
+        str = str.replace(/=\r?\n/gm,'');
         str = str.replace(/=$/,"");
     }
     if(charset == "UTF-8")
