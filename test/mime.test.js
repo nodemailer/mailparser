@@ -33,5 +33,8 @@ module.exports = {
                   { address: "vasya@example.com", name: "Pupkin, Vasya" },
                   { address: "pupkin@example.com", name: false }
                 ]);
+    },
+    "test decode mime word with charset GB2312": function() {
+	assert.equal(mime.decodeMimeWord("=?GB2312?Q?Test_for_=D6=D0=CE=C4?="), "Test for 中文");
     }
 }

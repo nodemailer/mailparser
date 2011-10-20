@@ -119,7 +119,7 @@ this.decodeMimeWord = function(str){
     }
 
     if(encoding.toUpperCase()=="B"){
-        return this.decodeBase64(text);
+        return this.decodeBase64(text, charset);
     }
 
     return text;
