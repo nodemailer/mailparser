@@ -108,21 +108,23 @@ this.encodeMimeWord = function(str, encoding, charset){
  **/
 
 this.decodeMimeWord = function(str){
-    var parts = str.split("?"),
-        charset = parts && parts[1],
-        encoding = parts && parts[2],
-        text = parts && parts[3];
-    if(!charset || !encoding || !text)
-        return str;
-    if(encoding.toUpperCase()=="Q"){
-        return this.decodeQuotedPrintable(text, true, charset);
-    }
+  var parts = str.split("?"),
+      charset = parts && parts[1],
+      encoding = parts && parts[2],
+      text = parts && parts[3];
 
-    if(encoding.toUpperCase()=="B"){
-        return this.decodeBase64(text, charset);
-    }
 
-    return text;
+  if(!charset || !encoding || !text)
+      return str;
+  if(encoding.toUpperCase()=="Q"){
+      return this.decodeQuotedPrintable(text, true, charset);
+  }
+
+  if(encoding.toUpperCase()=="B"){
+      return this.decodeBase64(text);
+  }
+
+  return text;
 }
 
 
@@ -185,26 +187,56 @@ this.encodeQuotedPrintable = function(str, mimeWord, charset){
  * Decodes a string from Quoted-printable format.
  **/
 this.decodeQuotedPrintable = function(str, mimeWord, charset){
-    charset = charset && charset.toUpperCase() || "UTF-8";
 
-    if(mimeWord){
-        str = str.replace(/_/g," ");
-    }else{
-        str = str.replace(/=\r?\n/gm,'');
-        str = str.replace(/=$/,"");
-    }
-    if(charset == "UTF-8")
-        str = decodeURIComponent(str.replace(/=/g,"%"));
-    else{
-        str = str.replace(/=/g,"%");
-        if(charset=="ISO-8859-1" || charset=="LATIN1")
-            str = unescape(str);
-        else{
-            str = decodeBytestreamUrlencoding(str);
-            str = fromCharset(charset, str);
-        }
-    }
-    return str;
+  function decode(s){
+    s= s.replace(/%([EF][0-9A-F])%([89AB][0-9A-F])%([89AB][0-9A-F])/g,
+        function(code,hex1,hex2,hex3)
+        {
+            var n1= parseInt(hex1,16)-0xE0;
+            var n2= parseInt(hex2,16)-0x80;
+            if (n1 == 0 && n2 < 32) return code;
+            var n3= parseInt(hex3,16)-0x80;
+            var n= (n1<<12) + (n2<<6) + n3;
+            if (n > 0xFFFF) return code;
+            return String.fromCharCode(n);
+        });
+    s= s.replace(/%([CD][0-9A-F])%([89AB][0-9A-F])/g,
+        function(code,hex1,hex2)
+        {
+            var n1= parseInt(hex1,16)-0xC0;
+            if (n1 < 2) return code;
+            var n2= parseInt(hex2,16)-0x80;
+            return String.fromCharCode((n1<<6)+n2);
+        });
+    s= s.replace(/%([0-7][0-9A-F])/g,
+        function(code,hex)
+        {
+            return String.fromCharCode(parseInt(hex,16));
+        });
+    return s;
+  }
+
+  charset = charset && charset.toUpperCase() || "UTF-8";
+
+
+  if(mimeWord){
+      str = str.replace(/_/g," ");
+  }else{
+      str = str.replace(/=\r?\n/gm,'');
+      str = str.replace(/=$/,"");
+  }
+  if(charset == "UTF-8")
+      str = decode(str.replace(/=/g,"%"));
+  else{
+      str = str.replace(/=/g,"%");
+      if(charset=="ISO-8859-1" || charset=="LATIN1")
+          str = unescape(str);
+      else{
+          str = decodeBytestreamUrlencoding(str);
+          str = fromCharset(charset, str);
+      }
+  }
+  return str;
 }
 
 /**
@@ -420,7 +452,7 @@ function lineEdges(str){
  * Converts a buffer in <charset> codepage into UTF-8 string
  **/
 function fromCharset(charset, buffer, keep_buffer){
-    var iconv = new Iconv(charset,'UTF-8'),
+    var iconv = new Iconv(charset,'UTF-8//TRANSLIT//IGNORE'),
         buffer = iconv.convert(buffer);
     return keep_buffer?buffer:buffer.toString("utf-8");
 }

@@ -503,9 +503,9 @@ DataStore.prototype.onStreamEnd = function(){
 
 DataStore.prototype.end = function(){
     if(this.type=="text"){
-        if(this.encoding=="quoted-printable")
+        if(this.encoding && (this.encoding.toLowerCase() == "quoted-printable"))
             this.data = mime.decodeQuotedPrintable(this.data, false, this.charset).trim();
-        if(this.encoding=="base64")
+        if(this.encoding && (this.encoding.toLowerCase() == "base64"))
             this.data = mime.decodeBase64(this.data, this.charset).trim();
 
         this.emit("end", {id:this.id, body:this.data});
