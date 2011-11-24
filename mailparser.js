@@ -272,9 +272,14 @@ MailParser.prototype.parseBody = function(data){
 
                 // handle headers
                 if(!this.body.headerStrComplete){
-                    if((pos2 = data.indexOf("\r\n\r\n", pos))>=0){
-                        this.body.headerStr += data.substring(pos, pos2);
-                        pos = pos2+4;
+                    if(
+                        (pos2 = data.indexOf("\r\n\r\n", pos)) >= 0
+                        || this.body.headerStr.indexOf("\r\n\r\n") >= 0
+                    ){
+                        if(pos2 >=0){
+                            this.body.headerStr += data.substring(pos, pos2);
+                            pos = pos2+4;
+                        }
                         this.body.headerStrComplete = true;
                         this.body.headerObj = mime.parseHeaders(this.body.headerStr.trim());
 
