@@ -296,7 +296,7 @@ this.parseHeaders = function(headers){
             name = cmd;
             value = lines[i].substr(name.length+1);
             if(!header_lines[name.toLowerCase().trim()])header_lines[name.toLowerCase().trim()] = [];
-            header_lines[name.toLowerCase()].push(value.trim());
+            header_lines[name.toLowerCase().trim()].push(value.trim());
         }
     }
 

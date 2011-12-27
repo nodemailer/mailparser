@@ -356,7 +356,7 @@ MailParser.prototype.setUpDSCallback = function(headers){
 
     this.body.ds.on("end", (function(data){
         var done = false;
-        if(!headers.contentDisposition){
+        if(!headers.contentDisposition || headers.contentDisposition == "inline"){
             // body
             switch(headers.contentType){
                 case "text/plain":
