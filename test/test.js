@@ -3,7 +3,7 @@ var mp = require("../lib/mailparser"),
     fs = require("fs");
 
 
-var inp = fs.createReadStream("sparrow.eml"),
+var inp = fs.createReadStream("applequoted.eml"),
     out = new mp.MailParser();
 
 inp.pipe(out);
