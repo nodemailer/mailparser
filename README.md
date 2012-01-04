@@ -1,12 +1,18 @@
-mailparser
+
+
+MailParser
 ==========
 
-**mailparser** is an asynchronous and non-blocking parser for [node.js](http://nodejs.org) to parse mime encoded e-mail messages. Handles even large
-attachments with ease - attachments are parsed in chunks that can be saved into disk or sent to database while parsing (tested with 16MB attachments).
+**NB!** This version of MailParser is incompatible with pre 0.2.0, do not upgrade from 0.1.x without updating your code, the API is totally different. Also if the source is coming directly from SMTP you need to unescape dots in the beginning of the lines yourself!
 
-**mailparser** parses raw source of e-mail messages to convert mime-stream into a structured object.
 
-No need to worry about charsets or decoding *quoted-printable* or *base64* data, *mailparser* (with the help of *node-iconv*) does all of it for you. All the textual output from *mailparser* (subject line, addressee names, message body) is always UTF-8.
+
+**MailParser** is an asynchronous and non-blocking parser for [node.js](http://nodejs.org) to parse mime encoded e-mail messages. Handles even large
+attachments with ease - attachments can be parsed in chunks and streamed if needed.
+
+**MailParser** parses raw source of e-mail messages into a structured object.
+
+No need to worry about charsets or decoding *quoted-printable* or *base64* data, **MailParser** (with the help of *node-iconv*) does all of it for you. All the textual output from **MailParser** (subject line, addressee names, message body) is always UTF-8.
 
 Installation
 ------------
@@ -16,120 +22,146 @@ Installation
 Usage
 -----
 
-Create a new *mailparser* object
+Require MailParser module
+
+    var MailParser = require("mailparser").MailParser;
+    
+Create a new MailParser object
+
+    var mailparser = new MailParser();
+
+MailParser object is a writable Stream - you can pipe directly files etc. to it
+or you can send new chunks with `mailparser.write`
+    
+When the parsing ends an 'end' event is emitted which has an object with parsed e-mail.
+
+    mailparser.on("end", function(mail){
+        mail; // object structure for parsed e-mail
+    });
+
+### Parsed mail object
+
+  * **headers** - an array of headers, in the form of - `[{key: "key", value: "value"}]`
+  * **from** - an array of parsed `From` addresses - `[{address:'sender@example.com',name:'Sender Name'}]`
+  * **to** - an array of parsed `To` addresses
+  * **subject** - the subject line
+  * **text** - text body
+  * **html** - html body
+  * **alternatives** - an array of alternative bodies in addition to the default `html` and `text` - `[{contentType:"text/plain", content: "..."}]`
+  * **attachments** - an array of attachments
+    
+### Decode a simple e-mail
+
+This example decodes an e-mail from a string
 
     var MailParser = require("mailparser").MailParser,
-        mp = new MailParser();
-    
-Set up listener for different events
+        mailparser = new MailParser();
 
-  * Get mail headers as a structured object
+    var email = "From: 'Sender Name' <sender@example.com>\r\n"+
+                "To: 'Receiver Name' <receiver@example.com>\r\n"+
+                "Subject: Hello world!\r\n"+
+                "\r\n"+
+                "How are you today?";
     
-        mp.on("headers", function(headers){
-            console.log(headers);
-        });
-  
-  * Get mail body as a structured object
+    // setup an event listener when the parsing finishes
+    mailparser.on("end", function(mail_object){
+        console.log("From:", mail_object.from); //[{address:'sender@example.com',name:'Sender Name'}]
+        console.log("Subject:", mail_object.subject); // Hello world!
+        console.log("Text body:", mail_object.text); // How are you today?
+    });
     
-        mp.on("body", function(body){
-            console.log(body);
-        });
-  
-  * Get info about binary attachment that is about to start streaming
-    
-        mp.on("astart", function(id, headers){
-            console.log("attachment id" + id + " started");
-            console.log(headers);
-        });
-  
-  * Get part of a binary attachment in the form of a Buffer
-    
-        mp.on("astream", function(id, buffer){
-            console.log("attachment id" + id);
-            console.log(buffer);
-        });
-  
-  * Attachment parsing completed
-  
-        mp.on("aend", function(id){
-            console.log("attachment " + id + " finished");
-        });
+    // send the email source to the parser
+    mailparser.write(email);
+    mailparser.end();
 
-Feed the parser with data
+### Pipe file to MailParser
 
-    mp.feed(part1_of_the_message);
-    mp.feed(part2_of_the_message);
-    mp.feed(part3_of_the_message);
+This example pipes a `readableStream` file to **MailParser**
+
+    var MailParser = require("mailparser").MailParser,
+        mailparser = new MailParser(),
+        fs = require("fs");
+    
+    mailparser.on("end", function(mail_object){
+        console.log("Subject:", mail_object.subject);
+    });
+    
+    fs.createReadStream("email.eml").pipe(mailparser);
+
+### Attachments
+
+By default any attachment found from the e-mail will be included fully in the
+final mail structure object as Buffer objects. With large files this might not
+be desirable so optionally it is possible to redirect the attachments to a Stream
+and keep only the metadata about the file in the mail structure.
+
+    mailparser.on("end", function(mail_object){
+        for(var i=0; i<mail_object.attachments.length; i++){
+            console.log(mail_object.attachments[i].fileName);
+        }
+    });
+
+#### Default behavior
+
+By default attachments will be included in the attachment objects as Buffers.
+
+    attachments = [{
+        contentType: 'image/png',
+        fileName: 'image.png',
+        contentDisposition: 'attachment',
+        contentId: '5.1321281380971@localhost',
+        transferEncoding: 'base64',
+        length: 126,
+        generatedFileName: 'image.png',
+        checksum: 'e4cef4c6e26037bcf8166905207ea09b',
+        content: <Buffer ...>
+    }];
+
+The property `generatedFileName` is usually the same but if several different
+attachments with the same name exist, the latter ones names will be modified and
+the generated name will be saved to `generatedFileName`
+
+    file.txt
+    file-1.txt
+    file-2.txt
     ...
-    mp.feed(partN_of_the_message);
 
-Finish the feeding
+Property `content` is always a Buffer object (or SlowBuffer on some occasions)
 
-    mp.end();
+#### Attachment streaming
+
+Attachment streaming can be used when providing an optional options parameter
+to the `MailParser` constructor.
+
+    var mp = new MailParser({
+        streamAttachments: true
+    }
+
+This way there will be no `content` property on final attachment objects (but the other fields will remain).
+
+To catch the streams you should listen for `attachment` events on the MailParser
+object. The parameter provided includes file information (`contentType`, 
+`fileName`, `contentId`) and a readable Stream object `stream`.
+
+    var mp = new MailParser({
+        streamAttachments: true
+    }
     
-Outcome
--------
+    mp.on("attachment", function(attachment){
+        var output = fs.createWriteStream(attachment.fileName);
+        attachment.stream.pipe(output);
+    });
 
-Parser returns the headers object with *"header"* event and it's structured like this
+In this case the `fileName` parameter is equal to `generatedFileName` property
+on the main attachment object, you match attachment streams to the main attachment
+objects through these values.
 
-    { useMime: true
-    , contentType: 'multipart/alternative'
-    , charset: 'us-ascii'
-    , format: 'fixed'
-    , multipart: true
-    , mimeBoundary: 'Apple-Mail-2-1061547935'
-    , messageId: 'BAFE6D0E-AE53-4698-9072-AD1C9BF966AB@gmail.com'
-    , messageDate: 1286458909000
-    , receivedDate: 1286743827944
-    , contentTransferEncoding: '7bit'
-    , addressesFrom: 
-       [ { address: 'andris.reinman@gmail.com'
-         , name: 'Andris Reinman'
-         }
-       ]
-    , addressesReplyTo: []
-    , addressesTo: [ { address: 'andris@kreata.ee', name: false } ]
-    , addressesCc: []
-    , subject: 'Simple test message with special characters like  \u0161 and \u00f5'
-    , priority: 3
-    }
+#### Testing attachment integrity
 
-Message body is returned with the *"body"* event and is structured like this
+Attachment objects include `length` property which is the length of the attachment
+in bytes and `checksum` property which is md5 hash of the file.
 
-    { bodyText: 'Mail message as plain text',
-    , bodyHTML: 'Mail message as HTML',
-    , bodyAlternate: ["list of additional text/* and multipart/* parts of the message"],
-    , attachments: ["list of attachments"]
-    }
 
-Attachments are included full size in the *body* object if the attachments are textual. Binary attachments
-are sent to the client as a stream that can be saved into disk if needed (events *"astream"* and *"aend"*), only the attachment meta-data is included in the *body* object this way.
+## License
 
-See *test.js* for an actual usage example (parses the source from *mail.txt* and outputs to console)
-
-    node test.js
-
-You need to install node-iconv before running the test!
-
-NB!
----
-
-Messages with attachments are typically formatted as *nested multipart* messages. This means that the *bodyText* and *bodyHTML*
-fields might be left blank. Search for an alternate with content-type *multipart* from the bodyAlternate array and use the bodyText and bodyHTML defined there instead.
-
-Feeding Non-SMTP Data
----------------------
-
-By default MailParser assumes an SMTP feed with "." at the start of the line
-replaced with "..". To disable this feature pass the following option to the
-constructor:
-
-    var mp = new MailParser({fix_smtp_escapes: 0});
-
-The default is to fixup those escape sequences, which isn't what you want if
-you already have a mail file on disk, or have already fixed those escapes up.
-
-LICENSE
--------
-
-**BSD**
+**MIT**

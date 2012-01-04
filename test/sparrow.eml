@@ -1,0 +1,74 @@
+Delivered-To: andris.reinman@gmail.com
+Received: by 10.52.167.169 with SMTP id zp9cs496614vdb;
+        Wed, 4 Jan 2012 04:52:15 -0800 (PST)
+Received: by 10.220.157.83 with SMTP id a19mr13702481vcx.54.1325681534153;
+        Wed, 04 Jan 2012 04:52:14 -0800 (PST)
+Return-Path: <andris+caf_=andris.reinman=gmail.com@node.ee>
+Received: from mail-vx0-f171.google.com (mail-vx0-f171.google.com [209.85.220.171])
+        by mx.google.com with ESMTPS id l13si7500423vcl.77.2012.01.04.04.52.13
+        (version=TLSv1/SSLv3 cipher=OTHER);
+        Wed, 04 Jan 2012 04:52:13 -0800 (PST)
+Received-SPF: neutral (google.com: 209.85.220.171 is neither permitted nor denied by best guess record for domain of andris+caf_=andris.reinman=gmail.com@node.ee) client-ip=209.85.220.171;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 209.85.220.171 is neither permitted nor denied by best guess record for domain of andris+caf_=andris.reinman=gmail.com@node.ee) smtp.mail=andris+caf_=andris.reinman=gmail.com@node.ee
+Received: by mail-vx0-f171.google.com with SMTP id fl11so42480416vcb.30
+        for <andris.reinman@gmail.com>; Wed, 04 Jan 2012 04:52:13 -0800 (PST)
+Received: by 10.52.93.240 with SMTP id cx16mr26010693vdb.99.1325681533468;
+        Wed, 04 Jan 2012 04:52:13 -0800 (PST)
+X-Forwarded-To: andris.reinman@gmail.com
+X-Forwarded-For: andris@node.ee andris.reinman@gmail.com
+Delivered-To: andris@node.ee
+Received: by 10.52.188.37 with SMTP id fx5cs345395vdc;
+        Wed, 4 Jan 2012 04:52:13 -0800 (PST)
+Received: by 10.213.105.74 with SMTP id s10mr6375828ebo.134.1325681531585;
+        Wed, 04 Jan 2012 04:52:11 -0800 (PST)
+Return-Path: <mailer@node.ee>
+Received: from mail-ee0-f48.google.com (mail-ee0-f48.google.com [74.125.83.48])
+        by mx.google.com with ESMTPS id 6si9500145eek.191.2012.01.04.04.52.10
+        (version=TLSv1/SSLv3 cipher=OTHER);
+        Wed, 04 Jan 2012 04:52:11 -0800 (PST)
+Received-SPF: neutral (google.com: 74.125.83.48 is neither permitted nor denied by best guess record for domain of mailer@node.ee) client-ip=74.125.83.48;
+Received: by eekd49 with SMTP id d49so17973446eek.35
+        for <andris@node.ee>; Wed, 04 Jan 2012 04:52:10 -0800 (PST)
+Received: by 10.14.16.135 with SMTP id h7mr7437533eeh.19.1325681530548;
+        Wed, 04 Jan 2012 04:52:10 -0800 (PST)
+Return-Path: <mailer@node.ee>
+Received: from andris-imac.lan (87-119-170-102.tll.elisa.ee. [87.119.170.102])
+        by mx.google.com with ESMTPS id t1sm219214836eeb.3.2012.01.04.04.52.09
+        (version=TLSv1/SSLv3 cipher=OTHER);
+        Wed, 04 Jan 2012 04:52:09 -0800 (PST)
+Date: Wed, 4 Jan 2012 14:52:07 +0200
+From: mailer test <mailer@node.ee>
+To: andris@node.ee
+Message-ID: <D1EF79F061C34ED99669A2A1E0548B63@node.ee>
+Subject: Tere =?utf-8?Q?=C3=B6=C3=A4=C3=B5=C3=BC?=
+X-Mailer: sparrow 1.5 (build 1043.2)
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="4f044b77_66334873_6f9"
+
+--4f044b77_66334873_6f9
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+Kuidas l=C3=A4heb=3F =20
+
+-- =20
+mailer test
+Sent with Sparrow (http://www.sparrowmailapp.com/=3Fsig)
+
+
+--4f044b77_66334873_6f9
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+
+                <div>
+                    Kuidas l=C3=A4heb=3F
+                </div>
+                <div><div><br></div><div>--&nbsp;</div><div>mailer test</=
+div><div>Sent with <a href=3D=22http://www.sparrowmailapp.com/=3Fsig=22>S=
+parrow</a></div><div><br></div></div>
+            
+--4f044b77_66334873_6f9--
+

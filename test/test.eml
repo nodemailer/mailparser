@@ -1,0 +1,61 @@
+Delivered-To: andris.reinman@gmail.com
+Received: by 10.52.109.163 with SMTP id ht3cs61042vdb;
+        Mon, 14 Nov 2011 06:36:23 -0800 (PST)
+Received: by 10.204.133.216 with SMTP id g24mr12132901bkt.82.1321281381893;
+        Mon, 14 Nov 2011 06:36:21 -0800 (PST)
+Return-Path: <test@spam-spam-spam.com>
+Received: from smtp.zone.eu (smtp.zone.ee. [217.146.66.119])
+        by mx.google.com with ESMTP id zy16si9230199bkb.27.2011.11.14.06.36.21;
+        Mon, 14 Nov 2011 06:36:21 -0800 (PST)
+Received-SPF: softfail (google.com: domain of transitioning test@spam-spam-spam.com does not designate 217.146.66.119 as permitted sender) client-ip=217.146.66.119;
+Authentication-Results: mx.google.com; spf=softfail (google.com: domain of transitioning test@spam-spam-spam.com does not designate 217.146.66.119 as permitted sender) smtp.mail=test@spam-spam-spam.com
+Received: from gn114.zone.eu (gn114.zone.eu [217.146.67.114])
+	(Authenticated sender: andris@eyh.ee)
+	by smtp.zone.eu (Postfix) with ESMTP id 06FAD18F9C4C;
+	Mon, 14 Nov 2011 16:36:21 +0200 (EET)
+X-Mailer: Nodemailer (0.2.3; +http://www.nodemailer.org)
+Date: Mon, 14 Nov 2011 14:36:20 GMT
+From: "Example Test" <test@spam-spam-spam.com>
+To: "Reinman, Andris" <andris.reinman@gmail.com>
+Cc: andris@tahvel.info, andmekala@hot.ee
+Subject:
+        =?UTF-8?Q?Nodemailer_is_totally-totally_punicode__friendly_=E2=9C=94,_no_exceptions_expected!_=C3=B6=C3=A4=C3=B5=C3=BC?=
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----NODEMAILER-?=_2-1321281380967"
+Message-Id: <20111114143621.06FAD18F9C4C@smtp.zone.eu>
+
+------NODEMAILER-?=_2-1321281380967
+Content-Type: multipart/alternative; boundary="----NODEMAILER-?=_3-1321281380970"
+
+------NODEMAILER-?=_3-1321281380970
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+tere! =C3=96=C3=84=C3=95=C3=9C =C5=BE=C4=8D=C5=A1!
+see on teine rida!
+
+------NODEMAILER-?=_3-1321281380970
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p><b>tere!</b><br/>=C3=96=C3=84=C3=95=C3=9C =C5=BE=C4=8D=C5=A1!</p><p>see =
+on teine rida!</p>
+
+------NODEMAILER-?=_3-1321281380970--
+------NODEMAILER-?=_2-1321281380967
+Content-Type: text/plain; name="notes.txt"
+Content-Disposition: attachment; filename="notes.txt"
+Content-ID: <4.1321281380971@localhost>
+Content-Transfer-Encoding: base64
+
+U29tZSBub3RlcyBhYm91dCB0aGlzIGUtbWFpbA==
+------NODEMAILER-?=_2-1321281380967
+Content-Type: image/png; name="image.png"
+Content-Disposition: attachment; filename="image.png"
+Content-ID: <5.1321281380971@localhost>
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD///+l2Z/dAAAAM0lE
+QVR4nGP4/5/h/1+G/58ZDrAz3D/McH8yw83NDDeNGe4Ug9C9zwz3gVLMDA/A6P9/AFGGFyjOXZtQ
+AAAAAElFTkSuQmCC
+------NODEMAILER-?=_2-1321281380967--

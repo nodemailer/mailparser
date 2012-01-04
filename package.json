@@ -1,7 +1,7 @@
 {
     "name": "mailparser",
     "description": "Asynchronous and non-blocking parser for mime encoded e-mail messages",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "author" : "Andris Reinman",
     "maintainers":[
         {
@@ -9,27 +9,21 @@
             "email":"andris@node.ee"
         }
     ],
-
     "repository" : {
         "type" : "git",
-        "url" : "http://github.com/andris9/mailparser"
+        "url" : "http://github.com/andris9/mailparser.git"
     },
-
-    "main" : "./mailparser",
+    "main" : "./lib/mailparser",
     "licenses" : [
         {
-            "type": "BSD",
+            "type": "MIT",
             "url": "http://github.com/andris9/mailparser/blob/master/LICENSE"
         }
     ],
-    "dependencies":{
+    "dependencies": {
+        "mimelib": "0.1.7",
         "iconv": "*"
     },
-    "devDependencies":{
-        "expresso": "*"
-    },
-    "scripts":{
-        "test": "expresso test/*.js"
-    },
+    "engines": ["node >=0.6.0"],
     "keywords": ["e-mail", "mime", "parser"]
 }
