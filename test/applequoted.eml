@@ -27,6 +27,9 @@ Content-Type: text/plain;
 	name="test.txt"
 Content-Transfer-Encoding: quoted-printable
 
-tere tere =FF=00 =C3=B5hkard!=
+tere tere =FF=00 =10=C3=B5
+hk
+a
+rd!=
 
 --Apple-Mail=_D94C3481-3060-403D-A6A3-83F7AF9AB96F--
