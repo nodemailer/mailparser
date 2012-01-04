@@ -3,16 +3,25 @@
 MailParser
 ==========
 
-**NB!** This version of MailParser is incompatible with pre 0.2.0, do not upgrade from 0.1.x without updating your code, the API is totally different. Also if the source is coming directly from SMTP you need to unescape dots in the beginning of the lines yourself!
+**NB!** This version of MailParser is incompatible with pre 0.2.0, do 
+not upgrade from 0.1.x without updating your code, the API is totally 
+different. Also if the source is coming directly from SMTP you need to 
+unescape dots in the beginning of the lines yourself!
 
 
 
-**MailParser** is an asynchronous and non-blocking parser for [node.js](http://nodejs.org) to parse mime encoded e-mail messages. Handles even large
-attachments with ease - attachments can be parsed in chunks and streamed if needed.
+**MailParser** is an asynchronous and non-blocking parser for 
+[node.js](http://nodejs.org) to parse mime encoded e-mail messages. 
+Handles even large attachments with ease - attachments can be parsed 
+in chunks and streamed if needed.
 
-**MailParser** parses raw source of e-mail messages into a structured object.
+**MailParser** parses raw source of e-mail messages into a structured 
+object.
 
-No need to worry about charsets or decoding *quoted-printable* or *base64* data, **MailParser** (with the help of *node-iconv*) does all of it for you. All the textual output from **MailParser** (subject line, addressee names, message body) is always UTF-8.
+No need to worry about charsets or decoding *quoted-printable* or 
+*base64* data, **MailParser** (with the help of *node-iconv*) does all 
+of it for you. All the textual output from **MailParser** (subject line, 
+addressee names, message body) is always UTF-8.
 
 Installation
 ------------
@@ -30,10 +39,11 @@ Create a new MailParser object
 
     var mailparser = new MailParser();
 
-MailParser object is a writable Stream - you can pipe directly files etc. to it
-or you can send new chunks with `mailparser.write`
+MailParser object is a writable Stream - you can pipe directly 
+files to it or you can send chunks with `mailparser.write`
     
-When the parsing ends an 'end' event is emitted which has an object with parsed e-mail.
+When the parsing ends an 'end' event is emitted which has an 
+object parameter with parsed e-mail structure.
 
     mailparser.on("end", function(mail){
         mail; // object structure for parsed e-mail
@@ -42,8 +52,9 @@ When the parsing ends an 'end' event is emitted which has an object with parsed 
 ### Parsed mail object
 
   * **headers** - an array of headers, in the form of - `[{key: "key", value: "value"}]`
-  * **from** - an array of parsed `From` addresses - `[{address:'sender@example.com',name:'Sender Name'}]`
+  * **from** - an array of parsed `From` addresses - `[{address:'sender@example.com',name:'Sender Name'}]` (should be only one though)
   * **to** - an array of parsed `To` addresses
+  * **cc** - an array of parsed `Cc` addresses
   * **subject** - the subject line
   * **text** - text body
   * **html** - html body
@@ -137,7 +148,8 @@ to the `MailParser` constructor.
         streamAttachments: true
     }
 
-This way there will be no `content` property on final attachment objects (but the other fields will remain).
+This way there will be no `content` property on final attachment objects 
+(but the other fields will remain).
 
 To catch the streams you should listen for `attachment` events on the MailParser
 object. The parameter provided includes file information (`contentType`, 
