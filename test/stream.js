@@ -3,7 +3,7 @@ var MailParser = require("../lib/mailparser").MailParser,
     fs = require("fs");
 
 
-var inp = fs.createReadStream("large.eml"),
+var inp = fs.createReadStream("applequoted.eml"),
     out = new MailParser({
         streamAttachments: true
     });
