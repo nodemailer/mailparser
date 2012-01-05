@@ -1,5 +1,4 @@
 
-
 MailParser
 ==========
 
@@ -22,6 +21,11 @@ No need to worry about charsets or decoding *quoted-printable* or
 *base64* data, **MailParser** (with the help of *node-iconv*) does all 
 of it for you. All the textual output from **MailParser** (subject line, 
 addressee names, message body) is always UTF-8.
+
+Live Demo
+---------
+
+You can test this module in action here: http://node.ee/MailParser/Demo
 
 Installation
 ------------
