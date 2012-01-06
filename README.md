@@ -4,8 +4,7 @@ MailParser
 
 **NB!** This version of MailParser is incompatible with pre 0.2.0, do 
 not upgrade from 0.1.x without updating your code, the API is totally 
-different. Also if the source is coming directly from SMTP you need to 
-unescape dots in the beginning of the lines yourself!
+different.
 
 
 
@@ -41,7 +40,13 @@ Require MailParser module
     
 Create a new MailParser object
 
-    var mailparser = new MailParser();
+    var mailparser = new MailParser([options]);
+
+Options parameter is an object with the following properties:
+
+  * **debug** - if set to true print all incoming lines to console
+  * **streamAttachments** - if set to true, stream attachments instead of including them
+  * **unescapeSMTP** - if set to true replace double dots in the beginning of the file
 
 MailParser object is a writable Stream - you can pipe directly 
 files to it or you can send chunks with `mailparser.write`
@@ -132,14 +137,9 @@ By default attachments will be included in the attachment objects as Buffers.
         content: <Buffer ...>
     }];
 
-The property `generatedFileName` is usually the same but if several different
-attachments with the same name exist, the latter ones names will be modified and
-the generated name will be saved to `generatedFileName`
-
-    file.txt
-    file-1.txt
-    file-2.txt
-    ...
+The property `generatedFileName` is usually the same as `fileName` but if several
+different attachments with the same name exist or there is no `fileName` set, an
+unique name is generated.
 
 Property `content` is always a Buffer object (or SlowBuffer on some occasions)
 
