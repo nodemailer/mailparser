@@ -1,97 +1,273 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		
+		<title>undefined 
+            
+            : File Index : JsDoc Reference</title>
 		<meta name="generator" content="JsDoc Toolkit" />
-		<title>File Index | JsDoc Reference</title>
+		
+		<style type="text/css">
+		/* default.css */
+body {
+	font: 13px Verdana, Arial, sans-serif;
+    padding: 0;
+    margin: 15px;
+}
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-		<meta name="mobileoptimized" content="0" />
-	
-		<link rel="stylesheet" href="css/all.css" media="all" />
-		<link rel="stylesheet" href="css/handheld.css" media="only screen and (max-width: 660px)" />
-		<link rel="stylesheet" href="css/handheld.css" media="handheld" />
-		<link rel="stylesheet" href="css/screen.css" media="screen and (min-width: 661px)" />
+.header {
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+a:link, a:visited {
+    color: #00A;
+}
+a:hover, a:active {
+    color: #00F;
+}
+h1 {
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+}
+h3.projectTitle {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0;
+}
+h1.classTitle {
+	font-size:170%;
+	line-height:130%;
+}
 
-		<script src="javascript/all.js"></script>
-		<!--[if lt IE 9]>
-			<script src="javascript/html5.js"></script>
-		<![endif]-->
+hr {
+	border: none 0;
+	border-top: 1px solid #627C9D;
+	height: 1px;
+    margin: 1em 0;
+}
+
+pre.code {
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+    overflow: auto;
+}
+
+#index {
+	float: left;
+	width: 220px;
+	position: absolute;
+    margin-bottom: 15px;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content {
+	margin-left: 260px;
+	width: 600px;
+}
+
+#index img {
+    margin: 15px 0;
+    border: 1px solid #627C9D;
+}
+
+ul.classList {
+	list-style-type: none;
+	padding: 0;
+    margin: 0;
+	font-size: 11px;
+}
+
+ul.classList li {
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+h2 , div.sectionTitle { 
+    font-weight: bold;
+	font-size: 18px;
+	padding: 15px 0 10px 0;
+    margin: 0;
+}
+div.sectionTitle {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #627C9D;
+}
+
+code {
+	font-family: "Lucida Console", "Courier New", Courier, monospace; 
+	font-size: 12px;
+}
+pre {
+	font-family: "Lucida Console", "Courier New", Courier, monospace; 
+	font-size: 12px;
+}
+div.toplinks {
+    font-size: 11px;
+    padding-top: 8px;
+}
+
+td.attributes, .fixedFont
+{
+	font-family: "Lucida Console", "Courier New", Courier, monospace; 
+	font-size: 12px;
+}
+
+/* tables */
+.summaryTable {
+    text-align: left;
+	margin: 10px 0;
+	border: 1px solid #999999;
+	width: 100%;
+}
+.summaryTable th {
+	color: #FFFFFF;
+	background-color: #627C9D;
+	white-space: nowrap;
+    padding: 3px 10px;
+}
+.summaryTable th.param {
+	color: #000;
+	background-color: #F2F2F2;
+	white-space: nowrap;
+    padding: 3px 10px;
+}
+.summaryTable td {
+	border-top: #999999 1px solid;
+	vertical-align: top;
+    padding: 5px 10px;
+}
+.summaryTable.params {
+    width: auto;
+}
+.row0 {
+	background-color: #F2F2F2;
+}
+.row1 {
+	background-color: #FFFFFF;
+}
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList dt
+{
+    float: left;
+    clear: both;
+	font-weight: bold;
+	margin-left: 0;
+}
+.detailList dd { 
+	padding-bottom: .5em;
+    margin-left: 7em; 
+}
+.detailList dd.tight {
+    padding-bottom: 0;
+}
+.membertitle {
+    font-size: 1.2em;
+    padding: .5em;
+    margin: 2.5em 0px 0.2em;
+    background: #EEF;
+    border-bottom: 3px double #999;
+}
+.membername {
+    font-weight: bold;
+}
+.datatype {
+    color: #999;
+}
+.paramname {
+    font-weight: bold;
+}
+.paramconfig {
+    color: #999;
+}
+.optional {
+	font-style: italic;
+}
+.defaultvalue {
+	font-style: italic;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+div.indexClass {
+    border-top: 1px solid #7F8FB1;
+    margin-bottom: .5em;
+}
+
+/* syntax coloring for examples */
+.KEYW {color: #339; font-weight: bold;}
+.COMM {color: #999; font-style: italic;}
+.NUMB {color: #933;}
+.STRN {color: #393;}
+.REGX {color: #993;}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
 	</head>
-
-	<body>
-
-<div class="index">
-	<div class="menu">
-		<div class="indexLinks">
-			<a href="index.html">Classes</a>
-			<a href="files.html">Files</a>
-		</div>
 	
-		<h2 class="heading1">Classes</h2>
-		
-		<input type="text" name="classFilter" class="classFilter" id="ClassFilter" placeholder="Filter"></input>
-		
-		<nav>
-			<ul class="classList" id="ClassList">
-				
-					<li><a href="symbols/_global_.html">_global_</a></li>
-				
-					<li><a href="symbols/MailParser.html">MailParser</a></li>
-				
-			</ul>
-		</nav>
-	</div>
-	<div class="fineprint" style="clear:both">
-		<footer>
-			
-			Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0<br />
-			Template: <a href="http://www.thebrightlines.com/2010/05/06/new-template-for-jsdoctoolkit-codeview/" target="_blank">Codeview</a> 1.2<br />
-			Generated on:
-			<time datetime='2012-0-6' pubdate>2012-0-6 13:05</time>
-		</footer>
-	</div>
+	<body>
+		<div id="header">
 </div>
-
-<div class="index indexStatic"></div>
-
-<div class="content">
-	<div class="innerContent">
-		<article>
-			<h1 class="classTitle"><span>File Index</span></h1>
+		
+		<div id="index">
+            <h3 class="projectTitle">undefined 
+                
+            </h3>
+            <div class="toplinks"><a href="index.html">Class Index</a>
+| File Index</div>
+            
+			<ul class="classList">
+	
+	<li><i><a href="symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="symbols/MailParser.html">MailParser</a></li>
+	
+</ul>
+		</div>
+		
+		<div id="content">
+			<h1 class="classTitle">File Index</h1>
+            
+            <hr />
 			
-			<ul class="fileList" id="FileList">
-				
-					<li>
-						<h2 class="filename"><a href="symbols/src/node_mailparser_lib_mailparser.js.html">mailparser.js</a></h2>
-						
-						
-This is the main file for the MailParser library to parse raw e-mail data
-						
-						<dl class="detailList">
-							
-								<dt class="heading">Author:</dt>
-								<dd><a href="mailto:andris@node.ee">Andris Reinman</a></dd>
-							
-							
-							
-								<dt class="heading">Version:</dt>
-								<dd>0.2.6</dd>
-							
-							
-							
-							
-						</dl>
-					</li>
-				
-			</ul>
-		</article>
-	</div>
-</div>
-		<script type="text/javascript">
-			wbos.CssTools.MediaQueryFallBack.LoadCss('css/screen.css', 'css/handheld.css', 660)
-			codeview.classFilter.Init()
-		</script>
+            <table class="summaryTable" cellspacing="0" cellpadding="3"> 
+                <tr> 
+                    <th width="20%">File</th><th width="80%">Overview</th> 
+                </tr> 
+                
+                    <tr class="row0"> 
+                        <td><a href="symbols/src/node_mailparser_lib_mailparser.js.html">mailparser.js</a></td>
+                        <td>
+This is the main file for the MailParser library to parse raw e-mail data</td> 
+                    </tr> 
+                
+            </table>
+
+		</div>
+		<div class="fineprint" style="clear:both">
+			
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 13:28:06 GMT+0200 (EET)
+		</div>
 	</body>
 </html>

@@ -1,238 +1,299 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
-		<title>MailParser | JsDoc Reference</title>
+		
+		<title>undefined 
+                
+                : MailParser : JsDoc Reference</title>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-		<meta name="mobileoptimized" content="0" />
-	
-		<link rel="stylesheet" href="../css/all.css" media="all" />
-		<link rel="stylesheet" href="../css/handheld.css" media="only screen and (max-width: 660px)" />
-		<link rel="stylesheet" href="../css/handheld.css" media="handheld" />
-		<link rel="stylesheet" href="../css/screen.css" media="screen and (min-width: 661px)" />
+		<style type="text/css">
+			/* default.css */
+body {
+	font: 13px Verdana, Arial, sans-serif;
+    padding: 0;
+    margin: 15px;
+}
 
-		<script src="../javascript/all.js"></script>
-		<!--[if lt IE 9]>
-			<script src="../javascript/html5.js"></script>
-		<![endif]-->
+.header {
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+a:link, a:visited {
+    color: #00A;
+}
+a:hover, a:active {
+    color: #00F;
+}
+h1 {
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+}
+h3.projectTitle {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0;
+}
+h1.classTitle {
+	font-size:170%;
+	line-height:130%;
+}
+
+hr {
+	border: none 0;
+	border-top: 1px solid #627C9D;
+	height: 1px;
+    margin: 1em 0;
+}
+
+pre.code {
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+    overflow: auto;
+}
+
+#index {
+	float: left;
+	width: 220px;
+	position: absolute;
+    margin-bottom: 15px;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content {
+	margin-left: 260px;
+	width: 600px;
+}
+
+#index img {
+    margin: 15px 0;
+    border: 1px solid #627C9D;
+}
+
+ul.classList {
+	list-style-type: none;
+	padding: 0;
+    margin: 0;
+	font-size: 11px;
+}
+
+ul.classList li {
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+h2 , div.sectionTitle { 
+    font-weight: bold;
+	font-size: 18px;
+	padding: 15px 0 10px 0;
+    margin: 0;
+}
+div.sectionTitle {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #627C9D;
+}
+
+code {
+	font-family: "Lucida Console", "Courier New", Courier, monospace; 
+	font-size: 12px;
+}
+pre {
+	font-family: "Lucida Console", "Courier New", Courier, monospace; 
+	font-size: 12px;
+}
+div.toplinks {
+    font-size: 11px;
+    padding-top: 8px;
+}
+
+td.attributes, .fixedFont
+{
+	font-family: "Lucida Console", "Courier New", Courier, monospace; 
+	font-size: 12px;
+}
+
+/* tables */
+.summaryTable {
+    text-align: left;
+	margin: 10px 0;
+	border: 1px solid #999999;
+	width: 100%;
+}
+.summaryTable th {
+	color: #FFFFFF;
+	background-color: #627C9D;
+	white-space: nowrap;
+    padding: 3px 10px;
+}
+.summaryTable th.param {
+	color: #000;
+	background-color: #F2F2F2;
+	white-space: nowrap;
+    padding: 3px 10px;
+}
+.summaryTable td {
+	border-top: #999999 1px solid;
+	vertical-align: top;
+    padding: 5px 10px;
+}
+.summaryTable.params {
+    width: auto;
+}
+.row0 {
+	background-color: #F2F2F2;
+}
+.row1 {
+	background-color: #FFFFFF;
+}
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList dt
+{
+    float: left;
+    clear: both;
+	font-weight: bold;
+	margin-left: 0;
+}
+.detailList dd { 
+	padding-bottom: .5em;
+    margin-left: 7em; 
+}
+.detailList dd.tight {
+    padding-bottom: 0;
+}
+.membertitle {
+    font-size: 1.2em;
+    padding: .5em;
+    margin: 2.5em 0px 0.2em;
+    background: #EEF;
+    border-bottom: 3px double #999;
+}
+.membername {
+    font-weight: bold;
+}
+.datatype {
+    color: #999;
+}
+.paramname {
+    font-weight: bold;
+}
+.paramconfig {
+    color: #999;
+}
+.optional {
+	font-style: italic;
+}
+.defaultvalue {
+	font-style: italic;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+div.indexClass {
+    border-top: 1px solid #7F8FB1;
+    margin-bottom: .5em;
+}
+
+/* syntax coloring for examples */
+.KEYW {color: #339; font-weight: bold;}
+.COMM {color: #999; font-style: italic;}
+.NUMB {color: #933;}
+.STRN {color: #393;}
+.REGX {color: #993;}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
 	</head>
 
 	<body>
-
-<div class="index">
-	<div class="menu">
-		<div class="indexLinks">
-			<a href="../index.html">Classes</a>
-			<a href="../files.html">Files</a>
-		</div>
-	
-		<h2 class="heading1">Classes</h2>
-		
-		<input type="text" name="classFilter" class="classFilter" id="ClassFilter" placeholder="Filter"></input>
-		
-		<nav>
-			<ul class="classList" id="ClassList">
-				
-					<li><a href="../symbols/_global_.html">_global_</a></li>
-				
-					<li><a href="../symbols/MailParser.html">MailParser</a></li>
-				
-			</ul>
-		</nav>
-	</div>
-	<div class="fineprint" style="clear:both">
-		<footer>
-			
-			Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0<br />
-			Template: <a href="http://www.thebrightlines.com/2010/05/06/new-template-for-jsdoctoolkit-codeview/" target="_blank">Codeview</a> 1.2<br />
-			Generated on:
-			<time datetime='2012-0-6' pubdate>2012-0-6 13:05</time>
-		</footer>
-	</div>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
 </div>
+		<!-- end static/header.html -->
 
-<div class="index indexStatic"></div>
-
-<div class="content">
-	<div class="innerContent">
-		<article>
-			<header>
-				<h1 class="classTitle">
-					
-					Class <span>MailParser</span>
-				</h1>
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+            <h3 class="projectTitle">undefined 
+                
+            </h3>
+            <div class="toplinks"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+            
+			<!-- begin publish.classesIndex -->
+			<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/MailParser.html">MailParser</a></li>
+	
+</ul>
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
 				
-				<div class="intro">
-					<p class="description summary">
-						
-					</p>
-						
-					
-						<ul class="summary">
-							
-							
-							
-								<li>Defined in: <a href="../symbols/src/node_mailparser_lib_mailparser.js.html">mailparser.js</a></li>
-							
-							
-						</ul>
-					
-				</div>
-			</header>
-			
-			
-				<section>
-					<div class="props">
-						<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class MailParser.">
-							<caption class="sectionTitle">Class Summary</caption>
-							<thead>
-								<tr>
-									<th scope="col">Constructor Attributes</th>
-									<th scope="col">Constructor Name and Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td class="attributes">&nbsp;</td>
-									<td class="nameDescription" >
-										<div class="fixedFont">
-											<b><a href="../symbols/MailParser.html#constructor">MailParser</a></b>(options)
-										</div>
-										<div class="description"><p>Creates instance of MailParser which in turn extends Stream</p>
+				Class MailParser
+			</h1>
 
-<p>Options object has the following properties:</p>
+<!-- ============================== class summary ========================== -->			
+            <dl class="detailList">
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                    <dt>Defined in:</dt>
+                    <dd><a href="../symbols/src/node_mailparser_lib_mailparser.js.html">mailparser.js</a></dd>
+                
+            
+                
+            </dl>
 
-<ul>
-  <li><b>debug</b> - if set to true print all incoming lines to console</li>
-  <li><b>streamAttachments</b> - if set to true, stream attachments instead of including them</li>
-  <li><b>unescapeSMTP</b> - if set to true replace double dots in the beginning of the file</li>
-</ul></div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</section>
-			
-			
-			
+            <p class="description">
 				
-				<section>
-					
-						<nav>
-							<div class="props">
-								<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class MailParser.">
-									<caption class="sectionTitle">Field Summary</caption>
-									
-									<thead>
-										<tr>
-											<th scope="col">Field Attributes</th>
-											<th scope="col">Field Name and Description</th>
-										</tr>
-									</thead>
-									
-									<tbody>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont">
-													<b><a href="../symbols/MailParser.html#mimeTree">mimeTree</a></b>
-													</div>
-													<div class="description"></div>
-												</td>
-											</tr>
-										
-									</tbody>
-								</table>
-							</div>
-						</nav>
-					
-					
-					
-				</section>
-			
-	<!--
-	#### METHODS SUMMARY
-	-->
-			
-				<section>
-					
-					
-					<div class="props">
-						<h2 class="sectionTitle">Method Summary</h2>
-						
-						
-							<nav>
-								<table class="summaryTable" id="MethodsList" cellspacing="0" summary="A summary of the methods documented in the class MailParser.">
-									<thead>
-										<tr>
-											<th scope="col">Method Attributes</th>
-											<th scope="col">Method Name and Description</th>
-										</tr>
-									</thead>
-									
-									<tbody>
-										
-										
-											<tr
-												 class='item0'
-											>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/MailParser.html#end">end</a></b>(chunk, encoding)
-													</div>
-													<div class="description"><p>Terminates the MailParser stream</p> 
+			</p>
+            
+            
 
-<p>If "chunk" is set, writes it to the Stream before terminating.</div>
-												</td>
-											</tr>
-										
-											<tr
-												 class='item1'
-											>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/MailParser.html#write">write</a></b>(chunk, encoding)
-													</div>
-													<div class="description">Writes a value to the MailParser stream</div>
-												</td>
-											</tr>
-										
-									</tbody>
-								</table>
-							</nav>
-						
-					
-						
-					</div>
-				</section>
+<!-- ============================== constructor summary ==================== -->			
 			
-			
-	<!--
-	#### EVENTS SUMMARY
-	-->
-			
-	<!--
-	#### CONSTRUCTOR DETAILS
-	-->
-			
-				<section>
-					<div class="details props">
-						<div class="innerProps">
-							<h2 class="sectionTitle" id="constructor">
-								Class Detail
-							</h2>
-							
-							<div class="fixedFont">
-								<b>MailParser</b>(options)
-							</div>
-							
-							<div class="description">
-								<p>Creates instance of MailParser which in turn extends Stream</p>
+            <h2>Constructor</h2>
+                <div class="fixedFont">
+                    <b><a href="../symbols/MailParser.html#constructor">MailParser</a></b>(options)
+                </div>
+                <div class="description">
+                    
+                    
+                    <p>Creates instance of MailParser which in turn extends Stream</p>
 
 <p>Options object has the following properties:</p>
 
@@ -241,214 +302,2585 @@
   <li><b>streamAttachments</b> - if set to true, stream attachments instead of including them</li>
   <li><b>unescapeSMTP</b> - if set to true replace double dots in the beginning of the file</li>
 </ul>
-								
-							</div>
-							
-							
-						
-							
-								<dl class="detailList params">
-									<dt class="heading">Parameters:</dt>
-									
-										<dt>
-											<span class="light fixedFont">{Object}</span>  <b>options</b>
-											<i>Optional</i>
-										</dt>
-										<dd>Optional options object</dd>
-									
-								</dl>
-							
-							
-							
-						</div>
-					</div>
-				</section>
+                </div>
 			
-	<!--
-	#### FIELD DETAILS
-	-->
+            
+            
+
+
+<!-- ============================== static properties summary ===================== -->
 			
-				<section>
-					<div class="details props">
-						<div class="innerProps">
-							<h2 class="sectionTitle">
-								Field Detail
-							</h2>
-							
-							
-								<div class="fixedFont heading" id="mimeTree">
-									<span class='lighter'>
-									
-									</span>
-									
-									
-									
-									<b>mimeTree</b>							
-								</div>
-								
-								<div class="description">
-									
-									
-									
-									
-								</div>
-								
-								
-									
-								
-								
-							
-						</div>
-					</div>
-				</section>
+				
+				
 			
-	<!--
-	#### METHOD DETAILS
-	-->		
+
+<!-- ============================== static methods summary ======================== -->
 			
-				<section>
-					<div class="details props">
-						<div class="innerProps">
-							<h2 class="sectionTitle">
-								Method Detail
-							</h2>
-							
-							<ul class="methodDetail" id="MethodDetail">
-								
-								
-									<li 
-										 class='item0'
-									>
-										<div class="fixedFont heading" id="end">
-											<span class='lighter'>
-											
-											</span>
-											
-											
-											
-											<b>end</b>(chunk, encoding)
-										</div>
-										
-										<div class="description">
-											<p>Terminates the MailParser stream</p> 
+				
+				
+			
+
+
+<!-- ============================== instance properties summary ===================== -->
+			
+				
+				
+                    <h2>Fields</h2>
+                    <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col" width="100%">Field</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_currentNode">_currentNode</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    Current node of the multipart mime tree that is being processed
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_fileNames">_fileNames</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    An object of already used attachment filenames
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_iconv">_iconv</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    Cache for iconv converter objects
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_linecounter">_linecounter</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    Line counter for debugging
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_multipartTree">_multipartTree</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    An array of multipart nodes
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_remainder">_remainder</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    The remaining data from the previos chunk which is waiting to be processed
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_state">_state</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    Indicates current state the parser is in
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#mailData">mailData</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                    
+                    
+                    This is the final mail structure object that is returned to the client
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#mimeTree">mimeTree</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                    
+                    
+                    The complete tree structure of the e-mail
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#options">options</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                    
+                    
+                    Options object
+                </div>
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+				
+			
+
+<!-- ============================== instance methods summary ======================== -->
+			
+				
+				
+                    <h2>Methods</h2>
+                    <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col" width="100%">Method</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_convertString">_convertString</a></b>(value, fromCharset, toCharset)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Converts a string from one charset to another</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_createMimeNode">_createMimeNode</a></b>(parentNode)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Creates an empty node element for the mime tree</p>
+
+<p>Created element includes parentNode property and a childNodes array.
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_encodeString">_encodeString</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Encodes a header string to UTF-8</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_finalizeContents">_finalizeContents</a></b>()
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Finalizes a node processing</p>
+
+<p>If the node is a text/plain or text/html, convert it to UTF-8 encoded string
+If it is an attachment, convert it to a Buffer or if an attachment stream is
+set up, close the stream</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_generateFileName">_generateFileName</a></b>(fileName)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Generates a context unique filename for an attachment</p>
+
+<p>If a filename already exists, append a number to it</p>
+
+<ul>
+    <li>file.txt</li>
+    <li>file-1.txt</li>
+    <li>file-2.txt</li>
+</ul>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_handleAttachmentLine">_handleAttachmentLine</a></b>(line)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes a line in an attachment node</p>
+
+<p>If a stream is set up for the attachment write the line to the
+stream as a Buffer object, otherwise append it to the content property</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_handleTextLine">_handleTextLine</a></b>(line)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes a line in text/html or text/plain node</p>
+
+<p>Append the line to the content property</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_parseContentDisposition">_parseContentDisposition</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Parses Content-Disposition header field value</p>
+
+<p>Fetches filename to current node meta object</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_parseContentType">_parseContentType</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Parses a Content-Type header field value</p>
+
+<p>Fetches additional properties from the content type (charset etc.
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_parseHeaderLineWithParams">_parseHeaderLineWithParams</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Splits a header value into key-value pairs</p>
+
+<p>Splits on <code>;</code> - the first value will be set as <code>defaultValue</code> property and will
+not be handled, others will be split on <code>=</code> to key-value pairs</p>
+
+<p>For example <code>content-type: text/plain; charset=utf-8</code> will become:</p>
+
+<pre>
+{
+    defaultValue: "text/plain",
+    charset: "utf-8"
+}
+</pre>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_parsePriority">_parsePriority</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Parses the priority of the e-mail</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_process">_process</a></b>(finalPart)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes the data written to the MailParser stream</p>
+
+<p>The data is split into lines and each line is processed individually.
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_processHeaderLine">_processHeaderLine</a></b>(pos)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes a complete unfolded header line</p>
+
+<p>Processes a line from current node headers array and replaces its value.
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_processMimeNode">_processMimeNode</a></b>(node, level)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes of a node in the mime tree</p>
+
+<p>Pushes the node into appropriate <code>this.mailData</code> array (<code>text/html</code> to <code>this.mailData.html</code> array etc)</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_processMimeTree">_processMimeTree</a></b>()
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes the mime tree</p>
+
+<p>Finds text parts and attachments from the tree.
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_processStateBody">_processStateBody</a></b>(line)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes a line while in body state</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_processStateHeader">_processStateHeader</a></b>(line)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Processes a line while in header state</p>
+
+<p>If header state ends and body starts, detect if the contents is an attachment
+and create a stream for it if needed</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_replaceMimeWords">_replaceMimeWords</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Replaces mime words in a string with UTF-8 encoded strings</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_trimQuotes">_trimQuotes</a></b>(value)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Removes enclosing quotes ("", '', &lt;&gt;) from a string</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_walkMimeTree">_walkMimeTree</a></b>(node, level)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Walks the mime tree and runs processMimeNode on each node of the tree</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#end">end</a></b>(chunk, encoding)
+                
+                </div>
+                <div class="description">
+                    
+                    
+                    
+                    <p>Terminates the MailParser stream</p> 
+
+<p>If "chunk" is set, writes it to the Stream before terminating.
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#write">write</a></b>(chunk, encoding)
+                
+                </div>
+                <div class="description">
+                    
+                    
+                    
+                    <p>Writes a value to the MailParser stream<p>
+                </div>
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+				
+			
+            
+<!-- ============================== events summary ======================== -->
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont membername">
+						<b>MailParser</b>(options)
+				</div>
+                
+                
+				
+                
+                    <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname optional">options</td>
+            <td class="datatype">
+                
+                    {Object}
+                
+            </td>
+            <td width="100%">
+                Optional options object
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+                
+                
+                <dl class="detailList">
+					
+					
+					
+					
+                </dl>
+
+			</div>
+			
+
+<!-- ============================== static field details ========================== -->		
+			
+
+<!-- ============================== static method details ========================= -->		
+			
+            
+<!-- ============================== instance field details ========================== -->		
+			
+                
+				
+                    <div class="sectionTitle">Field Details</div>
+                    
+    <a name="_currentNode"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_currentNode</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        Current node of the multipart mime tree that is being processed
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_fileNames"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_fileNames</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        An object of already used attachment filenames
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_iconv"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_iconv</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        Cache for iconv converter objects
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_linecounter"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_linecounter</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        Line counter for debugging
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_multipartTree"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_multipartTree</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        An array of multipart nodes
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_remainder"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_remainder</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        The remaining data from the previos chunk which is waiting to be processed
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_state"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_state</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        Indicates current state the parser is in
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="mailData"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">mailData</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+        
+        
+        This is the final mail structure object that is returned to the client
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="mimeTree"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">mimeTree</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+        
+        
+        The complete tree structure of the e-mail
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="options"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">options</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+        
+        
+        Options object
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+				
+			
+
+<!-- ============================== static method details ========================= -->		
+			
+                
+				
+                    <div class="sectionTitle">Method Details</div>
+                    
+    <a name="_convertString"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_convertString</span><span class="membersignature">(value, fromCharset, toCharset)</span>
+    
+    <span class="datatype">:{Buffer}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Converts a string from one charset to another</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {Buffer|String}
+                
+            </td>
+            <td width="100%">
+                A String to be converted
+                
+            </td>
+        </tr>
+    
+        <tr>
+            
+            <td class="paramname ">fromCharset</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                source charset
+                
+            </td>
+        </tr>
+    
+        <tr>
+            
+            <td class="paramname optional">toCharset</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                destination charset
+                
+                    <div class="defaultvalue">Default: "UTF-8"</div>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Buffer}</span> Converted string as a Buffer (or SlowBuffer)</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_createMimeNode"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_createMimeNode</span><span class="membersignature">(parentNode)</span>
+    
+    <span class="datatype">:{Object}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Creates an empty node element for the mime tree</p>
+
+<p>Created element includes parentNode property and a childNodes array. This is
+needed to later walk the whole mime tree</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname optional">parentNode</td>
+            <td class="datatype">
+                
+                    {Object}
+                
+            </td>
+            <td width="100%">
+                the parent object for the created node
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Object}</span> node element for the mime tree</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_encodeString"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_encodeString</span><span class="membersignature">(value)</span>
+    
+    <span class="datatype">:{String}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Encodes a header string to UTF-8</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                String to be encoded
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{String}</span> UTF-8 encoded string</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_finalizeContents"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_finalizeContents</span><span class="membersignature">()</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Finalizes a node processing</p>
+
+<p>If the node is a text/plain or text/html, convert it to UTF-8 encoded string
+If it is an attachment, convert it to a Buffer or if an attachment stream is
+set up, close the stream</p>
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_generateFileName"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_generateFileName</span><span class="membersignature">(fileName)</span>
+    
+    <span class="datatype">:{String}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Generates a context unique filename for an attachment</p>
+
+<p>If a filename already exists, append a number to it</p>
+
+<ul>
+    <li>file.txt</li>
+    <li>file-1.txt</li>
+    <li>file-2.txt</li>
+</ul>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">fileName</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                source filename
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{String}</span> generated filename</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_handleAttachmentLine"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_handleAttachmentLine</span><span class="membersignature">(line)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes a line in an attachment node</p>
+
+<p>If a stream is set up for the attachment write the line to the
+stream as a Buffer object, otherwise append it to the content property</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">line</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                A line to be processed
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_handleTextLine"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_handleTextLine</span><span class="membersignature">(line)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes a line in text/html or text/plain node</p>
+
+<p>Append the line to the content property</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">line</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                A line to be processed
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_parseContentDisposition"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_parseContentDisposition</span><span class="membersignature">(value)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Parses Content-Disposition header field value</p>
+
+<p>Fetches filename to current node meta object</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                A Content-Disposition header field
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_parseContentType"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_parseContentType</span><span class="membersignature">(value)</span>
+    
+    <span class="datatype">:{Object}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Parses a Content-Type header field value</p>
+
+<p>Fetches additional properties from the content type (charset etc.) and fills
+current node meta object with this data</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                Content-Type string
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Object}</span> parsed contenttype object</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_parseHeaderLineWithParams"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_parseHeaderLineWithParams</span><span class="membersignature">(value)</span>
+    
+    <span class="datatype">:{Object}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Splits a header value into key-value pairs</p>
+
+<p>Splits on <code>;</code> - the first value will be set as <code>defaultValue</code> property and will
+not be handled, others will be split on <code>=</code> to key-value pairs</p>
+
+<p>For example <code>content-type: text/plain; charset=utf-8</code> will become:</p>
+
+<pre>
+{
+    defaultValue: "text/plain",
+    charset: "utf-8"
+}
+</pre>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                A string to be splitted into key-value pairs
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Object}</span> a key-value object, with defaultvalue property</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_parsePriority"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_parsePriority</span><span class="membersignature">(value)</span>
+    
+    <span class="datatype">:{String}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Parses the priority of the e-mail</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                The priority value
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{String}</span> priority string low|normal|high</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_process"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_process</span><span class="membersignature">(finalPart)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes the data written to the MailParser stream</p>
+
+<p>The data is split into lines and each line is processed individually. Last
+line in the batch is preserved as a remainder since it is probably not a
+complete line but just the beginning of it. The remainder is later prepended
+to the next batch of data.</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname optional">finalPart</td>
+            <td class="datatype">
+                
+                    {Boolean}
+                
+            </td>
+            <td width="100%">
+                if set to true indicates that this is the last part of the stream
+                
+                    <div class="defaultvalue">Default: false</div>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_processHeaderLine"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_processHeaderLine</span><span class="membersignature">(pos)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes a complete unfolded header line</p>
+
+<p>Processes a line from current node headers array and replaces its value.
+Input string is in the form of "X-Mailer: PHP" and its replacement would be
+an object <code>{key: "x-mailer", value: "PHP"}</code></p>
+
+<p>Additionally node meta object will be filled also, for example with data from
+To: From: Cc: etc fields.</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">pos</td>
+            <td class="datatype">
+                
+                    {Number}
+                
+            </td>
+            <td width="100%">
+                Which header element (from an header lines array) should be processed
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_processMimeNode"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_processMimeNode</span><span class="membersignature">(node, level)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes of a node in the mime tree</p>
+
+<p>Pushes the node into appropriate <code>this.mailData</code> array (<code>text/html</code> to <code>this.mailData.html</code> array etc)</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">node</td>
+            <td class="datatype">
+                
+                    {Object}
+                
+            </td>
+            <td width="100%">
+                A mime tree node
+                
+            </td>
+        </tr>
+    
+        <tr>
+            
+            <td class="paramname optional">level</td>
+            <td class="datatype">
+                
+                    {Number}
+                
+            </td>
+            <td width="100%">
+                current depth
+                
+                    <div class="defaultvalue">Default: 0</div>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_processMimeTree"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_processMimeTree</span><span class="membersignature">()</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes the mime tree</p>
+
+<p>Finds text parts and attachments from the tree. If there's several text/plain
+or text/html parts, push the ones from the lower parts of the tree to the
+alternatives array</p>
+
+<p>Emits "end" when finished</p>
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_processStateBody"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_processStateBody</span><span class="membersignature">(line)</span>
+    
+    <span class="datatype">:{Boolean}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes a line while in body state</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">line</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                The contents of a line to be processed
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Boolean}</span> If body ends return true</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_processStateHeader"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_processStateHeader</span><span class="membersignature">(line)</span>
+    
+    <span class="datatype">:{Boolean}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Processes a line while in header state</p>
+
+<p>If header state ends and body starts, detect if the contents is an attachment
+and create a stream for it if needed</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">line</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                The contents of a line to be processed
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Boolean}</span> If state changes to body retuns true</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_replaceMimeWords"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_replaceMimeWords</span><span class="membersignature">(value)</span>
+    
+    <span class="datatype">:{String}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Replaces mime words in a string with UTF-8 encoded strings</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                String to be converted
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{String}</span> converted string</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_trimQuotes"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_trimQuotes</span><span class="membersignature">(value)</span>
+    
+    <span class="datatype">:{String}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Removes enclosing quotes ("", '', &lt;&gt;) from a string</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">value</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                String to be converted
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{String}</span> converted string</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_walkMimeTree"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_walkMimeTree</span><span class="membersignature">(node, level)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Walks the mime tree and runs processMimeNode on each node of the tree</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">node</td>
+            <td class="datatype">
+                
+                    {Object}
+                
+            </td>
+            <td width="100%">
+                A mime tree node
+                
+            </td>
+        </tr>
+    
+        <tr>
+            
+            <td class="paramname optional">level</td>
+            <td class="datatype">
+                
+                    {Number}
+                
+            </td>
+            <td width="100%">
+                current depth
+                
+                    <div class="defaultvalue">Default: 0</div>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="end"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">end</span><span class="membersignature">(chunk, encoding)</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+        
+        
+        <p>Terminates the MailParser stream</p> 
 
 <p>If "chunk" is set, writes it to the Stream before terminating.</p>
-											
-											
-											
-											
-										</div>
-										
-										
-										
-										
-											<dl class="detailList params">
-												<dt class="heading">Parameters:</dt>
-												
-													<dt>
-														<span class="light fixedFont">{Buffer|String}</span> <b>chunk</b>
-														
-													</dt>
-													<dd>The data to be written to the MailParser stream</dd>
-												
-													<dt>
-														<span class="light fixedFont">{String}</span> <b>encoding</b>
-														<i>Optional</i>
-													</dt>
-													<dd>The encoding to be used when "chunk" is a string</dd>
-												
-											</dl>
-										
-										
-										
-										<div class="hr"></div>
-									</li>
-								
-									<li 
-										 class='item1'
-									>
-										<div class="fixedFont heading" id="write">
-											<span class='lighter'>
-											
-											</span>
-											
-											<span class="light">{Boolean}</span>
-											
-											<b>write</b>(chunk, encoding)
-										</div>
-										
-										<div class="description">
-											Writes a value to the MailParser stream
-											
-											
-											
-											
-										</div>
-										
-										
-										
-										
-											<dl class="detailList params">
-												<dt class="heading">Parameters:</dt>
-												
-													<dt>
-														<span class="light fixedFont">{Buffer|String}</span> <b>chunk</b>
-														
-													</dt>
-													<dd>The data to be written to the MailParser stream</dd>
-												
-													<dt>
-														<span class="light fixedFont">{String}</span> <b>encoding</b>
-														<i>Optional</i>
-													</dt>
-													<dd>The encoding to be used when "chunk" is a string</dd>
-												
-											</dl>
-										
-										
-										
-											<dl class="detailList nomargin">
-											
-												
-												
-												
-												
-												
-												
-												
-													<dt class="heading">Returns:</dt>
-													
-														<dd><span class="light fixedFont">{Boolean}</span> Returns true</dd>
-													
-												
-												
-												
-												
-												
-											
-											</dl>
-										
-										
-									</li>
-								
-							</ul>
-						</div>
-					</div>
-				</section>
-			
-			
-	<!--
-	#### EVENT DETAILS
-	-->		
-			
-		</article>
-	</div>
-</div>
+    </div>
+    
+    
 
-		<script type="text/javascript">
-			wbos.CssTools.MediaQueryFallBack.LoadCss('../css/screen.css', '../css/handheld.css', 660)
-			codeview.classFilter.Init()
-		</script>
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">chunk</td>
+            <td class="datatype">
+                
+                    {Buffer|String}
+                
+            </td>
+            <td width="100%">
+                The data to be written to the MailParser stream
+                
+            </td>
+        </tr>
+    
+        <tr>
+            
+            <td class="paramname optional">encoding</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                The encoding to be used when "chunk" is a string
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="write"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">write</span><span class="membersignature">(chunk, encoding)</span>
+    
+    <span class="datatype">:{Boolean}</span>
+    </div>
+    
+    <div class="description">
+        
+        
+        
+        <p>Writes a value to the MailParser stream<p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">chunk</td>
+            <td class="datatype">
+                
+                    {Buffer|String}
+                
+            </td>
+            <td width="100%">
+                The data to be written to the MailParser stream
+                
+            </td>
+        </tr>
+    
+        <tr>
+            
+            <td class="paramname optional">encoding</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                The encoding to be used when "chunk" is a string
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{Boolean}</span> Returns true</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+			
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 13:28:06 GMT+0200 (EET)
+		</div>
 	</body>
 </html>
-
