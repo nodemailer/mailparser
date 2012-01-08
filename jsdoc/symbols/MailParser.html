@@ -401,7 +401,7 @@ div.indexClass {
             </td>
             <td class="nameDescription">
                 <div class="fixedFont">
-                <b><a href="../symbols/MailParser.html#_linecounter">_linecounter</a></b>
+                <b><a href="../symbols/MailParser.html#_lineCounter">_lineCounter</a></b>
                 
                 </div>
                 <div class="description">
@@ -421,6 +421,26 @@ div.indexClass {
             </td>
             <td class="nameDescription">
                 <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_lineFeed">_lineFeed</a></b>
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    Did the last chunk end with \r
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row1">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
                 <b><a href="../symbols/MailParser.html#_multipartTree">_multipartTree</a></b>
                 
                 </div>
@@ -435,7 +455,7 @@ div.indexClass {
             </td>
         </tr>
     
-        <tr class="row1">
+        <tr class="row0">
             <td>
                 
             </td>
@@ -455,7 +475,7 @@ div.indexClass {
             </td>
         </tr>
     
-        <tr class="row0">
+        <tr class="row1">
             <td>
                 
             </td>
@@ -475,7 +495,7 @@ div.indexClass {
             </td>
         </tr>
     
-        <tr class="row1">
+        <tr class="row0">
             <td>
                 
             </td>
@@ -493,7 +513,7 @@ div.indexClass {
             </td>
         </tr>
     
-        <tr class="row0">
+        <tr class="row1">
             <td>
                 
             </td>
@@ -511,7 +531,7 @@ div.indexClass {
             </td>
         </tr>
     
-        <tr class="row1">
+        <tr class="row0">
             <td>
                 
             </td>
@@ -980,6 +1000,26 @@ and create a stream for it if needed</p>
             </td>
             <td class="nameDescription">
                 <div class="fixedFont">
+                <b><a href="../symbols/MailParser.html#_updateHTMLCharset">_updateHTMLCharset</a></b>(HTML)
+                
+                </div>
+                <div class="description">
+                    
+                        <span class="attributes private">[private]</span>
+                    
+                    
+                    
+                    <p>Replaces character set to UTF-8 in HTML &lt;meta&gt; tags</p>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="row0">
+            <td>
+                
+            </td>
+            <td class="nameDescription">
+                <div class="fixedFont">
                 <b><a href="../symbols/MailParser.html#_walkMimeTree">_walkMimeTree</a></b>(node, level)
                 
                 </div>
@@ -994,7 +1034,7 @@ and create a stream for it if needed</p>
             </td>
         </tr>
     
-        <tr class="row0">
+        <tr class="row1">
             <td>
                 
             </td>
@@ -1014,7 +1054,7 @@ and create a stream for it if needed</p>
             </td>
         </tr>
     
-        <tr class="row1">
+        <tr class="row0">
             <td>
                 
             </td>
@@ -1201,9 +1241,9 @@ and create a stream for it if needed</p>
         
     </dl>
 
-    <a name="_linecounter"> </a>
+    <a name="_lineCounter"> </a>
     <div class="fixedFont membertitle">
-    <span class="membername">_linecounter</span>
+    <span class="membername">_lineCounter</span>
     
     
     </div>
@@ -1215,6 +1255,39 @@ and create a stream for it if needed</p>
         
         
         Line counter for debugging
+    </div>
+    
+    
+
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </dl>
+
+    <a name="_lineFeed"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_lineFeed</span>
+    
+    
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        Did the last chunk end with \r
     </div>
     
     
@@ -2650,6 +2723,69 @@ and create a stream for it if needed</p>
         
     </dl>
 
+    <a name="_updateHTMLCharset"> </a>
+    <div class="fixedFont membertitle">
+    <span class="membername">_updateHTMLCharset</span><span class="membersignature">(HTML)</span>
+    
+    <span class="datatype">:{String}</span>
+    </div>
+    
+    <div class="description">
+        
+            <span class="attributes private">[private]</span>
+        
+        
+        
+        <p>Replaces character set to UTF-8 in HTML &lt;meta&gt; tags</p>
+    </div>
+    
+    
+
+    
+        <table class="summaryTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th scope="table" colspan="3" class="param">Parameters (<span class="optional">optional</span>)</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="paramname ">HTML</td>
+            <td class="datatype">
+                
+                    {String}
+                
+            </td>
+            <td width="100%">
+                html contents
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+    
+        
+        
+    <dl class="detailList">
+        
+        
+        
+        
+        
+            <dt>Returns:</dt>
+            
+                <dd><span class="datatype">{String}</span> updated HTML</dd>
+            
+        
+        
+        
+        
+        
+    </dl>
+
     <a name="_walkMimeTree"> </a>
     <div class="fixedFont membertitle">
     <span class="membername">_walkMimeTree</span><span class="membersignature">(node, level)</span>
@@ -2880,7 +3016,7 @@ and create a stream for it if needed</p>
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 13:28:06 GMT+0200 (EET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Jan 08 2012 11:38:45 GMT+0200 (EET)
 		</div>
 	</body>
 </html>
