@@ -47,6 +47,7 @@ Options parameter is an object with the following properties:
   * **debug** - if set to true print all incoming lines to console
   * **streamAttachments** - if set to true, stream attachments instead of including them
   * **unescapeSMTP** - if set to true replace double dots in the beginning of the file
+  * **defaultCharset** - the default charset for *text/plain*, *text/html content*, if not set reverts to Latin-1
 
 MailParser object is a writable Stream - you can pipe directly 
 files to it or you can send chunks with `mailparser.write`
