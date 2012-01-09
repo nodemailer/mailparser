@@ -197,24 +197,35 @@ exports["Plaintext format"] = {
         }); 
     },
     "Flowed": function(test){
-        var encodedText = "Content-Type: text/plain; format=flowed\r\n\r\nFirst line \r\ncontinued",
+        var encodedText = "Content-Type: text/plain; format=flowed\r\n\r\nFirst line \r\ncontinued \r\nand so on",
             mail = new Buffer(encodedText, "utf-8");
         
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "First line continued");
+            test.equal(mail.text, "First line continued and so on");
             test.done();
         }); 
     },
     "Fixed": function(test){
-        var encodedText = "Content-Type: text/plain; format=fixed\r\n\r\nFirst line \r\ncontinued",
+        var encodedText = "Content-Type: text/plain; format=fixed\r\n\r\nFirst line \r\ncontinued \r\nand so on",
             mail = new Buffer(encodedText, "utf-8");
         
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "First line \ncontinued");
+            test.equal(mail.text, "First line \ncontinued \nand so on");
+            test.done();
+        }); 
+    },
+    "DelSp": function(test){
+        var encodedText = "Content-Type: text/plain; format=flowed; delsp=yes\r\n\r\nFirst line \r\ncontinued \r\nand so on",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "First linecontinuedand so on");
             test.done();
         }); 
     }
