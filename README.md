@@ -188,9 +188,13 @@ There aren't many tests yet but basics should be covered.
 
 ## Issues
 
+**S/MIME**
+
 Currently it is not possible to verify signed content as the incoming text is
 split to lines when parsing and line ending characters are not preserved. One
 can assume it is always \r\n but this might not be always the case.
+
+**Seeking**
 
 Due to the line based parsing it is also not possible to explicitly state
 the beginning and ending bytes of the attachments for later source seeking.
