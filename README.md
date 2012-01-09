@@ -186,6 +186,15 @@ You need to have nodeunit installed for running tests
 
 There aren't many tests yet but basics should be covered.
 
+## Issues
+
+Currently it is not possible to verify signed content as the incoming text is
+split to lines when parsing and line ending characters are not preserved. One
+can assume it is always \r\n but this might not be always the case.
+
+Due to the line based parsing it is also not possible to explicitly state
+the beginning and ending bytes of the attachments for later source seeking.
+
 ## License
 
 **MIT**
