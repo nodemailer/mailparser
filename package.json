@@ -24,6 +24,9 @@
         "mimelib": "0.1.10",
         "iconv": "*"
     },
+    "devDependencies": {
+        "nodeunit": "*"
+    },
     "engines": ["node >=0.6.0"],
     "keywords": ["e-mail", "mime", "parser"]
 }

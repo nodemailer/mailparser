@@ -178,6 +178,13 @@ objects through these values.
 Attachment objects include `length` property which is the length of the attachment
 in bytes and `checksum` property which is md5 hash of the file.
 
+### Running tests
+
+You need to have nodeunit installed for running tests
+
+    nodeunit test/run_tests.js
+
+There aren't many tests yet but basics should be covered
 
 ## License
 
