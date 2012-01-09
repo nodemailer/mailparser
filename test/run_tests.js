@@ -21,6 +21,46 @@ exports["General"] = {
             test.equal(mail.text, "ÕÄ\nÖÜ");
             test.done();
         });
+    },
+    
+    "Headers only": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\r\nSubject: ÕÄÖÜ",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.subject, "ÕÄÖÜ");
+            test.done();
+        });
+    },
+    
+    "Body only": function(test){
+        var encodedText = "\r\n===",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "===");
+            test.done();
+        });
+    },
+    
+    "Different line endings": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\rSubject: ÕÄÖÜ\n\r1234\r\nÕÄÖÜ\r\nÜÖÄÕ\n1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(2);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.subject, "ÕÄÖÜ");
+            test.equal(mail.text, "1234\nÕÄÖÜ\nÜÖÄÕ\n1234");
+            test.done();
+        });
     }
     
 }
@@ -107,7 +147,7 @@ exports["Text encodings"] = {
     }
 }
 
-exports["Binary encodings"] = {
+exports["Binary attachment encodings"] = {
     "Quoted-Printable": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=00=01=02=03",
             mail = new Buffer(encodedText, "utf-8");
