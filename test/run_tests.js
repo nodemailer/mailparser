@@ -81,6 +81,19 @@ exports["Text encodings"] = {
             test.done();
         });
     },
+    "HTML encoding: Header defined": function(test){
+        var encodedText = "Content-Type: text/html; charset=iso-UTF-8\r\n\r\nÕÄÖÜ", // \r\nÕÄÖÜ
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.html, "ÕÄÖÜ");
+            test.done();
+        });
+    },
     "Mime Words": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nSubject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n",
             mail = new Buffer(encodedText, "utf-8");
