@@ -47,13 +47,13 @@ Options parameter is an object with the following properties:
   * **debug** - if set to true print all incoming lines to console
   * **streamAttachments** - if set to true, stream attachments instead of including them
   * **unescapeSMTP** - if set to true replace double dots in the beginning of the file
-  * **defaultCharset** - the default charset for *text/plain*, *text/html content*, if not set reverts to Latin-1
+  * **defaultCharset** - the default charset for *text/plain* and *text/html* content, if not set reverts to *Latin-1*
 
 MailParser object is a writable Stream - you can pipe directly 
 files to it or you can send chunks with `mailparser.write`
     
-When the parsing ends an 'end' event is emitted which has an 
-object parameter with parsed e-mail structure.
+When the parsing ends an `'end'` event is emitted which has an 
+object with parsed e-mail structure as a parameter.
 
     mailparser.on("end", function(mail){
         mail; // object structure for parsed e-mail
@@ -61,7 +61,7 @@ object parameter with parsed e-mail structure.
 
 ### Parsed mail object
 
-  * **headers** - an array of headers, in the form of - `[{key: "key", value: "value"}]`
+  * **headers** - unprocessed headers in the form of - `{key: value}` - if there were multiple fields with the same key then the value is an array
   * **from** - an array of parsed `From` addresses - `[{address:'sender@example.com',name:'Sender Name'}]` (should be only one though)
   * **to** - an array of parsed `To` addresses
   * **cc** - an array of parsed `Cc` addresses
@@ -170,13 +170,13 @@ object. The parameter provided includes file information (`contentType`,
     });
 
 In this case the `fileName` parameter is equal to `generatedFileName` property
-on the main attachment object, you match attachment streams to the main attachment
-objects through these values.
+on the main attachment object - you can match attachment streams to the main
+attachment objects through these values.
 
 #### Testing attachment integrity
 
 Attachment objects include `length` property which is the length of the attachment
-in bytes and `checksum` property which is md5 hash of the file.
+in bytes and `checksum` property which is a `md5` hash of the file.
 
 ### Running tests
 
@@ -184,7 +184,7 @@ You need to have nodeunit installed for running tests
 
     nodeunit test/run_tests.js
 
-There aren't many tests yet but basics should be covered
+There aren't many tests yet but basics should be covered.
 
 ## License
 
