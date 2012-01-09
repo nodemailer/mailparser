@@ -264,8 +264,20 @@ exports["Transfer encoding"] = {
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
         }); 
-    }
+    },
     
+    "Invalid Quoted-Printable": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n==C3==95=C3=84=C3=96=C3=9C=",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "==ÄÖÜ");
+            test.done();
+        }); 
+    }
+
 }
 
 exports["Multipart"] = {
