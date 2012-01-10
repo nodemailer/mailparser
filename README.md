@@ -1,4 +1,3 @@
-
 MailParser
 ==========
 
@@ -21,10 +20,13 @@ No need to worry about charsets or decoding *quoted-printable* or
 of it for you. All the textual output from **MailParser** (subject line, 
 addressee names, message body) is always UTF-8.
 
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=andris9&url=https://github.com/andris9/mailparser&title=MailParser&language=&tags=github&category=software) 
+
 Live Demo
 ---------
 
 You can test this module in action here: http://node.ee/MailParser/Demo
+
 
 Installation
 ------------
