@@ -35,10 +35,6 @@ Installation
 
     npm install mailparser
 
-### Windows Users
-
-Nodemailer requires `mimelib-noiconv` to run which can be downloaded [here](https://github.com/andris9/mimelib/zipball/noiconv). Rename the directory to `mimelib-noiconv` and copy it to `node_modules` directory in nodemailer package (you need to create `node_modules` directory probably yourself to the root of nodemailer directory).
-
 Usage
 -----
 
