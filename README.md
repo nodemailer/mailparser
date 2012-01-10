@@ -22,7 +22,7 @@ addressee names, message body) is always UTF-8.
 
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=andris9&url=https://github.com/andris9/mailparser&title=MailParser&language=&tags=github&category=software) 
 
-MailParser is not the fastest multipart parser though - it takes about 5 sec. to parse a 25MB e-mail, so there's some room for improvement.
+MailParser is not the fastest multipart parser though - it takes about 5 sec. to parse a 25MB e-mail (one large attachment), so there's some room for improvement.
 
 Live Demo
 ---------
