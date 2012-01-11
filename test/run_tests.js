@@ -4,7 +4,7 @@ var MailParser = require("../lib/mailparser").MailParser,
 
 
 
-exports["General"] = {
+exports["General tests"] = {
     "Many chunks": function(test){
         var encodedText = "Content-Type: text/plain; charset=utf-8\r\n\r\nÕÄ\r\nÖÜ", // \r\nÕÄÖÜ
             mail = new Buffer(encodedText, "utf-8");
@@ -63,7 +63,7 @@ exports["General"] = {
         });
     }
     
-}
+};
 
 exports["Text encodings"] = {
     
@@ -103,7 +103,7 @@ exports["Text encodings"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal((mail.html || "").substr(-4), "ÕÄÖÜ");
+            test.equal((mail.html || "").substr(-4), "ÕÄÖÜ");
             test.done();
         });
     },
@@ -117,7 +117,7 @@ exports["Text encodings"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal((mail.html || "").substr(-4), "ÕÄÖÜ");
+            test.equal((mail.html || "").substr(-4), "ÕÄÖÜ");
             test.done();
         });
     },
@@ -145,28 +145,28 @@ exports["Text encodings"] = {
             test.done();
         }); 
     }
-}
+};
 
 exports["Binary attachment encodings"] = {
     "Quoted-Printable": function(test){
-        var encodedText = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=00=01=02=03",
+        var encodedText = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
         
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "0,1,2,3");
+            test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "0,1,2,3,253,254,255");
             test.done();
         }); 
     },
     "Base64": function(test){
-        var encodedText = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: base64\r\n\r\nAAECAw==",
+        var encodedText = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: base64\r\n\r\nAAECA/3+/w==",
             mail = new Buffer(encodedText, "utf-8");
         
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "0,1,2,3");
+            test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "0,1,2,3,253,254,255");
             test.done();
         }); 
     },
@@ -182,7 +182,7 @@ exports["Binary attachment encodings"] = {
         }); 
     }
     
-}
+};
 
 exports["Plaintext format"] = {
     "Default": function(test){
@@ -229,10 +229,21 @@ exports["Plaintext format"] = {
             test.done();
         }); 
     }
-}
+};
 
 exports["Transfer encoding"] = {
-    "Quoted-Printable": function(test){
+    "Quoted-Printable Default charset": function(test){
+        var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n=D5=C4=D6=DC",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Quoted-Printable UTF-8": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=C3=95=C3=84=C3=96=C3=9C",
             mail = new Buffer(encodedText, "utf-8");
         
@@ -243,7 +254,18 @@ exports["Transfer encoding"] = {
             test.done();
         }); 
     },
-    "Base64": function(test){
+    "Base64 Default charset": function(test){
+        var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: bAse64\r\n\r\n1cTW3A==",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Base64 UTF-8": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: bAse64\r\n\r\nw5XDhMOWw5w=",
             mail = new Buffer(encodedText, "utf-8");
         
@@ -265,7 +287,19 @@ exports["Transfer encoding"] = {
             test.done();
         }); 
     },
-    "8bit": function(test){
+    "8bit Default charset": function(test){
+        var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: 8bit\r\n\r\nÕÄÖÜ",
+            textmap = encodedText.split('').map(function(chr){return chr.charCodeAt(0);}),
+            mail = new Buffer(textmap);
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "8bit UTF-8": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
         
@@ -288,10 +322,9 @@ exports["Transfer encoding"] = {
             test.done();
         }); 
     }
+};
 
-}
-
-exports["Multipart"] = {
+exports["Multipart content"] = {
     "Simple": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n\r\n--ABC\r\nContent-type: text/plain; charset=utf-8\r\n\r\nÕÄÖÜ\r\n--ABC--",
             mail = new Buffer(encodedText, "utf-8");
@@ -343,9 +376,9 @@ exports["Multipart"] = {
             test.done();
         });
     }
-}
+};
 
-exports["Attachments"] = {
+exports["Attachment info"] = {
     "Included integrity": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
@@ -405,4 +438,4 @@ exports["Attachments"] = {
             test.done();
         });
     }
-}
+};
