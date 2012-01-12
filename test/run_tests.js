@@ -349,12 +349,12 @@ exports["Multipart content"] = {
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
                           "--ABC\r\n"+
-                          "Content-type: multipart/related; boundary=DEF\r\n"+
-                          "\r\n"+
-                          "--DEF\r\n"+
-                          "Content-type: text/plain; charset=utf-8\r\n"+
-                          "\r\n"+
-                          "ÕÄÖÜ\r\n"+
+                              "Content-type: multipart/related; boundary=DEF\r\n"+
+                              "\r\n"+
+                              "--DEF\r\n"+
+                                  "Content-type: text/plain; charset=utf-8\r\n"+
+                                  "\r\n"+
+                                  "ÕÄÖÜ\r\n"+
                           "--DEF--\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
@@ -370,11 +370,11 @@ exports["Multipart content"] = {
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
                           "--ABC\r\n"+
-                          "Content-Type: text/plain; charset=\"utf-8\"\r\n"+
-                          "Content-Transfer-Encoding: 8bit\r\n"+
-                          "Content-Disposition: inline\r\n"+
-                          "\r\n"+
-                          "ÕÄÖÜ\r\n"+
+                              "Content-Type: text/plain; charset=\"utf-8\"\r\n"+
+                              "Content-Transfer-Encoding: 8bit\r\n"+
+                              "Content-Disposition: inline\r\n"+
+                              "\r\n"+
+                              "ÕÄÖÜ\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
         
@@ -523,11 +523,11 @@ exports["Attachment info"] = {
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
                           "--ABC\r\n"+
-                          "Content-Type: application/octet-stream\r\n"+
-                          "Content-Transfer-Encoding: quoted-printable\r\n"+
-                          "Content-Disposition: attachment\r\n"+
-                          "\r\n"+
-                          "=00=01=02=03=04=05=06\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: quoted-printable\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=04=05=06\r\n"+
                           "--ABC--",
             expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
             mail = new Buffer(encodedText, "utf-8");
@@ -549,11 +549,11 @@ exports["Attachment info"] = {
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
                           "--ABC\r\n"+
-                          "Content-Type: application/octet-stream\r\n"+
-                          "Content-Transfer-Encoding: base64\r\n"+
-                          "Content-Disposition: attachment\r\n"+
-                          "\r\n"+
-                          "AAECAwQFBg==\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
                           "--ABC--",
             expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
             mail = new Buffer(encodedText, "utf-8");
