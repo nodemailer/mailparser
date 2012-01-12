@@ -3,7 +3,6 @@ var MailParser = require("../lib/mailparser").MailParser,
     utillib = require("util");
 
 
-
 exports["General tests"] = {
     "Many chunks": function(test){
         var encodedText = "Content-Type: text/plain; charset=utf-8\r\n\r\nÕÄ\r\nÖÜ", // \r\nÕÄÖÜ
@@ -373,6 +372,137 @@ exports["Multipart content"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
+            test.done();
+        });
+    },
+    "Different Levels": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: text/html; charset=utf-8\r\n"+
+                              "\r\n"+
+                              "ÕÄÖÜ2\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: multipart/related; boundary=DEF\r\n"+
+                              "\r\n"+
+                              "--DEF\r\n"+
+                                  "Content-type: text/plain; charset=utf-8\r\n"+
+                                   "\r\n"+
+                                   "ÕÄÖÜ1\r\n"+
+                              "--DEF--\r\n"+
+                           "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄÖÜ1");
+            test.equal(mail.html, "ÕÄÖÜ2");
+            test.done();
+        });
+    },
+    "Alternative content - Main TEXT first": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: text/plain; charset=utf-8\r\n"+
+                              "\r\n"+
+                              "ÕÄÖÜ1\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: multipart/related; boundary=DEF\r\n"+
+                              "\r\n"+
+                              "--DEF\r\n"+
+                                  "Content-type: text/plain; charset=utf-8\r\n"+
+                                   "\r\n"+
+                                   "ÕÄÖÜ2\r\n"+
+                              "--DEF--\r\n"+
+                           "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄÖÜ1");
+            test.done();
+        });
+    },
+    "Alternative content - Main TEXT last": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: multipart/related; boundary=DEF\r\n"+
+                              "\r\n"+
+                              "--DEF\r\n"+
+                                  "Content-type: text/plain; charset=utf-8\r\n"+
+                                   "\r\n"+
+                                   "ÕÄÖÜ2\r\n"+
+                              "--DEF--\r\n"+
+                           "--ABC\r\n"+
+                              "Content-type: text/plain; charset=utf-8\r\n"+
+                              "\r\n"+
+                              "ÕÄÖÜ1\r\n"+
+                           "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄÖÜ1");
+            test.done();
+        });
+    },
+    "Alternative content - Main HTML first": function(test){
+        var encodedHTML = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: text/html; charset=utf-8\r\n"+
+                              "\r\n"+
+                              "ÕÄÖÜ1\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: multipart/related; boundary=DEF\r\n"+
+                              "\r\n"+
+                              "--DEF\r\n"+
+                                  "Content-type: text/html; charset=utf-8\r\n"+
+                                   "\r\n"+
+                                   "ÕÄÖÜ2\r\n"+
+                              "--DEF--\r\n"+
+                           "--ABC--",
+            mail = new Buffer(encodedHTML, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.html, "ÕÄÖÜ1");
+            test.done();
+        });
+    },
+    "Alternative content - Main HTML last": function(test){
+        var encodedHTML = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-type: multipart/related; boundary=DEF\r\n"+
+                              "\r\n"+
+                              "--DEF\r\n"+
+                                  "Content-type: text/html; charset=utf-8\r\n"+
+                                   "\r\n"+
+                                   "ÕÄÖÜ2\r\n"+
+                              "--DEF--\r\n"+
+                           "--ABC\r\n"+
+                              "Content-type: text/html; charset=utf-8\r\n"+
+                              "\r\n"+
+                              "ÕÄÖÜ1\r\n"+
+                           "--ABC--",
+            mail = new Buffer(encodedHTML, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.html, "ÕÄÖÜ1");
             test.done();
         });
     }
