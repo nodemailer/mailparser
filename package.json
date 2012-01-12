@@ -1,7 +1,7 @@
 {
     "name": "mailparser",
     "description": "Asynchronous and non-blocking parser for mime encoded e-mail messages",
-    "version": "0.2.15",
+    "version": "0.2.16",
     "author" : "Andris Reinman",
     "maintainers":[
         {
@@ -12,6 +12,9 @@
     "repository" : {
         "type" : "git",
         "url" : "http://github.com/andris9/mailparser.git"
+    },
+    "scripts":{
+        "test": "node ./run_tests.js"
     },
     "main" : "./lib/mailparser",
     "licenses" : [

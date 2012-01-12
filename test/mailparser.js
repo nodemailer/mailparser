@@ -327,7 +327,7 @@ exports["Transfer encoding"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(Array.prototype.map.call(mail.text, function(chr){return chr.charCodeAt(0)}).join(","), "213,196,214,65533");
+            test.equal(Array.prototype.map.call(mail.text, function(chr){return chr.charCodeAt(0);}).join(","), "213,196,214,65533");
             test.done();
         }); 
     }
