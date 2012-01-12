@@ -309,7 +309,6 @@ exports["Transfer encoding"] = {
             test.done();
         }); 
     },
-    
     "Invalid Quoted-Printable": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n==C3==95=C3=84=C3=96=C3=9C=",
             mail = new Buffer(encodedText, "utf-8");
@@ -318,6 +317,17 @@ exports["Transfer encoding"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "==ÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Invalid BASE64": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nw5XDhMOWw5",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(Array.prototype.map.call(mail.text, function(chr){return chr.charCodeAt(0)}).join(","), "213,196,214,65533");
             test.done();
         }); 
     }
