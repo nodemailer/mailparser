@@ -5,7 +5,7 @@ MailParser
 not upgrade from 0.1.x without updating your code, the API is totally 
 different.
 
-
+[![Build Status](https://secure.travis-ci.org/[andris9]/[mailparser].png)](http://travis-ci.org/[andris9]/[mailparser])
 
 **MailParser** is an asynchronous and non-blocking parser for 
 [node.js](http://nodejs.org) to parse mime encoded e-mail messages. 
