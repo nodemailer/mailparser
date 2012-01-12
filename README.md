@@ -24,7 +24,7 @@ addressee names, message body) is always UTF-8.
 
 MailParser is not the fastest multipart parser though - it takes about 5 sec. to parse a 25MB e-mail (a letter with one large attachment), so there's some room for improvement.
 
-If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](/andris9/nodemailer).
+If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](/andris9/Nodemailer).
 
 Live Demo
 ---------
