@@ -377,6 +377,23 @@ exports["Attachment filename"] = {
             test.equal(mail.attachments && mail.attachments[1] && mail.attachments[1].content && mail.attachments[1].generatedFileName, "test.txt");
             test.done();
         }); 
+    },
+    "Generate filename from Content-Type": function(test){
+        var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/pdf\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=FD=FE=FF\r\n"+
+                          "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.pdf");
+            test.done();
+        }); 
     }
     
 };
@@ -773,6 +790,29 @@ exports["Attachment info"] = {
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 7);
+            test.done();
+        });
+    },
+    "Detect Content-Type by filename": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment; filename=\"test.pdf\"\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC--",
+            expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        
+        mailparser.write(mail);
+        mailparser.end();
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentType, "application/pdf");
             test.done();
         });
     }
