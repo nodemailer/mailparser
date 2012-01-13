@@ -185,9 +185,13 @@ in bytes and `checksum` property which is a `md5` hash of the file.
 
 ### Running tests
 
-You need to have nodeunit installed for running tests
+Install **MailParser** with dev dependencies
 
-    nodeunit test/run_tests.js
+    npm install --dev mailparser
+
+And then run
+
+    npm test mailparser
 
 There aren't many tests yet but basics should be covered.
 
