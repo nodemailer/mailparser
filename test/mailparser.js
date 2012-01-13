@@ -148,7 +148,10 @@ exports["Text encodings"] = {
 
 exports["Binary attachment encodings"] = {
     "Quoted-Printable": function(test){
-        var encodedText = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=00=01=02=03=FD=FE=FF",
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
         
         var mailparser = new MailParser();
@@ -177,6 +180,104 @@ exports["Binary attachment encodings"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "195,149,195,132,195,150,195,156");
+            test.done();
+        }); 
+    }
+    
+};
+
+exports["Attachment filename"] = {
+    
+    "Content-Disposition filename": function(test){
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "Content-Disposition: attachment; filename=\"=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?=\"\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Content-Disposition filename*": function(test){
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "Content-Disposition: attachment; filename*=\"UTF-8''%C3%95%C3%84%C3%96%C3%9C\"\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Content-Disposition filename*X*": function(test){
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "Content-Disposition: attachment;\r\n"+
+                          "    filename*0*=UTF-8''%C3%95%C3%84;\r\n"+
+                          "    filename*1*=%C3%96%C3%9C\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    
+    "Content-Type name": function(test){
+        var encodedText = "Content-Type: application/octet-stream; name=\"=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?=\"\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Content-Type name*": function(test){
+        var encodedText = "Content-Type: application/octet-stream;\r\n"+
+                          "    name*=UTF-8''%C3%95%C3%84%C3%96%C3%9C\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
+            test.done();
+        }); 
+    },
+    "Content-Type name*X*": function(test){
+        var encodedText = "Content-Type: application/octet-stream;\r\n"+
+                          "    name*0*=UTF-8''%C3%95%C3%84;\r\n"+
+                          "    name*1*=%C3%96%C3%9C\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
         }); 
     }
