@@ -180,10 +180,6 @@ object. The parameter provided includes file information (`contentType`,
         attachment.stream.pipe(output);
     });
 
-In this case the `fileName` parameter is equal to `generatedFileName` property
-on the main attachment object - you can match attachment streams to the main
-attachment objects through these values.
-
 #### Testing attachment integrity
 
 Attachment objects include `length` property which is the length of the attachment
