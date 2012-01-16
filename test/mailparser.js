@@ -71,6 +71,32 @@ exports["General tests"] = {
             test.equal(mail.text, "1234\nÕÄÖÜ\nÜÖÄÕ\n1234");
             test.done();
         });
+    },
+    
+    "Headers event": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "Subject: ABCDEF\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment; filename=\"test.pdf\"\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(2);
+        var mailparser = new MailParser();
+        
+        mailparser.on("headers", function(headers){
+            test.equal(headers.subject, "ABCDEF");
+        });
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.ok(1, "Parsing ended");
+            test.done();
+        });
     }
     
 };

@@ -56,7 +56,13 @@ Options parameter is an object with the following properties:
 
 MailParser object is a writable Stream - you can pipe directly 
 files to it or you can send chunks with `mailparser.write`
-    
+
+When the headers have received, "headers" is emitted. The headers have not been pre-processed (encodings changed eg.).
+
+    mailparser.on("headers", function(headers){
+        console.log(headers.received);
+    });
+
 When the parsing ends an `'end'` event is emitted which has an 
 object with parsed e-mail structure as a parameter.
 
