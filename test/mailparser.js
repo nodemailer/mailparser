@@ -75,6 +75,7 @@ exports["General tests"] = {
     
     "Headers event": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n"+
                           "Subject: ABCDEF\r\n"+
                           "\r\n"+
                           "--ABC\r\n"+
@@ -86,12 +87,14 @@ exports["General tests"] = {
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
         
-        test.expect(2);
+        test.expect(3);
         var mailparser = new MailParser();
         
         mailparser.on("headers", function(headers){
             test.equal(headers.subject, "ABCDEF");
+            test.equal(headers['x-test'], "ÕÄÖÜ");
         });
+        
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.ok(1, "Parsing ended");
@@ -786,7 +789,7 @@ exports["Attachment info"] = {
             test.done();
         });
     },
-    "Stream integrity": function(test){
+    "Stream integrity base64": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
                           "--ABC\r\n"+
@@ -816,6 +819,40 @@ exports["Attachment info"] = {
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 7);
+            test.done();
+        });
+    },
+    "Stream integrity - 8bit": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: 8bit\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "ÕÄ\r\n"+"" +
+                              "ÖÜ\r\n"+
+                          "--ABC--",
+            expectedHash = "cad0f72629a7245dd3d2cbf41473e3ca",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser({streamAttachments: true});
+        
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+        
+        test.expect(3);
+        
+        mailparser.on("attachment", function(attachment){
+            test.ok(attachment.stream, "Stream detected");
+        });
+        
+        mailparser.end();
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
             test.done();
         });
     },
