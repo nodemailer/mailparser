@@ -819,6 +819,43 @@ exports["Attachment info"] = {
             test.done();
         });
     },
+    "Stream multiple attachments": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment; filename=\"test.txt\"\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser({streamAttachments: true});
+        
+        test.expect(3); // should be 3 attachments
+        mailparser.on("attachment", function(attachment){
+            test.ok(attachment.stream, "Stream detected");
+        });
+        
+        mailparser.end(mail);
+        
+        mailparser.on("end", function(mail){
+            test.done();
+        });
+    },
     "Detect Content-Type by filename": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+

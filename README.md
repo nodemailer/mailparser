@@ -176,9 +176,14 @@ object. The parameter provided includes file information (`contentType`,
     }
     
     mp.on("attachment", function(attachment){
-        var output = fs.createWriteStream(attachment.fileName);
+        var output = fs.createWriteStream(attachment.generatedFileName);
         attachment.stream.pipe(output);
     });
+
+`generatedFileName` is unique for the parsed mail - if several attachments with
+the same name exist, `generatedFileName` is updated accordingly. Also there
+might not be `fileName` parameter at all, so it is better to rely on 
+`generatedFileName`.
 
 #### Testing attachment integrity
 
