@@ -6,4 +6,7 @@ node_js:
 
 notifications:
   email:
-    - andris@node.ee
+    recipients:
+      - andris@node.ee
+    on_success: change
+    on_failure: change
