@@ -530,6 +530,19 @@ exports["Transfer encoding"] = {
             test.done();
         }); 
     },
+    "Mime Words with invalid linebreaks (Sparrow)": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
+                          "Subject: abc=?utf-8?Q?=C3=B6=C\r\n"+
+                          " 3=B5=C3=BC?=",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.subject, "abcöõü");
+            test.done();
+        }); 
+    },
     "8bit Default charset": function(test){
         var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: 8bit\r\n\r\nÕÄÖÜ",
             textmap = encodedText.split('').map(function(chr){return chr.charCodeAt(0);}),
