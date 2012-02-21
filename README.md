@@ -77,6 +77,7 @@ object with parsed e-mail structure as a parameter.
   * **to** - an array of parsed `To` addresses
   * **cc** - an array of parsed `Cc` addresses
   * **subject** - the subject line
+  * **priority** - priority of the e-mail, always one of the following: *normal* (default), *high*, *low*
   * **text** - text body
   * **html** - html body
   * **alternatives** - an array of alternative bodies in addition to the default `html` and `text` - `[{contentType:"text/plain", content: "..."}]`

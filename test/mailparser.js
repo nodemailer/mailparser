@@ -100,6 +100,39 @@ exports["General tests"] = {
             test.ok(1, "Parsing ended");
             test.done();
         });
+    },
+    
+    "No priority": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\r" +
+                          "Subject: ÕÄÖÜ\n" +
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.priority, "normal");
+            test.done();
+        });
+    },
+    
+    "MS Style priority": function(test){
+        var encodedText = "Content-type: text/plain; charset=utf-8\r" +
+                          "Subject: ÕÄÖÜ\n" +
+                          "X-Priority: 1 (Highest)\n" +
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.priority, "high");
+            test.done();
+        });
     }
     
 };

@@ -49,7 +49,7 @@
 			Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0<br />
 			Template: <a href="http://www.thebrightlines.com/2010/05/06/new-template-for-jsdoctoolkit-codeview/" target="_blank">Codeview</a> 1.2<br />
 			Generated on:
-			<time datetime='2012-0-16' pubdate>2012-0-16 15:53</time>
+			<time datetime='2012-1-21' pubdate>2012-1-21 11:22</time>
 		</footer>
 	</div>
 </div>
@@ -110,6 +110,7 @@
   <li><b>streamAttachments</b> - if set to true, stream attachments instead of including them</li>
   <li><b>unescapeSMTP</b> - if set to true replace double dots in the beginning of the file</li>
   <li><b>defaultCharset</b> - the default charset for text/plain, text/html content, if not set reverts to Latin-1
+  <li><b>showAttachmentLinks</b></li> - if set to true, show inlined attachment links
 </ul></div>
 									</td>
 								</tr>
@@ -415,6 +416,28 @@ stream as a Buffer object, otherwise append it to the content property</p></div>
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/MailParser.html#_joinHTMLAttachment">_joinHTMLAttachment</a></b>(htmlNode, attachment)
+													</div>
+													<div class="description"><p>Adds filename placeholder to the HTML if needed</p></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item10'
+											>
+												<td class="attributes">&lt;private&gt; &nbsp;</td>
+												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/MailParser.html#_joinHTMLNodes">_joinHTMLNodes</a></b>(htmlNode, newHTML)
+													</div>
+													<div class="description"><p>Joins two HTML blocks by removing the header of the added element<p></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item11'
+											>
+												<td class="attributes">&lt;private&gt; &nbsp;</td>
+												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/MailParser.html#_parseContentDisposition">_parseContentDisposition</a></b>(value)
 													</div>
 													<div class="description"><p>Parses Content-Disposition header field value</p>
@@ -424,7 +447,7 @@ stream as a Buffer object, otherwise append it to the content property</p></div>
 											</tr>
 										
 											<tr
-												 class='item10'
+												 class='item12'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -437,7 +460,7 @@ stream as a Buffer object, otherwise append it to the content property</p></div>
 											</tr>
 										
 											<tr
-												 class='item11'
+												 class='item13'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -460,7 +483,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item12'
+												 class='item14'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -471,7 +494,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item13'
+												 class='item15'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -484,7 +507,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item14'
+												 class='item16'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -497,11 +520,11 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item15'
+												 class='item17'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/MailParser.html#_processMimeNode">_processMimeNode</a></b>(node, level)
+													<div class="fixedFont"><b><a href="../symbols/MailParser.html#_processMimeNode">_processMimeNode</a></b>(node, level, mimeMultipart)
 													</div>
 													<div class="description"><p>Processes of a node in the mime tree</p>
 
@@ -510,7 +533,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item16'
+												 class='item18'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -523,7 +546,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item17'
+												 class='item19'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -534,7 +557,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 											</tr>
 										
 											<tr
-												 class='item18'
+												 class='item20'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -548,7 +571,7 @@ and create a stream for it if needed</p></div>
 											</tr>
 										
 											<tr
-												 class='item19'
+												 class='item21'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -559,7 +582,7 @@ and create a stream for it if needed</p></div>
 											</tr>
 										
 											<tr
-												 class='item20'
+												 class='item22'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -570,7 +593,7 @@ and create a stream for it if needed</p></div>
 											</tr>
 										
 											<tr
-												 class='item21'
+												 class='item23'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -581,7 +604,7 @@ and create a stream for it if needed</p></div>
 											</tr>
 										
 											<tr
-												 class='item22'
+												 class='item24'
 											>
 												<td class="attributes">&lt;private&gt; &nbsp;</td>
 												<td class="nameDescription">
@@ -592,7 +615,7 @@ and create a stream for it if needed</p></div>
 											</tr>
 										
 											<tr
-												 class='item23'
+												 class='item25'
 											>
 												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
@@ -605,7 +628,7 @@ and create a stream for it if needed</p></div>
 											</tr>
 										
 											<tr
-												 class='item24'
+												 class='item26'
 											>
 												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
@@ -654,6 +677,7 @@ and create a stream for it if needed</p></div>
   <li><b>streamAttachments</b> - if set to true, stream attachments instead of including them</li>
   <li><b>unescapeSMTP</b> - if set to true replace double dots in the beginning of the file</li>
   <li><b>defaultCharset</b> - the default charset for text/plain, text/html content, if not set reverts to Latin-1
+  <li><b>showAttachmentLinks</b></li> - if set to true, show inlined attachment links
 </ul>
 								
 							</div>
@@ -1491,6 +1515,98 @@ stream as a Buffer object, otherwise append it to the content property</p>
 									<li 
 										 class='item9'
 									>
+										<div class="fixedFont heading" id="_joinHTMLAttachment">
+											<span class='lighter'>
+											&lt;private&gt; 
+											</span>
+											
+											
+											
+											<b>_joinHTMLAttachment</b>(htmlNode, attachment)
+										</div>
+										
+										<div class="description">
+											<p>Adds filename placeholder to the HTML if needed</p>
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{Object}</span> <b>htmlNode</b>
+														
+													</dt>
+													<dd>Original HTML contents node object</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>attachment</b>
+														
+													</dt>
+													<dd>Attachment meta object</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item10'
+									>
+										<div class="fixedFont heading" id="_joinHTMLNodes">
+											<span class='lighter'>
+											&lt;private&gt; 
+											</span>
+											
+											
+											
+											<b>_joinHTMLNodes</b>(htmlNode, newHTML)
+										</div>
+										
+										<div class="description">
+											<p>Joins two HTML blocks by removing the header of the added element<p>
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{Object}</span> <b>htmlNode</b>
+														
+													</dt>
+													<dd>Original HTML contents node object</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>newHTML</b>
+														
+													</dt>
+													<dd>HTML text to add to the original object node</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item11'
+									>
 										<div class="fixedFont heading" id="_parseContentDisposition">
 											<span class='lighter'>
 											&lt;private&gt; 
@@ -1531,7 +1647,7 @@ stream as a Buffer object, otherwise append it to the content property</p>
 									</li>
 								
 									<li 
-										 class='item10'
+										 class='item12'
 									>
 										<div class="fixedFont heading" id="_parseContentType">
 											<span class='lighter'>
@@ -1595,7 +1711,7 @@ current node meta object with this data</p>
 									</li>
 								
 									<li 
-										 class='item11'
+										 class='item13'
 									>
 										<div class="fixedFont heading" id="_parseHeaderLineWithParams">
 											<span class='lighter'>
@@ -1668,7 +1784,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 									</li>
 								
 									<li 
-										 class='item12'
+										 class='item14'
 									>
 										<div class="fixedFont heading" id="_parsePriority">
 											<span class='lighter'>
@@ -1729,7 +1845,7 @@ not be handled, others will be split on <code>=</code> to key-value pairs</p>
 									</li>
 								
 									<li 
-										 class='item13'
+										 class='item15'
 									>
 										<div class="fixedFont heading" id="_process">
 											<span class='lighter'>
@@ -1774,7 +1890,7 @@ to the next batch of data.</p>
 									</li>
 								
 									<li 
-										 class='item14'
+										 class='item16'
 									>
 										<div class="fixedFont heading" id="_processHeaderLine">
 											<span class='lighter'>
@@ -1821,7 +1937,7 @@ To: From: Cc: etc fields.</p>
 									</li>
 								
 									<li 
-										 class='item15'
+										 class='item17'
 									>
 										<div class="fixedFont heading" id="_processMimeNode">
 											<span class='lighter'>
@@ -1830,7 +1946,7 @@ To: From: Cc: etc fields.</p>
 											
 											
 											
-											<b>_processMimeNode</b>(node, level)
+											<b>_processMimeNode</b>(node, level, mimeMultipart)
 										</div>
 										
 										<div class="description">
@@ -1861,6 +1977,12 @@ To: From: Cc: etc fields.</p>
 													</dt>
 													<dd>current depth</dd>
 												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>mimeMultipart</b>
+														
+													</dt>
+													<dd>Type of multipart we are dealing with (if any)</dd>
+												
 											</dl>
 										
 										
@@ -1869,7 +1991,7 @@ To: From: Cc: etc fields.</p>
 									</li>
 								
 									<li 
-										 class='item16'
+										 class='item18'
 									>
 										<div class="fixedFont heading" id="_processMimeTree">
 											<span class='lighter'>
@@ -1904,7 +2026,7 @@ alternatives array</p>
 									</li>
 								
 									<li 
-										 class='item17'
+										 class='item19'
 									>
 										<div class="fixedFont heading" id="_processStateBody">
 											<span class='lighter'>
@@ -1965,7 +2087,7 @@ alternatives array</p>
 									</li>
 								
 									<li 
-										 class='item18'
+										 class='item20'
 									>
 										<div class="fixedFont heading" id="_processStateHeader">
 											<span class='lighter'>
@@ -2029,7 +2151,7 @@ and create a stream for it if needed</p>
 									</li>
 								
 									<li 
-										 class='item19'
+										 class='item21'
 									>
 										<div class="fixedFont heading" id="_replaceMimeWords">
 											<span class='lighter'>
@@ -2090,7 +2212,7 @@ and create a stream for it if needed</p>
 									</li>
 								
 									<li 
-										 class='item20'
+										 class='item22'
 									>
 										<div class="fixedFont heading" id="_trimQuotes">
 											<span class='lighter'>
@@ -2151,7 +2273,7 @@ and create a stream for it if needed</p>
 									</li>
 								
 									<li 
-										 class='item21'
+										 class='item23'
 									>
 										<div class="fixedFont heading" id="_updateHTMLCharset">
 											<span class='lighter'>
@@ -2212,7 +2334,7 @@ and create a stream for it if needed</p>
 									</li>
 								
 									<li 
-										 class='item22'
+										 class='item24'
 									>
 										<div class="fixedFont heading" id="_walkMimeTree">
 											<span class='lighter'>
@@ -2258,7 +2380,7 @@ and create a stream for it if needed</p>
 									</li>
 								
 									<li 
-										 class='item23'
+										 class='item25'
 									>
 										<div class="fixedFont heading" id="end">
 											<span class='lighter'>
@@ -2306,7 +2428,7 @@ and create a stream for it if needed</p>
 									</li>
 								
 									<li 
-										 class='item24'
+										 class='item26'
 									>
 										<div class="fixedFont heading" id="write">
 											<span class='lighter'>
