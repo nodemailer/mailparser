@@ -25,6 +25,29 @@ exports["General tests"] = {
         });
     },
     
+    "Many chunks - split line endings": function(test){
+        var encodedText = "Content-Type: text/plain; charset=utf-8\r"+
+                          "\n" +
+                          "Subject: Hi Mom\r\n" +
+                          "\r\n" +
+                          "ÕÄ\r\n" +
+                          "ÖÜ", // \r\nÕÄÖÜ
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+        
+        mailparser.end();
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "ÕÄ\nÖÜ");
+            test.done();
+        });
+    },
+
     "Headers only": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
                           "Subject: ÕÄÖÜ",
