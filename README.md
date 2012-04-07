@@ -20,11 +20,13 @@ No need to worry about charsets or decoding *quoted-printable* or
 of it for you. All the textual output from **MailParser** (subject line, 
 addressee names, message body) is always UTF-8.
 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=andris9&url=https://github.com/andris9/mailparser&title=MailParser&language=&tags=github&category=software) 
-
 MailParser is not the fastest multipart parser though - it takes about 5 sec. to parse a 25MB e-mail (a letter with one large attachment), so there's some room for improvement.
 
 If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](/andris9/Nodemailer).
+
+## Support mailparser development
+
+[![Donate to author](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DB26KWR2BQX5W)
 
 Live Demo
 ---------
