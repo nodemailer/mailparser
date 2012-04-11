@@ -24,7 +24,34 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
+    "Many chunks - split line endings": function(test){
+        var chunks = [
+            "Content-Type: text/plain; charset=utf-8\r",
+            "\nSubject: Hi Mom\r\n\r\n",
+            "hello"
+        ];
+
+        test.expect(1);
+        var mailparser = new MailParser();
+
+        var writeNextChunk = function(){
+            var chunk = chunks.shift();
+            if( chunk !== undefined ){
+                mailparser.write(chunk, 'utf8');
+                process.nextTick(writeNextChunk);
+            } else {
+                mailparser.end();
+            }
+        };
+
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "hello");
+            test.done();
+        });
+        process.nextTick(writeNextChunk);
+    },
+
     "Headers only": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
                           "Subject: ÕÄÖÜ",
