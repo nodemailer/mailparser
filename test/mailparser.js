@@ -24,28 +24,32 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Many chunks - split line endings": function(test){
-        var encodedText = "Content-Type: text/plain; charset=utf-8\r"+
-                          "\n" +
-                          "Subject: Hi Mom\r\n" +
-                          "\r\n" +
-                          "ÕÄ\r\n" +
-                          "ÖÜ", // \r\nÕÄÖÜ
-            mail = new Buffer(encodedText, "utf-8");
-        
+        var chunks = [
+            "Content-Type: text/plain; charset=utf-8\r",
+            "\nSubject: Hi Mom\r\n\r\n",
+            "hello"
+        ];
+
         test.expect(1);
         var mailparser = new MailParser();
-        
-        for(var i=0, len = mail.length; i<len; i++){
-            mailparser.write(new Buffer([mail[i]]));
-        }
-        
-        mailparser.end();
+
+        var writeNextChunk = function(){
+            var chunk = chunks.shift();
+            if( chunk !== undefined ){
+                mailparser.write(chunk, 'utf8');
+                process.nextTick(writeNextChunk);
+            } else {
+                mailparser.end();
+            }
+        };
+
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "ÕÄ\nÖÜ");
+            test.equal(mail.text, "hello");
             test.done();
         });
+        process.nextTick(writeNextChunk);
     },
 
     "Headers only": function(test){
