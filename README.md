@@ -80,7 +80,8 @@ object with parsed e-mail structure as a parameter.
   * **to** - an array of parsed `To` addresses
   * **cc** - an array of parsed `Cc` addresses
   * **subject** - the subject line
-  * **references** - an array of reference message id values
+  * **references** - an array of reference message id values (not set if no reference values present)
+  * **inReplyTo** - an array of In-Reply-To message id values (not set if no in-reply-to values present)
   * **priority** - priority of the e-mail, always one of the following: *normal* (default), *high*, *low*
   * **text** - text body
   * **html** - html body

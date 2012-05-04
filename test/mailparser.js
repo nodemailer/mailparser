@@ -178,7 +178,7 @@ exports["General tests"] = {
         });
     },
     
-    "Multiple references": function(test){
+    "Multiple reference values": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "References: <mail1>\n" +
                           "    <mail2> <mail3>\n"
@@ -191,6 +191,73 @@ exports["General tests"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.deepEqual(mail.references, ["mail1", "mail2", "mail3"]);
+            test.done();
+        });
+    },
+    
+    "Multiple reference fields": function(test){
+        var encodedText = "Content-type: text/plain\r" +
+                          "References: <mail1>\n" +
+                          "References: <mail3>\n"
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.references, ["mail1", "mail3"]);
+            test.done();
+        });
+    },
+    
+    "Single in-reply-to": function(test){
+        var encodedText = "Content-type: text/plain\r" +
+                          "in-reply-to: <mail1>\n" +
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.inReplyTo, ["mail1"]);
+            test.done();
+        });
+    },
+    
+    "Multiple in-reply-to values": function(test){
+        var encodedText = "Content-type: text/plain\r" +
+                          "in-reply-to: <mail1>\n" +
+                          "    <mail2> <mail3>\n"
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.inReplyTo, ["mail1", "mail2", "mail3"]);
+            test.done();
+        });
+    },
+    
+    "Multiple in-reply-to fields": function(test){
+        var encodedText = "Content-type: text/plain\r" +
+                          "in-reply-to: <mail1>\n" +
+                          "in-reply-to: <mail3>\n"
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.inReplyTo, ["mail1", "mail3"]);
             test.done();
         });
     }
