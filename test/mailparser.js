@@ -160,6 +160,39 @@ exports["General tests"] = {
             test.equal(mail.priority, "high");
             test.done();
         });
+    },
+    
+    "Single reference": function(test){
+        var encodedText = "Content-type: text/plain\r" +
+                          "References: <mail1>\n" +
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.references, ["mail1"]);
+            test.done();
+        });
+    },
+    
+    "Multiple references": function(test){
+        var encodedText = "Content-type: text/plain\r" +
+                          "References: <mail1>\n" +
+                          "    <mail2> <mail3>\n"
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.references, ["mail1", "mail2", "mail3"]);
+            test.done();
+        });
     }
     
 };
