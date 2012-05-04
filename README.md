@@ -219,6 +219,7 @@ can assume it is always \r\n but this might not be always the case.
 
 Due to the line based parsing it is also not possible to explicitly state
 the beginning and ending bytes of the attachments for later source seeking.
+Node.js doesn't support the concept of seeking very well anyway.
 
 ## License
 
