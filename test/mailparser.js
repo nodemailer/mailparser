@@ -753,7 +753,7 @@ exports["Transfer encoding"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "==ÄÖÜ");
+            test.equal(mail.text, "=�=�ÄÖÜ=");
             test.done();
         }); 
     },
