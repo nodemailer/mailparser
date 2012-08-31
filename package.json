@@ -24,7 +24,7 @@
         }
     ],
     "dependencies": {
-        "mimelib": ">=0.1.15",
+        "mimelib": ">=0.1.17",
         "iconv": "*"
     },
     "devDependencies": {
