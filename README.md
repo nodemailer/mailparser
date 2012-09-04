@@ -1,9 +1,7 @@
 MailParser
 ==========
 
-**NB!** This version of MailParser is incompatible with pre 0.2.0, do 
-not upgrade from 0.1.x without updating your code, the API is totally 
-different.
+**NB!** MailParser is now out of the box compatible with Windows - instead of compiled [Iconv](https://npmjs.org/package/iconv) module, [iconv-lite](https://npmjs.org/package/iconv-lite) is used instead when in Windows.
 
 [![Build Status](https://secure.travis-ci.org/andris9/mailparser.png)](http://travis-ci.org/andris9/mailparser)
 
@@ -12,13 +10,11 @@ different.
 Handles even large attachments with ease - attachments can be parsed 
 in chunks and streamed if needed.
 
-**MailParser** parses raw source of e-mail messages into a structured 
-object.
+**MailParser** parses raw source of e-mail messages into a structured object.
 
 No need to worry about charsets or decoding *quoted-printable* or 
-*base64* data, **MailParser** (with the help of *node-iconv*) does all 
-of it for you. All the textual output from **MailParser** (subject line, 
-addressee names, message body) is always UTF-8.
+*base64* data, **MailParser** does all of it for you. All the textual output 
+from **MailParser** (subject line, addressee names, message body) is always UTF-8.
 
 MailParser is not the fastest multipart parser though - it takes about 5 sec. to parse a 25MB e-mail (a letter with one large attachment), so there's some room for improvement.
 
