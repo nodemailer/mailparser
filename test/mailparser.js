@@ -1,6 +1,7 @@
 var MailParser = require("../lib/mailparser").MailParser,
     testCase = require('nodeunit').testCase,
-    utillib = require("util");
+    utillib = require("util"),
+    encodinglib = require("encoding");
 
 
 exports["General tests"] = {
@@ -1023,12 +1024,82 @@ exports["Attachment info"] = {
                               "Content-Transfer-Encoding: 8bit\r\n"+
                               "Content-Disposition: attachment\r\n"+
                               "\r\n"+
-                              "ÕÄ\r\n"+"" +
+                              "ÕÄ\r\n"+
                               "ÖÜ\r\n"+
                           "--ABC--",
             expectedHash = "cad0f72629a7245dd3d2cbf41473e3ca",
             mail = new Buffer(encodedText, "utf-8");
         
+        var mailparser = new MailParser({streamAttachments: true});
+        
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+        
+        test.expect(3);
+        
+        mailparser.on("attachment", function(attachment){
+            test.ok(attachment.stream, "Stream detected");
+        });
+        
+        mailparser.end();
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
+            test.done();
+        });
+    },
+    "Stream integrity - binary, non utf-8": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: 8bit\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "ÕÄ\r\n"+
+                              "ÖÜ\r\n"+
+                              "ŽŠ\r\n"+
+                          "--ABC--",
+            expectedHash = "34bca86f8cc340bbd11446ee16ee3cae",
+            mail = encodinglib.convert(encodedText, "latin-13");
+
+        var mailparser = new MailParser({streamAttachments: true});
+        
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+        
+        test.expect(3);
+        
+        mailparser.on("attachment", function(attachment){
+            test.ok(attachment.stream, "Stream detected");
+        });
+        
+        mailparser.end();
+        
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
+            test.done();
+        });
+    },
+    "Stream integrity - qp, non utf-8": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream; charset=iso-8859-13\r\n"+
+                              "Content-Transfer-Encoding: quoted-printable\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "=d5=c4\r\n"+
+                              "=d6=dc\r\n"+
+                              "=de=d0\r\n"+
+                          "--ABC--",
+            expectedHash = "34bca86f8cc340bbd11446ee16ee3cae",
+            mail = new Buffer(encodedText, "utf-8");
+
         var mailparser = new MailParser({streamAttachments: true});
         
         for(var i=0, len = mail.length; i<len; i++){
