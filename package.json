@@ -24,8 +24,8 @@
         }
     ],
     "dependencies": {
-        "mimelib": ">=0.2.1",
-        "encoding": "*"
+        "mimelib": ">=0.2.6",
+        "encoding": ">=0.1.4"
     },
     "devDependencies": {
         "nodeunit": "*"

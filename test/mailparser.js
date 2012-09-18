@@ -333,7 +333,6 @@ exports["Text encodings"] = {
             mail = new Buffer(encodedText, "utf-8");
         
         test.expect(1);
-        
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -747,6 +746,17 @@ exports["Transfer encoding"] = {
             test.equal(Array.prototype.map.call(mail.text, function(chr){return chr.charCodeAt(0);}).join(","), "213,196,214,65533");
             test.done();
         }); 
+    },
+    "gb2312 mime words": function(test){
+        var encodedText = "From: =?gb2312?B?086yyZjl?= user@ldkf.com.tw\r\n\r\nBody",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.from, [{address: 'user@ldkf.com.tw', name: '游采樺'}]);
+            test.done();
+        });
     }
 };
 
