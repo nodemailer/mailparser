@@ -518,7 +518,7 @@ exports["Attachment filename"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment");
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.bin");
             test.done();
         }); 
     },
@@ -561,7 +561,7 @@ exports["Attachment filename"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment");
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.bin");
             test.equal(mail.attachments && mail.attachments[1] && mail.attachments[1].content && mail.attachments[1].generatedFileName, "test.txt");
             test.done();
         }); 
