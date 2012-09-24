@@ -630,6 +630,28 @@ exports["Plaintext format"] = {
             test.equal(mail.text, "First linecontinuedand so on");
             test.done();
         }); 
+    },
+    "Quoted printable, Flowed": function(test){
+        var encodedText = "Content-Type: text/plain; format=flowed\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nFoo =\n\nBar =\n\nBaz",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "Foo Bar Baz");
+            test.done();
+        }); 
+    },
+    "Quoted printable, DelSp": function(test){
+        var encodedText = "Content-Type: text/plain; format=flowed; delsp=yes\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nFoo =\n\nBar =\n\nBaz",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "FooBarBaz");
+            test.done();
+        });
     }
 };
 
