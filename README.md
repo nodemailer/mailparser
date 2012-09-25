@@ -16,7 +16,7 @@ No need to worry about charsets or decoding *quoted-printable* or
 *base64* data, **MailParser** does all of it for you. All the textual output 
 from **MailParser** (subject line, addressee names, message body) is always UTF-8.
 
-MailParser is not the fastest multipart parser though - it takes about 5 sec. to parse a 25MB e-mail (a letter with one large attachment), so there's some room for improvement.
+For a 25MB e-mail it takes less than a second to parse if attachments are not streamed but buffered and about 3-4 seconds if they are streamed. Expect high RAM usage though if you do not stream the attachments.
 
 If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](/andris9/Nodemailer).
 
