@@ -754,7 +754,7 @@ exports["Transfer encoding"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "=�=�ÄÖÜ=");
+            test.equal(mail.text, "=�=�ÄÖÜ");
             test.done();
         }); 
     },
@@ -1188,6 +1188,35 @@ exports["Attachment info"] = {
         
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentType, "application/pdf");
+            test.done();
+        });
+    },
+    "MHT Content-Location replace": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: text/html; charset=utf-8\r\n"+
+                              "Content-Location: http://www.example.com/index.html\r\n"+
+                              "Content-Transfer-Encoding: 8bit\r\n"+
+                              "\r\n"+
+                              "<img src=\"images/logo.png\">\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: image/png\r\n"+
+                              "Content-Location: http://www.example.com/images/logo.png\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC--",
+            expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        
+        mailparser.write(mail);
+        mailparser.end();
+        
+        mailparser.on("end", function(mail){
+            test.ok(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId && mail.html.indexOf("cid:"+mail.attachments[0].contentId));
             test.done();
         });
     }
