@@ -70,6 +70,7 @@ object with parsed e-mail structure as a parameter.
   * **from** - an array of parsed `From` addresses - `[{address:'sender@example.com',name:'Sender Name'}]` (should be only one though)
   * **to** - an array of parsed `To` addresses
   * **cc** - an array of parsed `Cc` addresses
+ *  **bcc** - an array of parsed 'Bcc' addresses
   * **subject** - the subject line
   * **references** - an array of reference message id values (not set if no reference values present)
   * **inReplyTo** - an array of In-Reply-To message id values (not set if no in-reply-to values present)
