@@ -618,7 +618,7 @@ exports["Plaintext format"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "How are you today?\n--\nSignature\n");
+            test.equal(mail.text, "How are you today?\n-- \nSignature\n");
             test.done();
         });
     },
@@ -664,7 +664,7 @@ exports["Plaintext format"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "How are you today?\n--\nSignature\n");
+            test.equal(mail.text, "How are you today?\n-- \nSignature\n");
             test.done();
         });
     },
