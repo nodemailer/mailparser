@@ -11,12 +11,12 @@ exports["ks_c_5601-1987"] = function(test){
                       "\r\n"+
                       "vcU=",
         mail = new Buffer(encodedText, "utf-8");
-    
+
     var mailparser = new MailParser();
     mailparser.end(mail);
     mailparser.on("end", function(mail){
         test.equal(mail.subject, "신");
         test.equal(mail.text.trim(), "신");
         test.done();
-    }); 
+    });
 }

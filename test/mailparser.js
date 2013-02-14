@@ -10,14 +10,14 @@ exports["General tests"] = {
                           "ÕÄ\r\n" +
                           "ÖÜ", // \r\nÕÄÖÜ
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
-        
+
         for(var i=0, len = mail.length; i<len; i++){
             mailparser.write(new Buffer([mail[i]]));
         }
-        
+
         mailparser.end();
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄ\nÖÜ");
@@ -56,7 +56,7 @@ exports["General tests"] = {
         var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
                           "Subject: ÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -65,12 +65,12 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Body only": function(test){
         var encodedText = "\r\n" +
                           "===",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -79,7 +79,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Different line endings": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r" +
                           "Subject: ÕÄÖÜ\n" +
@@ -89,7 +89,7 @@ exports["General tests"] = {
                           "ÜÖÄÕ\n" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(2);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -99,7 +99,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Headers event": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n"+
@@ -113,29 +113,29 @@ exports["General tests"] = {
                               "AAECAwQFBg==\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(3);
         var mailparser = new MailParser();
-        
+
         mailparser.on("headers", function(headers){
             test.equal(headers.subject, "ABCDEF");
             test.equal(headers['x-test'], "ÕÄÖÜ");
         });
-        
+
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.ok(1, "Parsing ended");
             test.done();
         });
     },
-    
+
     "No priority": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r" +
                           "Subject: ÕÄÖÜ\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -144,7 +144,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "MS Style priority": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r" +
                           "Subject: ÕÄÖÜ\n" +
@@ -152,7 +152,7 @@ exports["General tests"] = {
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -161,14 +161,14 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Single reference": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "References: <mail1>\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -177,7 +177,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Multiple reference values": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "References: <mail1>\n" +
@@ -185,7 +185,7 @@ exports["General tests"] = {
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -194,7 +194,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Multiple reference fields": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "References: <mail1>\n" +
@@ -202,7 +202,7 @@ exports["General tests"] = {
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -211,14 +211,14 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Single in-reply-to": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "in-reply-to: <mail1>\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -227,7 +227,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Multiple in-reply-to values": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "in-reply-to: <mail1>\n" +
@@ -235,7 +235,7 @@ exports["General tests"] = {
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -244,7 +244,7 @@ exports["General tests"] = {
             test.done();
         });
     },
-    
+
     "Multiple in-reply-to fields": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "in-reply-to: <mail1>\n" +
@@ -252,7 +252,7 @@ exports["General tests"] = {
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -261,17 +261,17 @@ exports["General tests"] = {
             test.done();
         });
     }
-    
+
 };
 
 exports["Text encodings"] = {
-    
+
     "Plaintext encoding: Default": function(test){
         var encodedText = [13,10, 213, 196, 214, 220], // \r\nÕÄÖÜ
             mail = new Buffer(encodedText);
-        
+
         test.expect(1);
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -279,13 +279,13 @@ exports["Text encodings"] = {
             test.done();
         });
     },
-    
+
     "Plaintext encoding: Header defined": function(test){
         var encodedText = "Content-Type: TEXT/PLAIN; CHARSET=UTF-8\r\n" +
                           "\r\n" +
                           "ÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -294,15 +294,15 @@ exports["Text encodings"] = {
             test.done();
         });
     },
-    
+
     "HTML encoding: From <meta>": function(test){
         var encodedText = "Content-Type: text/html\r\n" +
                           "\r\n" +
                           "<html><head><meta charset=\"utf-8\"/></head><body>ÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -310,15 +310,15 @@ exports["Text encodings"] = {
             test.done();
         });
     },
-    
+
     "HTML encoding: Conflicting headers": function(test){
         var encodedText = "Content-Type: text/html; charset=iso-8859-1\r\n" +
                           "\r\n" +
                           "<html><head><meta charset=\"utf-8\"/></head><body>ÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -331,7 +331,7 @@ exports["Text encodings"] = {
                           "\r\n"+
                           "ÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         test.expect(1);
         var mailparser = new MailParser();
         mailparser.end(mail);
@@ -344,13 +344,13 @@ exports["Text encodings"] = {
         var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
                           "Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.subject, "Avaldus lepingu lõpetamiseks");
             test.done();
-        }); 
+        });
     }
 };
 
@@ -361,13 +361,13 @@ exports["Binary attachment encodings"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "0,1,2,3,253,254,255");
             test.done();
-        }); 
+        });
     },
     "Base64": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\n"+
@@ -375,32 +375,32 @@ exports["Binary attachment encodings"] = {
                           "\r\n"+
                           "AAECA/3+/w==",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "0,1,2,3,253,254,255");
             test.done();
-        }); 
+        });
     },
     "8bit": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\n"+
                           "\r\n"+
                           "ÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "195,149,195,132,195,150,195,156");
             test.done();
-        }); 
+        });
     }
-    
+
 };
 
 exports["Attachment filename"] = {
-    
+
     "Content-Disposition filename": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\n"+
                           "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
@@ -408,13 +408,13 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Content-Disposition filename*": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\n"+
@@ -423,13 +423,13 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Content-Disposition filename*X*": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\n"+
@@ -440,28 +440,28 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
-    
+
     "Content-Type name": function(test){
         var encodedText = "Content-Type: application/octet-stream; name=\"=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?=\"\r\n"+
                           "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Content-Type name*": function(test){
         var encodedText = "Content-Type: application/octet-stream;\r\n"+
@@ -470,13 +470,13 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Content-Type name*X*": function(test){
         var encodedText = "Content-Type: application/octet-stream;\r\n"+
@@ -486,13 +486,13 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Default name from Content-type": function(test){
         var encodedText = "Content-Type: application/pdf\r\n"+
@@ -500,13 +500,13 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.pdf");
             test.done();
-        }); 
+        });
     },
     "Default name": function(test){
         var encodedText = "Content-Type: application/octet-stream\r\n"+
@@ -514,13 +514,13 @@ exports["Attachment filename"] = {
                           "\r\n"+
                           "=00=01=02=03=FD=FE=FF",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.bin");
             test.done();
-        }); 
+        });
     },
     "Multiple filenames - Same": function(test){
         var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
@@ -535,14 +535,14 @@ exports["Attachment filename"] = {
                               "=00=01=02=03=FD=FE=FF\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "test.txt");
             test.equal(mail.attachments && mail.attachments[1] && mail.attachments[1].content && mail.attachments[1].generatedFileName, "test-1.txt");
             test.done();
-        }); 
+        });
     },
     "Multiple filenames - Different": function(test){
         var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
@@ -557,14 +557,14 @@ exports["Attachment filename"] = {
                               "=00=01=02=03=FD=FE=FF\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.bin");
             test.equal(mail.attachments && mail.attachments[1] && mail.attachments[1].content && mail.attachments[1].generatedFileName, "test.txt");
             test.done();
-        }); 
+        });
     },
     "Generate filename from Content-Type": function(test){
         var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
@@ -575,103 +575,103 @@ exports["Attachment filename"] = {
                               "=00=01=02=03=FD=FE=FF\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.pdf");
             test.done();
-        }); 
+        });
     }
-    
+
 };
 
 exports["Plaintext format"] = {
     "Default": function(test){
         var encodedText = "Content-Type: text/plain;\r\n\r\nFirst line \r\ncontinued",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "First line \ncontinued");
             test.done();
-        }); 
+        });
     },
     "Flowed": function(test){
         var encodedText = "Content-Type: text/plain; format=flowed\r\n\r\nFirst line \r\ncontinued \r\nand so on",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "First line continued and so on");
             test.done();
-        }); 
+        });
     },
     "Flowed Signature": function(test){
         var encodedText = "Content-Type: text/plain; format=flowed\r\n\r\nHow are you today?\r\n"+
             "-- \r\n"+
             "Signature\r\n",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "How are you today?\n--\nSignature\n");
             test.done();
-        }); 
+        });
     },
     "Fixed": function(test){
         var encodedText = "Content-Type: text/plain; format=fixed\r\n\r\nFirst line \r\ncontinued \r\nand so on",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "First line \ncontinued \nand so on");
             test.done();
-        }); 
+        });
     },
     "DelSp": function(test){
         var encodedText = "Content-Type: text/plain; format=flowed; delsp=yes\r\n\r\nFirst line \r\ncontinued \r\nand so on",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "First linecontinuedand so on");
             test.done();
-        }); 
+        });
     },
     "Quoted printable, Flowed": function(test){
         var encodedText = "Content-Type: text/plain; format=flowed\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nFoo =\n\nBar =\n\nBaz",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "Foo Bar Baz");
             test.done();
-        }); 
+        });
     },
     "Quoted printable, Flowed Signature": function(test){
         var encodedText = "Content-Type: text/plain; format=flowed\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nHow are you today?\r\n"+
             "-- \r\n"+
             "Signature\r\n",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "How are you today?\n--\nSignature\n");
             test.done();
-        }); 
+        });
     },
     "Quoted printable, DelSp": function(test){
         var encodedText = "Content-Type: text/plain; format=flowed; delsp=yes\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nFoo =\n\nBar =\n\nBaz",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -685,115 +685,115 @@ exports["Transfer encoding"] = {
     "Quoted-Printable Default charset": function(test){
         var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n=D5=C4=D6=DC",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Quoted-Printable UTF-8": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=C3=95=C3=84=C3=96=C3=9C",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Base64 Default charset": function(test){
         var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: bAse64\r\n\r\n1cTW3A==",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Base64 UTF-8": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: bAse64\r\n\r\nw5XDhMOWw5w=",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Mime Words": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nSubject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.subject, "Avaldus lepingu lõpetamiseks");
             test.done();
-        }); 
+        });
     },
     "Mime Words with invalid linebreaks (Sparrow)": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
                           "Subject: abc=?utf-8?Q?=C3=B6=C\r\n"+
                           " 3=B5=C3=BC?=",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.subject, "abcöõü");
             test.done();
-        }); 
+        });
     },
     "8bit Default charset": function(test){
         var encodedText = "Content-type: text/plain\r\nContent-Transfer-Encoding: 8bit\r\n\r\nÕÄÖÜ",
             textmap = encodedText.split('').map(function(chr){return chr.charCodeAt(0);}),
             mail = new Buffer(textmap);
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "8bit UTF-8": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nÕÄÖÜ",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Invalid Quoted-Printable": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n==C3==95=C3=84=C3=96=C3=9C=",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "=�=�ÄÖÜ");
             test.done();
-        }); 
+        });
     },
     "Invalid BASE64": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nw5XDhMOWw5",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(Array.prototype.map.call(mail.text, function(chr){return chr.charCodeAt(0);}).join(","), "213,196,214,65533");
             test.done();
-        }); 
+        });
     },
     "gb2312 mime words": function(test){
         var encodedText = "From: =?gb2312?B?086yyZjl?= user@ldkf.com.tw\r\n\r\nBody",
@@ -812,7 +812,7 @@ exports["Multipart content"] = {
     "Simple": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n\r\n--ABC\r\nContent-type: text/plain; charset=utf-8\r\n\r\nÕÄÖÜ\r\n--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -833,7 +833,7 @@ exports["Multipart content"] = {
                           "--DEF--\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -852,7 +852,7 @@ exports["Multipart content"] = {
                               "ÕÄÖÜ\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
@@ -877,10 +877,10 @@ exports["Multipart content"] = {
                               "--DEF--\r\n"+
                            "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ1");
             test.equal(mail.html, "ÕÄÖÜ2");
@@ -904,10 +904,10 @@ exports["Multipart content"] = {
                               "--DEF--\r\n"+
                            "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ1");
             test.done();
@@ -930,10 +930,10 @@ exports["Multipart content"] = {
                               "ÕÄÖÜ1\r\n"+
                            "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.text, "ÕÄÖÜ1");
             test.done();
@@ -956,10 +956,10 @@ exports["Multipart content"] = {
                               "--DEF--\r\n"+
                            "--ABC--",
             mail = new Buffer(encodedHTML, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.html, "ÕÄÖÜ1");
             test.done();
@@ -982,10 +982,10 @@ exports["Multipart content"] = {
                               "ÕÄÖÜ1\r\n"+
                            "--ABC--",
             mail = new Buffer(encodedHTML, "utf-8");
-        
+
         var mailparser = new MailParser();
         mailparser.end(mail);
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.html, "ÕÄÖÜ1");
             test.done();
@@ -1006,12 +1006,12 @@ exports["Attachment info"] = {
                           "--ABC--",
             expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
-        
+
         for(var i=0, len = mail.length; i<len; i++){
             mailparser.write(new Buffer([mail[i]]));
-        }        
+        }
         mailparser.end();
 
         mailparser.on("end", function(mail){
@@ -1032,21 +1032,21 @@ exports["Attachment info"] = {
                           "--ABC--",
             expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser({streamAttachments: true});
-        
+
         for(var i=0, len = mail.length; i<len; i++){
             mailparser.write(new Buffer([mail[i]]));
         }
-        
+
         test.expect(3);
-        
+
         mailparser.on("attachment", function(attachment){
             test.ok(attachment.stream, "Stream detected");
         });
-        
+
         mailparser.end();
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 7);
@@ -1066,21 +1066,21 @@ exports["Attachment info"] = {
                           "--ABC--",
             expectedHash = "cad0f72629a7245dd3d2cbf41473e3ca",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser({streamAttachments: true});
-        
+
         for(var i=0, len = mail.length; i<len; i++){
             mailparser.write(new Buffer([mail[i]]));
         }
-        
+
         test.expect(3);
-        
+
         mailparser.on("attachment", function(attachment){
             test.ok(attachment.stream, "Stream detected");
         });
-        
+
         mailparser.end();
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
@@ -1103,19 +1103,19 @@ exports["Attachment info"] = {
             mail = encodinglib.convert(encodedText, "latin-13");
 
         var mailparser = new MailParser({streamAttachments: true});
-        
+
         for(var i=0, len = mail.length; i<len; i++){
             mailparser.write(new Buffer([mail[i]]));
         }
-        
+
         test.expect(3);
-        
+
         mailparser.on("attachment", function(attachment){
             test.ok(attachment.stream, "Stream detected");
         });
-        
+
         mailparser.end();
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
@@ -1138,19 +1138,19 @@ exports["Attachment info"] = {
             mail = new Buffer(encodedText, "utf-8");
 
         var mailparser = new MailParser({streamAttachments: true});
-        
+
         for(var i=0, len = mail.length; i<len; i++){
             mailparser.write(new Buffer([mail[i]]));
         }
-        
+
         test.expect(3);
-        
+
         mailparser.on("attachment", function(attachment){
             test.ok(attachment.stream, "Stream detected");
         });
-        
+
         mailparser.end();
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
@@ -1180,16 +1180,16 @@ exports["Attachment info"] = {
                               "AAECAwQFBg==\r\n"+
                           "--ABC--",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser({streamAttachments: true});
-        
+
         test.expect(3); // should be 3 attachments
         mailparser.on("attachment", function(attachment){
             test.ok(attachment.stream, "Stream detected");
         });
-        
+
         mailparser.end(mail);
-        
+
         mailparser.on("end", function(mail){
             test.done();
         });
@@ -1206,12 +1206,12 @@ exports["Attachment info"] = {
                           "--ABC--",
             expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
             mail = new Buffer(encodedText, "utf-8");
-        
+
         var mailparser = new MailParser();
-        
+
         mailparser.write(mail);
         mailparser.end();
-        
+
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentType, "application/pdf");
             test.done();
