@@ -609,6 +609,19 @@ exports["Plaintext format"] = {
             test.done();
         }); 
     },
+    "Flowed Signature": function(test){
+        var encodedText = "Content-Type: text/plain; format=flowed\r\n\r\nHow are you today?\r\n"+
+            "-- \r\n"+
+            "Signature\r\n",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "How are you today?\n--\nSignature\n");
+            test.done();
+        }); 
+    },
     "Fixed": function(test){
         var encodedText = "Content-Type: text/plain; format=fixed\r\n\r\nFirst line \r\ncontinued \r\nand so on",
             mail = new Buffer(encodedText, "utf-8");
@@ -639,6 +652,19 @@ exports["Plaintext format"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.text, "Foo Bar Baz");
+            test.done();
+        }); 
+    },
+    "Quoted printable, Flowed Signature": function(test){
+        var encodedText = "Content-Type: text/plain; format=flowed\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nHow are you today?\r\n"+
+            "-- \r\n"+
+            "Signature\r\n",
+            mail = new Buffer(encodedText, "utf-8");
+        
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "How are you today?\n--\nSignature\n");
             test.done();
         }); 
     },
@@ -754,7 +780,7 @@ exports["Transfer encoding"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "=�=�ÄÖÜ=");
+            test.equal(mail.text, "=�=�ÄÖÜ");
             test.done();
         }); 
     },
