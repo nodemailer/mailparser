@@ -1,7 +1,8 @@
 var MailParser = require("../lib/mailparser").MailParser,
     testCase = require('nodeunit').testCase,
     utillib = require("util"),
-    encodinglib = require("encoding");
+    encodinglib = require("encoding"),
+    fs = require("fs");
 
 exports["General tests"] = {
     "Many chunks": function(test){
@@ -886,110 +887,6 @@ exports["Multipart content"] = {
             test.equal(mail.html, "ÕÄÖÜ2");
             test.done();
         });
-    },
-    "Alternative content - Main TEXT first": function(test){
-        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
-                          "\r\n"+
-                          "--ABC\r\n"+
-                              "Content-type: text/plain; charset=utf-8\r\n"+
-                              "\r\n"+
-                              "ÕÄÖÜ1\r\n"+
-                          "--ABC\r\n"+
-                              "Content-type: multipart/related; boundary=DEF\r\n"+
-                              "\r\n"+
-                              "--DEF\r\n"+
-                                  "Content-type: text/plain; charset=utf-8\r\n"+
-                                   "\r\n"+
-                                   "ÕÄÖÜ2\r\n"+
-                              "--DEF--\r\n"+
-                           "--ABC--",
-            mail = new Buffer(encodedText, "utf-8");
-
-        var mailparser = new MailParser();
-        mailparser.end(mail);
-
-        mailparser.on("end", function(mail){
-            test.equal(mail.text, "ÕÄÖÜ1");
-            test.done();
-        });
-    },
-    "Alternative content - Main TEXT last": function(test){
-        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
-                          "\r\n"+
-                          "--ABC\r\n"+
-                              "Content-type: multipart/related; boundary=DEF\r\n"+
-                              "\r\n"+
-                              "--DEF\r\n"+
-                                  "Content-type: text/plain; charset=utf-8\r\n"+
-                                   "\r\n"+
-                                   "ÕÄÖÜ2\r\n"+
-                              "--DEF--\r\n"+
-                           "--ABC\r\n"+
-                              "Content-type: text/plain; charset=utf-8\r\n"+
-                              "\r\n"+
-                              "ÕÄÖÜ1\r\n"+
-                           "--ABC--",
-            mail = new Buffer(encodedText, "utf-8");
-
-        var mailparser = new MailParser();
-        mailparser.end(mail);
-
-        mailparser.on("end", function(mail){
-            test.equal(mail.text, "ÕÄÖÜ1");
-            test.done();
-        });
-    },
-    "Alternative content - Main HTML first": function(test){
-        var encodedHTML = "Content-type: multipart/mixed; boundary=ABC\r\n"+
-                          "\r\n"+
-                          "--ABC\r\n"+
-                              "Content-type: text/html; charset=utf-8\r\n"+
-                              "\r\n"+
-                              "ÕÄÖÜ1\r\n"+
-                          "--ABC\r\n"+
-                              "Content-type: multipart/related; boundary=DEF\r\n"+
-                              "\r\n"+
-                              "--DEF\r\n"+
-                                  "Content-type: text/html; charset=utf-8\r\n"+
-                                   "\r\n"+
-                                   "ÕÄÖÜ2\r\n"+
-                              "--DEF--\r\n"+
-                           "--ABC--",
-            mail = new Buffer(encodedHTML, "utf-8");
-
-        var mailparser = new MailParser();
-        mailparser.end(mail);
-
-        mailparser.on("end", function(mail){
-            test.equal(mail.html, "ÕÄÖÜ1");
-            test.done();
-        });
-    },
-    "Alternative content - Main HTML last": function(test){
-        var encodedHTML = "Content-type: multipart/mixed; boundary=ABC\r\n"+
-                          "\r\n"+
-                          "--ABC\r\n"+
-                              "Content-type: multipart/related; boundary=DEF\r\n"+
-                              "\r\n"+
-                              "--DEF\r\n"+
-                                  "Content-type: text/html; charset=utf-8\r\n"+
-                                   "\r\n"+
-                                   "ÕÄÖÜ2\r\n"+
-                              "--DEF--\r\n"+
-                           "--ABC\r\n"+
-                              "Content-type: text/html; charset=utf-8\r\n"+
-                              "\r\n"+
-                              "ÕÄÖÜ1\r\n"+
-                           "--ABC--",
-            mail = new Buffer(encodedHTML, "utf-8");
-
-        var mailparser = new MailParser();
-        mailparser.end(mail);
-
-        mailparser.on("end", function(mail){
-            test.equal(mail.html, "ÕÄÖÜ1");
-            test.done();
-        });
     }
 };
 
@@ -1216,5 +1113,55 @@ exports["Attachment info"] = {
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentType, "application/pdf");
             test.done();
         });
+    },
+
+    "Inline attachments": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n"+
+                          "Subject: ABCDEF\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: text/html\r\n"+
+                              "\r\n"+
+                              "<p>test 1</p>\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment; filename=\"test.pdf\"\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: text/html\r\n"+
+                              "\r\n"+
+                              "<p>test 2</p>\r\n"+
+                          "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
+        var mailparser = new MailParser({showAttachmentLinks: true});
+
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.html, '<p>test 1</p><br/>\n\n<div class="mailparser-attachment"><a href="cid:test.pdf@node">&lt;test.pdf&gt;</a></div><br/>\n<p>test 2</p>');
+            test.done();
+        });
     }
 };
+
+exports["Advanced nested HTML"] = function(test){
+        var mail = fs.readFileSync(__dirname + "/nested.eml");
+
+        test.expect(2);
+        var mailparser = new MailParser();
+
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+
+        mailparser.end();
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "\nDear Sir,\n\nGood evening.\n\n\n \n\n\n\nThe footer\n");
+            test.equal(mail.html, "<p>Dear Sir</p>\n<p>Good evening.</p>\n<p></p><p>The footer</p>\n");
+            test.done();
+        });
+    }

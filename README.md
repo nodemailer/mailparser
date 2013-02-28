@@ -1,8 +1,6 @@
 MailParser
 ==========
 
-**NB!** MailParser is now out of the box compatible with Windows - instead of compiled [Iconv](https://npmjs.org/package/iconv) module, [iconv-lite](https://npmjs.org/package/iconv-lite) is used instead when in Windows.
-
 [![Build Status](https://secure.travis-ci.org/andris9/mailparser.png)](http://travis-ci.org/andris9/mailparser)
 
 **MailParser** is an asynchronous and non-blocking parser for 
@@ -77,7 +75,6 @@ object with parsed e-mail structure as a parameter.
   * **priority** - priority of the e-mail, always one of the following: *normal* (default), *high*, *low*
   * **text** - text body
   * **html** - html body
-  * **alternatives** - an array of alternative bodies in addition to the default `html` and `text` - `[{contentType:"text/plain", content: "..."}]`
   * **attachments** - an array of attachments
     
 ### Decode a simple e-mail
