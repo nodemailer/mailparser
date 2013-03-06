@@ -3,15 +3,15 @@ MailParser
 
 [![Build Status](https://secure.travis-ci.org/andris9/mailparser.png)](http://travis-ci.org/andris9/mailparser)
 
-**MailParser** is an asynchronous and non-blocking parser for 
-[node.js](http://nodejs.org) to parse mime encoded e-mail messages. 
-Handles even large attachments with ease - attachments can be parsed 
+**MailParser** is an asynchronous and non-blocking parser for
+[node.js](http://nodejs.org) to parse mime encoded e-mail messages.
+Handles even large attachments with ease - attachments can be parsed
 in chunks and streamed if needed.
 
 **MailParser** parses raw source of e-mail messages into a structured object.
 
-No need to worry about charsets or decoding *quoted-printable* or 
-*base64* data, **MailParser** does all of it for you. All the textual output 
+No need to worry about charsets or decoding *quoted-printable* or
+*base64* data, **MailParser** does all of it for you. All the textual output
 from **MailParser** (subject line, addressee names, message body) is always UTF-8.
 
 For a 25MB e-mail it takes less than a second to parse if attachments are not streamed but buffered and about 3-4 seconds if they are streamed. Expect high RAM usage though if you do not stream the attachments.
@@ -33,7 +33,7 @@ Usage
 Require MailParser module
 
     var MailParser = require("mailparser").MailParser;
-    
+
 Create a new MailParser object
 
     var mailparser = new MailParser([options]);
@@ -46,7 +46,7 @@ Options parameter is an object with the following properties:
   * **defaultCharset** - the default charset for *text/plain* and *text/html* content, if not set reverts to *Latin-1*
   * **showAttachmentLinks** - if set to true, show inlined attachment links `<a href="cid:...">filename</a>`
 
-MailParser object is a writable Stream - you can pipe directly 
+MailParser object is a writable Stream - you can pipe directly
 files to it or you can send chunks with `mailparser.write`
 
 When the headers have received, "headers" is emitted. The headers have not been pre-processed (except that mime words have been converted to UTF-8 text).
@@ -55,7 +55,7 @@ When the headers have received, "headers" is emitted. The headers have not been 
         console.log(headers.received);
     });
 
-When the parsing ends an `'end'` event is emitted which has an 
+When the parsing ends an `'end'` event is emitted which has an
 object with parsed e-mail structure as a parameter.
 
     mailparser.on("end", function(mail){
@@ -76,7 +76,7 @@ object with parsed e-mail structure as a parameter.
   * **text** - text body
   * **html** - html body
   * **attachments** - an array of attachments
-    
+
 ### Decode a simple e-mail
 
 This example decodes an e-mail from a string
@@ -89,14 +89,14 @@ This example decodes an e-mail from a string
                 "Subject: Hello world!\r\n"+
                 "\r\n"+
                 "How are you today?";
-    
+
     // setup an event listener when the parsing finishes
     mailparser.on("end", function(mail_object){
         console.log("From:", mail_object.from); //[{address:'sender@example.com',name:'Sender Name'}]
         console.log("Subject:", mail_object.subject); // Hello world!
         console.log("Text body:", mail_object.text); // How are you today?
     });
-    
+
     // send the email source to the parser
     mailparser.write(email);
     mailparser.end();
@@ -108,11 +108,11 @@ This example pipes a `readableStream` file to **MailParser**
     var MailParser = require("mailparser").MailParser,
         mailparser = new MailParser(),
         fs = require("fs");
-    
+
     mailparser.on("end", function(mail_object){
         console.log("Subject:", mail_object.subject);
     });
-    
+
     fs.createReadStream("email.eml").pipe(mailparser);
 
 ### Attachments
@@ -159,17 +159,17 @@ to the `MailParser` constructor.
         streamAttachments: true
     }
 
-This way there will be no `content` property on final attachment objects 
+This way there will be no `content` property on final attachment objects
 (but the other fields will remain).
 
 To catch the streams you should listen for `attachment` events on the MailParser
-object. The parameter provided includes file information (`contentType`, 
+object. The parameter provided includes file information (`contentType`,
 `fileName`, `contentId`) and a readable Stream object `stream`.
 
     var mp = new MailParser({
         streamAttachments: true
     }
-    
+
     mp.on("attachment", function(attachment){
         var output = fs.createWriteStream(attachment.generatedFileName);
         attachment.stream.pipe(output);
@@ -177,7 +177,7 @@ object. The parameter provided includes file information (`contentType`,
 
 `generatedFileName` is unique for the parsed mail - if several attachments with
 the same name exist, `generatedFileName` is updated accordingly. Also there
-might not be `fileName` parameter at all, so it is better to rely on 
+might not be `fileName` parameter at all, so it is better to rely on
 `generatedFileName`.
 
 #### Testing attachment integrity
