@@ -428,7 +428,7 @@ exports["Attachment Content-Id"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, mail.attachments[0].generatedFileName + "@node");
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, "ef694232fea1c01c16fb8a03a0ca710c@mailparser");
             test.done();
         });
     },
@@ -1193,7 +1193,7 @@ exports["Attachment info"] = {
 
         mailparser.end(mail);
         mailparser.on("end", function(mail){
-            test.equal(mail.html, '<p>test 1</p><br/>\n\n<div class="mailparser-attachment"><a href="cid:test.pdf@node">&lt;test.pdf&gt;</a></div><br/>\n<p>test 2</p>');
+            test.equal(mail.html, '<p>test 1</p><br/>\n\n<div class="mailparser-attachment"><a href="cid:754dc77d28e62763c4916970d595a10f@mailparser">&lt;test.pdf&gt;</a></div><br/>\n<p>test 2</p>');
             test.done();
         });
     }
