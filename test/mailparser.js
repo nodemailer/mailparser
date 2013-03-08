@@ -416,6 +416,41 @@ exports["Binary attachment encodings"] = {
 
 };
 
+exports["Attachment Content-Id"] = {
+    "Default": function(test){
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "Content-Disposition: attachment; filename=\"=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?=\"\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, mail.attachments[0].generatedFileName + "@node");
+            test.done();
+        });
+    },
+
+    "Defined": function(test){
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n"+
+                          "Content-Disposition: attachment; filename=\"=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?=\"\r\n"+
+                          "Content-Id: test@localhost\r\n"+
+                          "\r\n"+
+                          "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, "test@localhost");
+            test.done();
+        });
+    }
+}
+
 exports["Attachment filename"] = {
 
     "Content-Disposition filename": function(test){
