@@ -261,6 +261,22 @@ exports["General tests"] = {
             test.deepEqual(mail.inReplyTo, ["mail1", "mail3"]);
             test.done();
         });
+    },
+
+    "Reply To address": function(test){
+        var encodedText = "Reply-TO: andris <andris@disposebox.com>\r" +
+                          "Subject: ÕÄÖÜ\n" +
+                          "\r" +
+                          "1234",
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.deepEqual(mail.replyTo, [{name:"andris", address:"andris@disposebox.com"}]);
+            test.done();
+        });
     }
 
 };
