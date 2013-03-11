@@ -19,4 +19,4 @@ exports["ks_c_5601-1987"] = function(test){
         test.equal(mail.text.trim(), "신");
         test.done();
     });
-}
+};

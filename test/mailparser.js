@@ -182,7 +182,7 @@ exports["General tests"] = {
     "Multiple reference values": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "References: <mail1>\n" +
-                          "    <mail2> <mail3>\n"
+                          "    <mail2> <mail3>\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
@@ -199,7 +199,7 @@ exports["General tests"] = {
     "Multiple reference fields": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "References: <mail1>\n" +
-                          "References: <mail3>\n"
+                          "References: <mail3>\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
@@ -232,7 +232,7 @@ exports["General tests"] = {
     "Multiple in-reply-to values": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "in-reply-to: <mail1>\n" +
-                          "    <mail2> <mail3>\n"
+                          "    <mail2> <mail3>\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
@@ -249,7 +249,7 @@ exports["General tests"] = {
     "Multiple in-reply-to fields": function(test){
         var encodedText = "Content-type: text/plain\r" +
                           "in-reply-to: <mail1>\n" +
-                          "in-reply-to: <mail3>\n"
+                          "in-reply-to: <mail3>\n" +
                           "\r" +
                           "1234",
             mail = new Buffer(encodedText, "utf-8");
@@ -449,7 +449,7 @@ exports["Attachment Content-Id"] = {
             test.done();
         });
     }
-}
+};
 
 exports["Attachment filename"] = {
 
@@ -1152,7 +1152,6 @@ exports["Attachment info"] = {
                               "\r\n"+
                               "AAECAwQFBg==\r\n"+
                           "--ABC--",
-            expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
             mail = new Buffer(encodedText, "utf-8");
 
         var mailparser = new MailParser();
@@ -1200,9 +1199,32 @@ exports["Attachment info"] = {
 };
 
 exports["Advanced nested HTML"] = function(test){
-        var mail = fs.readFileSync(__dirname + "/nested.eml");
+    var mail = fs.readFileSync(__dirname + "/nested.eml");
 
-        test.expect(2);
+    test.expect(2);
+    var mailparser = new MailParser();
+
+    for(var i=0, len = mail.length; i<len; i++){
+        mailparser.write(new Buffer([mail[i]]));
+    }
+
+    mailparser.end();
+    mailparser.on("end", function(mail){
+        test.equal(mail.text, "\nDear Sir,\n\nGood evening.\n\n\n \n\n\n\nThe footer\n");
+        test.equal(mail.html, "<p>Dear Sir</p>\n<p>Good evening.</p>\n<p></p><p>The footer</p>\n");
+        test.done();
+    });
+};
+
+exports["MBOX format"] = {
+    "Not a mbox": function(test){
+        var encodedText = "Content-Type: text/plain; charset=utf-8\r\n" +
+                          "\r\n" +
+                          "ÕÄ\r\n" +
+                          "ÖÜ", // \r\nÕÄÖÜ
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
         var mailparser = new MailParser();
 
         for(var i=0, len = mail.length; i<len; i++){
@@ -1211,8 +1233,73 @@ exports["Advanced nested HTML"] = function(test){
 
         mailparser.end();
         mailparser.on("end", function(mail){
-            test.equal(mail.text, "\nDear Sir,\n\nGood evening.\n\n\n \n\n\n\nThe footer\n");
-            test.equal(mail.html, "<p>Dear Sir</p>\n<p>Good evening.</p>\n<p></p><p>The footer</p>\n");
+            test.equal(mailparser._isMbox, false);
+            test.done();
+        });
+    },
+
+    "Is a mbox": function(test){
+        var encodedText = "From MAILER-DAEMON Fri Jul  8 12:08:34 2011\r\n"+
+                          "Content-Type: text/plain; charset=utf-8\r\n" +
+                          "\r\n" +
+                          "ÕÄ\r\n" +
+                          "ÖÜ", // \r\nÕÄÖÜ
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
+        var mailparser = new MailParser();
+
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+
+        mailparser.end();
+        mailparser.on("end", function(mail){
+            test.equal(mailparser._isMbox, true);
+            test.done();
+        });
+    },
+
+    "Don't unescape '>From '": function(test){
+        var encodedText = "Content-Type: text/plain; charset=utf-8\r\n" +
+                          "\r\n" +
+                          ">From test\r\n" +
+                          ">>From pest", // \r\nÕÄÖÜ
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
+        var mailparser = new MailParser();
+
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+
+        mailparser.end();
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, ">From test\n>>From pest");
+            test.done();
+        });
+    },
+
+    "Unescape '>From '": function(test){
+        var encodedText = "From MAILER-DAEMON Fri Jul  8 12:08:34 2011\r\n"+
+                          "Content-Type: text/plain; charset=utf-8\r\n" +
+                          "\r\n" +
+                          ">From test\r\n" +
+                          ">>From pest", // \r\nÕÄÖÜ
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
+        var mailparser = new MailParser();
+
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+
+        mailparser.end();
+        mailparser.on("end", function(mail){
+            test.equal(mail.text, "From test\n>From pest");
             test.done();
         });
     }
+};
