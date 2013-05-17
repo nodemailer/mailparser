@@ -618,6 +618,38 @@ exports["Attachment filename"] = {
             test.done();
         });
     },
+    "Multiple filenames - with number": function(test){
+        var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream; name=\"somename.txt\"\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=FD=FE=FF\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream; name=\"somename-1.txt\"\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=FD=FE=FF\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream; name=\"somename.txt\"\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=FD=FE=FF\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream; name=\"somename-1-1.txt\"\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=FD=FE=FF\r\n"+
+                          "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "somename.txt");
+            test.equal(mail.attachments && mail.attachments[1] && mail.attachments[1].content && mail.attachments[1].generatedFileName, "somename-1-1.txt");
+            test.equal(mail.attachments && mail.attachments[2] && mail.attachments[2].content && mail.attachments[2].generatedFileName, "somename-2.txt");
+            test.equal(mail.attachments && mail.attachments[3] && mail.attachments[3].content && mail.attachments[3].generatedFileName, "somename-1-1-3.txt");
+            test.done();
+        });
+    },
     "Generate filename from Content-Type": function(test){
         var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
