@@ -17,7 +17,7 @@ from **MailParser** (subject line, addressee names, message body) is always UTF-
 
 For a 25MB e-mail it takes less than a second to parse if attachments are not streamed but buffered and about 3-4 seconds if they are streamed. Expect high RAM usage though if you do not stream the attachments.
 
-If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](/andris9/Nodemailer).
+If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](https://github.com/andris9/Nodemailer).
 
 ## Support mailparser development
 
