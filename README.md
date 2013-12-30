@@ -19,6 +19,10 @@ For a 25MB e-mail it takes less than a second to parse if attachments are not st
 
 If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](https://github.com/andris9/Nodemailer).
 
+## ICONV NOTICE
+
+Since v0.4 `node-iconv` is not included by default as a dependency. If you need to support encodings not covered by `iconv-lite` you should add `iconv` as a dependency to your own project so `mailparser` could pick it up.
+
 ## Support mailparser development
 
 [![Donate to author](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DB26KWR2BQX5W)
