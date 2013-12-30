@@ -40,7 +40,11 @@ exports["General tests"] = {
             var chunk = chunks.shift();
             if( chunk !== undefined ){
                 mailparser.write(chunk, 'utf8');
-                process.nextTick(writeNextChunk);
+                if(typeof setImmediate == "function"){
+                    setImmediate(writeNextChunk);
+                }else{
+                    process.nextTick(writeNextChunk);
+                }
             } else {
                 mailparser.end();
             }
@@ -50,7 +54,12 @@ exports["General tests"] = {
             test.equal(mail.text, "hello");
             test.done();
         });
-        process.nextTick(writeNextChunk);
+
+        if(typeof setImmediate == "function"){
+            setImmediate(writeNextChunk);
+        }else{
+            process.nextTick(writeNextChunk);
+        }
     },
 
     "Headers only": function(test){
