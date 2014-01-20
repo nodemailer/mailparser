@@ -898,6 +898,42 @@ exports["Transfer encoding"] = {
             test.deepEqual(mail.from, [{address: 'user@ldkf.com.tw', name: '游采樺'}]);
             test.done();
         });
+    },
+    "Valid Date header": function(test){
+        var encodedText = "Date: Wed, 08 Jan 2014 09:52:26 -0800\r\n\r\n1cTW3A==",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.date.toISOString(), "2014-01-08T17:52:26.000Z");
+            test.equal(mail.headers.date, "Wed, 08 Jan 2014 09:52:26 -0800");
+            test.done();
+        });
+    },
+    "Invalid Date header": function(test){
+        var encodedText = "Date: zzzzz\r\n\r\n1cTW3A==",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.ok(!mail.date);
+            test.equal(mail.headers.date, "zzzzz");
+            test.done();
+        });
+    },
+    "Missing Date header": function(test){
+        var encodedText = "Subject: test\r\n\r\n1cTW3A==",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.ok(!mail.date);
+            test.equal(mail.headers.date, undefined);
+            test.done();
+        });
     }
 };
 
