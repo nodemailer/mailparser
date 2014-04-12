@@ -1,7 +1,7 @@
 {
     "name": "mailparser",
     "description": "Asynchronous and non-blocking parser for mime encoded e-mail messages",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "author" : "Andris Reinman",
     "maintainers":[
         {
