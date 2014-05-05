@@ -675,6 +675,23 @@ exports["Attachment filename"] = {
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "attachment.pdf");
             test.done();
         });
+    },
+    "Filename with semicolon": function(test){
+        var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Disposition: attachment; filename=\"hello;world;test.txt\"\r\n"+
+                              "\r\n"+
+                              "=00=01=02=03=FD=FE=FF\r\n"+
+                          "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "hello;world;test.txt");
+            test.done();
+        });
     }
 
 };
