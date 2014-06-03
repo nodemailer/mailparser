@@ -1,38 +1,43 @@
 {
-    "name": "mailparser",
-    "description": "Asynchronous and non-blocking parser for mime encoded e-mail messages",
-    "version": "0.4.3",
-    "author" : "Andris Reinman",
-    "maintainers":[
-        {
-            "name":"andris",
-            "email":"andris@node.ee"
-        }
-    ],
-    "repository" : {
-        "type" : "git",
-        "url" : "http://github.com/andris9/mailparser.git"
-    },
-    "scripts":{
-        "test": "nodeunit test/"
-    },
-    "main" : "./lib/mailparser",
-    "licenses" : [
-        {
-            "type": "MIT",
-            "url": "http://github.com/andris9/mailparser/blob/master/LICENSE"
-        }
-    ],
-    "dependencies": {
-        "mimelib": ">=0.2.6",
-        "encoding": ">=0.1.4",
-        "mime": "*"
-    },
-    "devDependencies": {
-        "nodeunit": "*"
-    },
-    "engine": {
-        "node": ">=0.4"
-    },
-    "keywords": ["e-mail", "mime", "parser"]
+  "name": "mailparser",
+  "description": "Asynchronous and non-blocking parser for mime encoded e-mail messages",
+  "version": "0.4.3",
+  "author": "Andris Reinman",
+  "maintainers": [
+    {
+      "name": "andris",
+      "email": "andris@node.ee"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/andris9/mailparser.git"
+  },
+  "scripts": {
+    "test": "nodeunit test/"
+  },
+  "main": "./lib/mailparser",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/andris9/mailparser/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "mimelib": ">=0.2.6",
+    "encoding": ">=0.1.4",
+    "mime": "*",
+    "uue": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodeunit": "*"
+  },
+  "engine": {
+    "node": ">=0.4"
+  },
+  "keywords": [
+    "e-mail",
+    "mime",
+    "parser"
+  ]
 }

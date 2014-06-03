@@ -421,6 +421,23 @@ exports["Binary attachment encodings"] = {
             test.equal(Array.prototype.slice.apply(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].content || []).join(","), "195,149,195,132,195,150,195,156");
             test.done();
         });
+    },
+    "UUENCODE": function(test){
+        var encodedText = "Content-Type: application/octet-stream\r\n"+
+                          "Content-Transfer-Encoding: uuencode\r\n"+
+                          "\r\n"+
+                          "begin 644 buffer.bin\r\n"+
+                          "#0V%T\r\n"+
+                          "`\r\n"+
+                          "end",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments[0].content.toString(), "Cat");
+            test.done();
+        });
     }
 
 };
@@ -1196,6 +1213,41 @@ exports["Attachment info"] = {
         mailparser.on("end", function(mail){
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 10);
+            test.done();
+        });
+    },
+    "Stream integrity - uuencode": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+	                          "Content-Transfer-Encoding: uuencode\r\n"+
+	                          "\r\n"+
+	                          "begin 644 buffer.bin\r\n"+
+	                          "#0V%T\r\n"+
+	                          "`\r\n"+
+	                          "end\r\n"+
+                          "--ABC--",
+            expectedHash = "fa3ebd6742c360b2d9652b7f78d9bd7d",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser({streamAttachments: true});
+
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+
+        test.expect(3);
+
+        mailparser.on("attachment", function(attachment){
+            test.ok(attachment.stream, "Stream detected");
+        });
+
+        mailparser.end();
+
+        mailparser.on("end", function(mail){
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].checksum, expectedHash);
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].length, 3);
             test.done();
         });
     },
