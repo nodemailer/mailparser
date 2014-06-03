@@ -1241,6 +1241,7 @@ exports["Attachment info"] = {
 
         mailparser.on("attachment", function(attachment){
             test.ok(attachment.stream, "Stream detected");
+            attachment.on('data', console.log);
         });
 
         mailparser.end();
