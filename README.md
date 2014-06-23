@@ -1,8 +1,8 @@
 MailParser
 ==========
 
-[![Build Status](https://secure.travis-ci.org/andris9/mailparser.png)](http://travis-ci.org/andris9/mailparser)
-[![NPM version](https://badge.fury.io/js/mailparser.png)](http://badge.fury.io/js/mailparser)
+[![Build Status](https://api.travis-ci.org/andris9/mailparser.svg)](http://travis-ci.org/andris9/mailparser)
+[![NPM version](https://badge.fury.io/js/mailparser.svg)](http://badge.fury.io/js/mailparser)
 
 **MailParser** is an asynchronous and non-blocking parser for
 [node.js](http://nodejs.org) to parse mime encoded e-mail messages.
