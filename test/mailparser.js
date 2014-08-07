@@ -368,6 +368,8 @@ exports["Text encodings"] = {
     },
     "Mime Words": function(test){
         var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
+                          "From: =?utf-8?q??= <sender@email.com>\r\n" +
+                          "To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <to@email.com>\r\n" +
                           "Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n",
             mail = new Buffer(encodedText, "utf-8");
 
@@ -375,6 +377,8 @@ exports["Text encodings"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.equal(mail.subject, "Avaldus lepingu lõpetamiseks");
+            test.equal(mail.from[0].name, "");
+            test.equal(mail.to[0].name, "Keld Jørn Simonsen");
             test.done();
         });
     }
