@@ -1292,6 +1292,40 @@ exports["Attachment info"] = {
             test.done();
         });
     },
+
+    "Pass mail node to headers event": function(test){
+        var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
+                          "Subject: ABCDEF\r\n"+
+                          "\r\n"+
+                          "--ABC\r\n"+
+                              "Content-Type: application/octet-stream\r\n"+
+                              "Content-Transfer-Encoding: base64\r\n"+
+                              "Content-Disposition: attachment\r\n"+
+                              "\r\n"+
+                              "AAECAwQFBg==\r\n"+
+                          "--ABC--",
+            expectedHash = "9aa461e1eca4086f9230aa49c90b0c61",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser({streamAttachments: true});
+
+        for(var i=0, len = mail.length; i<len; i++){
+            mailparser.write(new Buffer([mail[i]]));
+        }
+
+        test.expect(2);
+
+        mailparser.on("attachment", function(attachment, email){
+            test.equal(email.subject, "ABCDEF");
+        });
+
+        mailparser.end();
+
+        mailparser.on("end", function(mail){
+            test.ok(1, "Done");
+            test.done();
+        });
+    },
     "Detect Content-Type by filename": function(test){
         var encodedText = "Content-type: multipart/mixed; boundary=ABC\r\n"+
                           "\r\n"+
