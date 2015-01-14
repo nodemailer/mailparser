@@ -176,7 +176,7 @@ object. The parameter provided includes file information (`contentType`,
         streamAttachments: true
     }
 
-    mp.on("attachment", function(attachment){
+    mp.on("attachment", function(attachment, mail){
         var output = fs.createWriteStream(attachment.generatedFileName);
         attachment.stream.pipe(output);
     });
