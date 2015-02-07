@@ -972,6 +972,31 @@ exports["Transfer encoding"] = {
             test.equal(mail.headers.date, undefined);
             test.done();
         });
+    },
+    "Received Headers": function(test){
+        var encodedTest = "Received: by 10.25.25.72 with SMTP id 69csp2404548lfz;\r\n" +
+                          "        Fri, 6 Feb 2015 20:15:32 -0800 (PST)\r\n" +
+                          "X-Received: by 10.194.200.68 with SMTP id jq4mr7518476wjc.128.1423264531879;\r\n" +
+                          "        Fri, 06 Feb 2015 15:15:31 -0800 (PST)\r\n" +
+                          "Received: from mail.formilux.org (flx02.formilux.org. [195.154.117.161])\r\n" +
+                          "        by mx.google.com with ESMTP id wn4si6920692wjc.106.2015.02.06.15.15.31\r\n" +
+                          "        for <test@example.com>;\r\n" +
+                          "        Fri, 06 Feb 2015 15:15:31 -0800 (PST)\r\n" +
+                          "Received: from flx02.formilux.org (flx02.formilux.org [127.0.0.1])\r\n" +
+                          "        by mail.formilux.org (Postfix) with SMTP id 9D262450C77\r\n" +
+                          "        for <test@example.com>; Sat,  7 Feb 2015 00:15:31 +0100 (CET)\r\n" +
+                          "Date: Fri, 6 Feb 2015 16:13:51 -0700 (MST)\r\n" +
+                          "\r\n" +
+                          "1cTW3A==",
+            mail = new Buffer(encodedTest, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail){
+            test.ok(mail.date);
+            test.equal(mail.date.toISOString(), "2015-02-07T04:15:32.000Z");
+            test.done();
+        });
     }
 };
 
