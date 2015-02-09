@@ -994,7 +994,9 @@ exports["Transfer encoding"] = {
         mailparser.end(mail);
         mailparser.on("end", function(mail){
             test.ok(mail.date);
-            test.equal(mail.date.toISOString(), "2015-02-07T04:15:32.000Z");
+            test.ok(mail.receivedDate);
+            test.equal(mail.date.toISOString(), "2015-02-06T23:13:51.000Z");
+            test.equal(mail.receivedDate.toISOString(), "2015-02-07T04:15:32.000Z");
             test.done();
         });
     }
