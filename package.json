@@ -27,7 +27,7 @@
     "mimelib": ">=0.2.17",
     "encoding": ">=0.1.4",
     "mime": "*",
-    "uue": "~1.0.0"
+    "uue": "~2.1.0"
   },
   "devDependencies": {
     "nodeunit": "*"
