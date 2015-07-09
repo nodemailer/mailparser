@@ -716,8 +716,29 @@ exports["Attachment filename"] = {
             test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "hello;world;test.txt");
             test.done();
         });
-    }
+    },
+    "UUE filename with special characters": function(test) {
+        var encodedText = "Content-Type: multipart/mixed; boundary=ABC\r\n" +
+            "\r\n" +
+            "--ABC\r\n" +
+            "Content-Type: application/octet-stream\r\n" +
+            "Content-Transfer-Encoding: uuencode\r\n" +
+            "Content-Disposition: attachment; filename=\"hello ~!@#%.txt\"\r\n" +
+            "\r\n" +
+            "begin 644 hello ~!@#%.txt\r\n" +
+            "#0V%T\r\n" +
+            "`\r\n" +
+            "end\r\n" +
+            "--ABC--",
+            mail = new Buffer(encodedText, "utf-8");
 
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail) {
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].generatedFileName, "hello ~!@#%.txt");
+            test.done();
+        });
+    }
 };
 
 exports["Plaintext format"] = {
