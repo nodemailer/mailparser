@@ -533,6 +533,24 @@ exports["Attachment filename"] = {
             test.done();
         });
     },
+    "Content-Disposition filename*X* mixed": function(test) {
+        var encodedText = "Content-Type: application/octet-stream\r\n" +
+            "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n" +
+            "Content-Disposition: attachment;\r\n" +
+            "    filename*0*=UTF-8''%C3%95%C3%84;\r\n" +
+            "    filename*1*=%C3%96%C3%9C;\r\n" +
+            "    filename*2=.txt\r\n" +
+            "\r\n" +
+            "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail) {
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "ÕÄÖÜ.txt");
+            test.done();
+        });
+    },
 
     "Content-Type name": function(test) {
         var encodedText = "Content-Type: application/octet-stream; name=\"=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?=\"\r\n" +
