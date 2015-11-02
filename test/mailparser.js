@@ -340,21 +340,6 @@ exports["Text encodings"] = {
         });
     },
 
-    "HTML encoding: Conflicting headers": function(test) {
-        var encodedText = "Content-Type: text/html; charset=iso-8859-1\r\n" +
-            "\r\n" +
-            "<html><head><meta charset=\"utf-8\"/></head><body>ÕÄÖÜ",
-            mail = new Buffer(encodedText, "utf-8");
-
-        test.expect(1);
-
-        var mailparser = new MailParser();
-        mailparser.end(mail);
-        mailparser.on("end", function(mail) {
-            test.equal((mail.html || "").substr(-4), "ÕÄÖÜ");
-            test.done();
-        });
-    },
     "HTML encoding: Header defined": function(test) {
         var encodedText = "Content-Type: text/html; charset=iso-UTF-8\r\n" +
             "\r\n" +
