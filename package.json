@@ -17,7 +17,7 @@
   "main": "./lib/mailparser",
   "license": "MIT",
   "dependencies": {
-    "mimelib": "^0.2.19",
+    "mimelib": "^0.3.0",
     "encoding": "^0.1.11",
     "mime": "^1.3.4",
     "uue": "^3.0.0"
