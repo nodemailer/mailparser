@@ -1510,6 +1510,24 @@ exports["Advanced nested HTML"] = function(test) {
     });
 };
 
+exports["Additional text"] = function(test) {
+  var mail = fs.readFileSync(__dirname + "/mixed.eml");
+
+  test.expect(2);
+  var mailparser = new MailParser();
+
+  for (var i = 0, len = mail.length; i < len; i++) {
+    mailparser.write(new Buffer([mail[i]]));
+  }
+
+  mailparser.end();
+  mailparser.on("end", function(mail) {
+    test.equal(mail.text, "\nThis e-mail message has been scanned for Viruses and Content and cleared\nGood Morning;\n\n");
+    test.equal(mail.html, "<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\nGood Morning;\n\n");
+    test.done();
+  });
+};
+
 exports["MBOX format"] = {
     "Not a mbox": function(test) {
         var encodedText = "Content-Type: text/plain; charset=utf-8\r\n" +
