@@ -446,7 +446,7 @@ exports["Attachment Content-Id"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail) {
-            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, "ef694232fea1c01c16fb8a03a0ca710c@mailparser");
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, "7c7cf35ce5becf62faea56ed8d0ad6e4@mailparser");
             test.done();
         });
     },
