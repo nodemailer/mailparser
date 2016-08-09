@@ -65,9 +65,9 @@ When the parsing ends an `'end'` event is emitted which has an
 object with parsed e-mail structure as a parameter.
 
 ```javascript
-    mailparser.on("end", function(mail){
-        mail; // object structure for parsed e-mail
-    });
+mailparser.on("end", function(mail){
+    mail; // object structure for parsed e-mail
+});
 ```
 ### Parsed mail object
 
@@ -90,21 +90,23 @@ object with parsed e-mail structure as a parameter.
 This example decodes an e-mail from a string
 
 ```javascript
-var MailParser = require("mailparser").MailParser,
-    mailparser = new MailParser();
+var MailParser = require("mailparser").MailParser;
+var mailparser = new MailParser();
 
 var email = "From: 'Sender Name' <sender@example.com>\r\n"+
             "To: 'Receiver Name' <receiver@example.com>\r\n"+
             "Subject: Hello world!\r\n"+
             "\r\n"+
             "How are you today?";
-    // setup an event listener when the parsing finishes
+
+// setup an event listener when the parsing finishes
 mailparser.on("end", function(mail_object){
     console.log("From:", mail_object.from); //[{address:'sender@example.com',name:'Sender Name'}]
     console.log("Subject:", mail_object.subject); // Hello world!
     console.log("Text body:", mail_object.text); // How are you today?
 });
-    // send the email source to the parser
+
+// send the email source to the parser
 mailparser.write(email);
 mailparser.end();
 ```
@@ -112,10 +114,11 @@ mailparser.end();
 
 This example pipes a `readableStream` file to **MailParser**
 ```javascript
-var MailParser = require("mailparser").MailParser,
-    mailparser = new MailParser(),
-    fs = require("fs");
-    mailparser.on("end", function(mail_object){
+var MailParser = require("mailparser").MailParser;
+var mailparser = new MailParser();
+var fs = require("fs");
+
+mailparser.on("end", function(mail_object){
     console.log("Subject:", mail_object.subject);
 });
 
@@ -139,17 +142,17 @@ mailparser.on("end", function(mail_object){
 
 By default attachments will be included in the attachment objects as Buffers.
 ```javascript
-    attachments = [{
-        contentType: 'image/png',
-        fileName: 'image.png',
-        contentDisposition: 'attachment',
-        contentId: '5.1321281380971@localhost',
-        transferEncoding: 'base64',
-        length: 126,
-        generatedFileName: 'image.png',
-        checksum: 'e4cef4c6e26037bcf8166905207ea09b',
-        content: <Buffer ...>
-    }];
+attachments = [{
+    contentType: 'image/png',
+    fileName: 'image.png',
+    contentDisposition: 'attachment',
+    contentId: '5.1321281380971@localhost',
+    transferEncoding: 'base64',
+    length: 126,
+    generatedFileName: 'image.png',
+    checksum: 'e4cef4c6e26037bcf8166905207ea09b',
+    content: <Buffer ...>
+}];
 ```
 The property `generatedFileName` is usually the same as `fileName` but if several
 different attachments with the same name exist or there is no `fileName` set, an
@@ -176,6 +179,7 @@ object. The parameter provided includes file information (`contentType`,
 var mp = new MailParser({
     streamAttachments: true
 }
+
 mp.on("attachment", function(attachment, mail){
     var output = fs.createWriteStream(attachment.generatedFileName);
     attachment.stream.pipe(output);

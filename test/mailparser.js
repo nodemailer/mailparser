@@ -446,7 +446,7 @@ exports["Attachment Content-Id"] = {
         var mailparser = new MailParser();
         mailparser.end(mail);
         mailparser.on("end", function(mail) {
-            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, "ef694232fea1c01c16fb8a03a0ca710c@mailparser");
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].contentId, "7c7cf35ce5becf62faea56ed8d0ad6e4@mailparser");
             test.done();
         });
     },
@@ -1508,6 +1508,24 @@ exports["Advanced nested HTML"] = function(test) {
         test.equal(mail.html, "<p>Dear Sir</p>\n<p>Good evening.</p>\n<p></p><p>The footer</p>\n");
         test.done();
     });
+};
+
+exports["Additional text"] = function(test) {
+  var mail = fs.readFileSync(__dirname + "/mixed.eml");
+
+  test.expect(2);
+  var mailparser = new MailParser();
+
+  for (var i = 0, len = mail.length; i < len; i++) {
+    mailparser.write(new Buffer([mail[i]]));
+  }
+
+  mailparser.end();
+  mailparser.on("end", function(mail) {
+    test.equal(mail.text, "\nThis e-mail message has been scanned for Viruses and Content and cleared\nGood Morning;\n\n");
+    test.equal(mail.html, "<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\nGood Morning;\n\n");
+    test.done();
+  });
 };
 
 exports["MBOX format"] = {
