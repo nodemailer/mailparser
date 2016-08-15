@@ -222,6 +222,55 @@ exports["General tests"] = {
         });
     },
 
+    "Single reference with spaces": function (test) {
+      var encodedText = "Content-type: text/plain\r" +
+          "References: <mail one>\n" +
+          "\r" +
+          "1234",
+          mail = new Buffer(encodedText, "utf-8");
+
+      test.expect(1);
+      var mailparser = new MailParser();
+      mailparser.end(mail);
+      mailparser.on("end", function (mail) {
+        test.deepEqual(mail.references, ["mailone"]);
+        test.done();
+      });
+    },
+
+    "Multiple references with spaces": function (test) {
+      var encodedText = "Content-type: text/plain\r" +
+          "References: <mail one> <mail2> <AWS mail3>\n" +
+          "\r" +
+          "1234",
+          mail = new Buffer(encodedText, "utf-8");
+
+      test.expect(1);
+      var mailparser = new MailParser();
+      mailparser.end(mail);
+      mailparser.on("end", function (mail) {
+        test.deepEqual(mail.references, ["mailone", "mail2", "AWSmail3"]);
+        test.done();
+      });
+    },
+
+    "Multiple references fields with spaces": function (test) {
+      var encodedText = "Content-type: text/plain\r" +
+          "References: <mail one> <mail2> \n" +
+          "References: <mail duo> <mail4> \n" +
+          "\r" +
+          "1234",
+          mail = new Buffer(encodedText, "utf-8");
+
+      test.expect(1);
+      var mailparser = new MailParser();
+      mailparser.end(mail);
+      mailparser.on("end", function (mail) {
+        test.deepEqual(mail.references, ["mailone", "mail2", "mailduo", "mail4"]);
+        test.done();
+      });
+    },
+
     "Single in-reply-to": function(test) {
         var encodedText = "Content-type: text/plain\r" +
             "in-reply-to: <mail1>\n" +
