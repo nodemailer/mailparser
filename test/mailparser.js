@@ -321,6 +321,56 @@ exports["General tests"] = {
         });
     },
 
+    "Single in-reply-to field/value with spaces": function (test) {
+      var encodedText = "Content-type: text/plain\r" +
+          "in-reply-to: <mail 1>\n" +
+          "\r" +
+          "1234",
+          mail = new Buffer(encodedText, "utf-8");
+
+      test.expect(1);
+      var mailparser = new MailParser();
+      mailparser.end(mail);
+      mailparser.on("end", function(mail) {
+          test.deepEqual(mail.inReplyTo, ["mail1"]);
+          test.done();
+      });
+    },
+
+    "Multiple in-reply-to values with spaces": function (test) {
+      var encodedText = "Content-type: text/plain\r" +
+          "in-reply-to: <mail1>\n" +
+          " <m ail2> <ma il3>\n" +
+          "\r" +
+          "1234",
+          mail = new Buffer(encodedText, "utf-8");
+
+      test.expect(1);
+      var mailparser = new MailParser();
+      mailparser.end(mail);
+      mailparser.on("end", function(mail) {
+          test.deepEqual(mail.inReplyTo, ["mail1", "mail2", "mail3"]);
+          test.done();
+      });
+    },
+
+    "Multiple in-reply-to fields with spaces": function(test) {
+        var encodedText = "Content-type: text/plain\r" +
+            "in-reply-to: <mail1>\n" +
+            "in-reply-to: <mail 3>\n" +
+            "\r" +
+            "1234",
+            mail = new Buffer(encodedText, "utf-8");
+
+        test.expect(1);
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail) {
+            test.deepEqual(mail.inReplyTo, ["mail1", "mail3"]);
+            test.done();
+        });
+    },
+
     "Reply To address": function(test) {
         var encodedText = "Reply-TO: andris <andris@disposebox.com>\r" +
             "Subject: ÕÄÖÜ\n" +
