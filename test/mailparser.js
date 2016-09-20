@@ -551,6 +551,23 @@ exports["Attachment filename"] = {
             test.done();
         });
     },
+    "Content-Type ; name": function(test) {
+        var encodedText = "Content-Type: ; name=\"test\"\r\n" +
+            "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n" +
+            "\r\n" +
+            "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+
+        mailparser.write(mail);
+        mailparser.end();
+
+        mailparser.on("end", function(mail) {
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].fileName, "test");
+            test.done();
+        });
+    },
     "Content-Type name*": function(test) {
         var encodedText = "Content-Type: application/octet-stream;\r\n" +
             "    name*=UTF-8''%C3%95%C3%84%C3%96%C3%9C\r\n" +
