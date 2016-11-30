@@ -501,6 +501,24 @@ exports["Attachment filename"] = {
             test.done();
         });
     },
+    "Content-Disposition filename*X": function(test) {
+        var encodedText = "Content-Type: application/octet-stream\r\n" +
+            "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n" +
+            "Content-Disposition: attachment;\r\n" +
+            "    filename*0=OA;\r\n" +
+            "    filename*1=U;\r\n" +
+            "    filename*2=.txt\r\n" +
+            "\r\n" +
+            "=00=01=02=03=FD=FE=FF",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail) {
+            test.equal(mail.attachments && mail.attachments[0] && mail.attachments[0].content && mail.attachments[0].fileName, "OAU.txt");
+            test.done();
+        });
+    },
     "Content-Disposition filename*X*": function(test) {
         var encodedText = "Content-Type: application/octet-stream\r\n" +
             "Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n" +
