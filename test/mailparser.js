@@ -369,6 +369,18 @@ exports["Text encodings"] = {
             test.equal(mail.to[0].name, "Keld Jørn Simonsen");
             test.done();
         });
+    },
+    "Split Mime Words": function(test) {
+        var encodedText = "Content-type: text/plain; charset=utf-8\r\n" +
+            "Subject: =?utf-8?B?R0xHOiBSZWd1bGF0aW9uIG9mIFRheGkgaW4gQ2hpbmEgLSDl?= =?utf-8?B?vKDkuIDlhbU=?=\r\n",
+            mail = new Buffer(encodedText, "utf-8");
+
+        var mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on("end", function(mail) {
+            test.equal(mail.subject, "GLG: Regulation of Taxi in China - 张一兵");
+            test.done();
+        });
     }
 };
 
