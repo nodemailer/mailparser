@@ -1528,7 +1528,7 @@ exports["Attachment info"] = {
 };
 
 exports["Advanced nested HTML"] = function(test) {
-    var mail = fs.readFileSync(__dirname + "/nested.eml");
+    var mail = fs.readFileSync(__dirname + "/ali.eml");
 
     test.expect(2);
     var mailparser = new MailParser();
@@ -1539,6 +1539,7 @@ exports["Advanced nested HTML"] = function(test) {
 
     mailparser.end();
     mailparser.on("end", function(mail) {
+        console.log(require('util').inspect(mail, false, 22));
         test.equal(mail.text, "\nDear Sir,\n\nGood evening.\n\n\n \n\n\n\nThe footer\n");
         test.equal(mail.html, "<p>Dear Sir</p>\n<p>Good evening.</p>\n<p></p><p>The footer</p>\n");
         test.done();

@@ -9,6 +9,12 @@ MailParser
 Handles even large attachments with ease - attachments can be parsed
 in chunks and streamed if needed.
 
+### Community version
+
+This module is unmaintained. For an upgrade see [Mailparser2](https://gitlab.com/nodemailer/mailparser2). The upgraded version is more effective, has vastly better stream handling through Streams3 interface and is able to build up more accurate versions of HTML and Text contents.
+
+### Usage
+
 **MailParser** parses raw source of e-mail messages into a structured object.
 
 No need to worry about charsets or decoding *quoted-printable* or
