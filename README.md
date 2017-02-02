@@ -216,6 +216,6 @@ Charset decoding is handled using [iconv-lite](https://github.com/ashtuchkin/ico
 
 ## License
 
-European Union Public License 1.1\. Commercial licenses available upon request. Contact [cales@nodemailer.com](mailto:sales@nodemailer.com) for details.
+European Union Public License 1.1\. Commercial licenses available upon request. Contact [sales@nodemailer.com](mailto:sales@nodemailer.com) for details.
 
 © 2017 Kreata OÜ
