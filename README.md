@@ -1,232 +1,221 @@
-MailParser
-==========
+# MailParser
 
-[![Build Status](https://api.travis-ci.org/andris9/mailparser.svg)](http://travis-ci.org/andris9/mailparser)
-[![NPM version](https://badge.fury.io/js/mailparser.svg)](http://badge.fury.io/js/mailparser)
+[![Build Status](https://api.travis-ci.org/andris9/mailparser.svg)](http://travis-ci.org/andris9/mailparser) [![NPM version](https://badge.fury.io/js/mailparser.svg)](http://badge.fury.io/js/mailparser)
 
-**MailParser** is an asynchronous and non-blocking parser for
-[node.js](http://nodejs.org) to parse mime encoded e-mail messages.
-Handles even large attachments with ease - attachments can be parsed
-in chunks and streamed if needed.
+Advanced email parser for Node.js. Everything is handled as a stream which should make it able to parse even very large messages (100MB+) with relatively low overhead.
 
-### Community version
+The module exposes two separate modes, a lower level `MailParser` class and `simpleParser` function. The latter is simpler to use (hence the name) but is less resource efficient as it buffers attachment contents in memory.
 
-This module is unmaintained. For an upgrade see [Mailparser2](https://gitlab.com/nodemailer/mailparser2). The upgraded version is more effective, has vastly better stream handling through Streams3 interface and is able to build up more accurate versions of HTML and Text contents.
+For older version of MailParser see the docs [here](https://github.com/andris9/mailparser/blob/b8488c5b6a73920b58bcd2f62a5c3be115940fe4/README.md)
 
-### Usage
+> Starting from v2.0.0 MailParser is licensed under the [European Union Public License 1.1](http://ec.europa.eu/idabc/eupl.html). In general, EUPLv1.1 is a _copyleft_ license compatible with GPLv2, so if you're OK using GPL then you should be OK using MailParser. Previous versions of MailParser are licensed under the MIT license.
 
-**MailParser** parses raw source of e-mail messages into a structured object.
+## Install
 
-No need to worry about charsets or decoding *quoted-printable* or
-*base64* data, **MailParser** does all of it for you. All the textual output
-from **MailParser** (subject line, addressee names, message body) is always UTF-8.
-
-For a 25MB e-mail it takes less than a second to parse if attachments are not streamed but buffered and about 3-4 seconds if they are streamed. Expect high RAM usage though if you do not stream the attachments.
-
-If you want to send e-mail instead of parsing it, check out my other module [Nodemailer](https://github.com/andris9/Nodemailer).
-
-## ICONV NOTICE
-
-Since v0.4 `node-iconv` is not included by default as a dependency. If you need to support encodings not covered by `iconv-lite` you should add `iconv` as a dependency to your own project so `mailparser` could pick it up.
-
-## Support mailparser development
-
-[![Donate to author](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DB26KWR2BQX5W)
-
-Installation
-------------
-
-    npm install mailparser
-
-Usage
------
-
-Require MailParser module
-```javascript
-var MailParser = require("mailparser").MailParser;
 ```
-Create a new MailParser object
-```javascript
-var mailparser = new MailParser([options]);
+npm install mailparser
 ```
-Options parameter is an object with the following properties:
 
-  * **debug** - if set to true print all incoming lines to console
-  * **streamAttachments** - if set to true, stream attachments instead of including them
-  * **unescapeSMTP** - if set to true replace double dots in the beginning of the file
-  * **defaultCharset** - the default charset for *text/plain* and *text/html* content, if not set reverts to *Latin-1*
-  * **showAttachmentLinks** - if set to true, show inlined attachment links `<a href="cid:...">filename</a>`
+## simpleParser
 
-MailParser object is a writable Stream - you can pipe directly
-files to it or you can send chunks with `mailparser.write`
-
-When the headers have received, "headers" is emitted. The headers have not been pre-processed (except that mime words have been converted to UTF-8 text).
+`simpleParser` is the easiest way to parse emails. You only need to provide a message source to get a parsed email structure in return. As an additional bonus all embedded images in HTML (eg. the images that point to attachments using cid: URIs) are replaced with base64 encoded data URIs, so the message can be displayed without any additional processing. Be aware though that this module does not do any security cleansing (eg. removing javascript and so on), this is left to your own application.
 
 ```javascript
-mailparser.on("headers", function(headers){
-    console.log(headers.received);
-});
+const simpleParser = require('mailparser').simpleParser;
+simpleParser(source, (err, mail)=>{})
 ```
-When the parsing ends an `'end'` event is emitted which has an
-object with parsed e-mail structure as a parameter.
+
+or as a Promise:
 
 ```javascript
-mailparser.on("end", function(mail){
-    mail; // object structure for parsed e-mail
-});
+simpleParser(source).then(mail=>{}).catch(err=>{})
 ```
-### Parsed mail object
 
-  * **headers** - unprocessed headers in the form of - `{key: value}` - if there were multiple fields with the same key then the value is an array
-  * **from** - an array of parsed `From` addresses - `[{address:'sender@example.com',name:'Sender Name'}]` (should be only one though)
-  * **to** - an array of parsed `To` addresses
-  * **cc** - an array of parsed `Cc` addresses
-  * **bcc** - an array of parsed 'Bcc' addresses
-  * **subject** - the subject line
-  * **references** - an array of reference message id values (not set if no reference values present)
-  * **inReplyTo** - an array of In-Reply-To message id values (not set if no in-reply-to values present)
-  * **priority** - priority of the e-mail, always one of the following: *normal* (default), *high*, *low*
-  * **text** - text body
-  * **html** - html body
-  * **date** - date field as a `Date()` object. If date could not be resolved or is not found this field is not set. Check the original date string from `headers.date`
-  * **attachments** - an array of attachments
+Where
 
-### Decode a simple e-mail
+- **source** is either a stream, a Buffer or a string that needs to be parsed
+- **err** is the possible error object
+- **mail** is a structured email object
 
-This example decodes an e-mail from a string
+### mail object
 
-```javascript
-var MailParser = require("mailparser").MailParser;
-var mailparser = new MailParser();
+Parsed `mail` object has the following properties
 
-var email = "From: 'Sender Name' <sender@example.com>\r\n"+
-            "To: 'Receiver Name' <receiver@example.com>\r\n"+
-            "Subject: Hello world!\r\n"+
-            "\r\n"+
-            "How are you today?";
+- **headers** – a Map object with lowercase header keys
+- **subject** is the subject line (also available from the header `mail.headers.get('subject')`)
+- **from** is an address object for the From: header
+- **to** is an address object for the To: header
+- **cc** is an address object for the Cc: header
+- **bcc** is an address object for the Bcc: header (usually not present)
+- **date** is a Date object for the Date: header
+- **messageId** is the Message-ID value string
+- **inReplyTo** is the In-Reply-To value string
+- **reply-to** is an address object for the Cc: header
+- **references** is an array of referenced Message-ID values
+- **html** is the HTML body of the message. If the message included embedded images as cid: urls then these are all replaced with base64 formatted data: URIs
+- **text** is the plaintext body of the message
+- **textAsHtml** is the plaintext body of the message formatted as HTML
+- **attachments** is an array of attachments
 
-// setup an event listener when the parsing finishes
-mailparser.on("end", function(mail_object){
-    console.log("From:", mail_object.from); //[{address:'sender@example.com',name:'Sender Name'}]
-    console.log("Subject:", mail_object.subject); // Hello world!
-    console.log("Text body:", mail_object.text); // How are you today?
-});
+### address object
 
-// send the email source to the parser
-mailparser.write(email);
-mailparser.end();
-```
-### Pipe file to MailParser
+Address objects have the following structure:
 
-This example pipes a `readableStream` file to **MailParser**
-```javascript
-var MailParser = require("mailparser").MailParser;
-var mailparser = new MailParser();
-var fs = require("fs");
+- **value** an array with address details
 
-mailparser.on("end", function(mail_object){
-    console.log("Subject:", mail_object.subject);
-});
+  - **name** is the name part of the email/group
+  - **address** is the email address
+  - **group** is an array of grouped addresses
 
-fs.createReadStream("email.eml").pipe(mailparser);
-```
-### Attachments
+- **text** is a formatted address string for plaintext context
 
-By default any attachment found from the e-mail will be included fully in the
-final mail structure object as Buffer objects. With large files this might not
-be desirable so optionally it is possible to redirect the attachments to a Stream
-and keep only the metadata about the file in the mail structure.
+- **html** is a formatted address string for HTML context
+
+**Example**
 
 ```javascript
-mailparser.on("end", function(mail_object){
-    mail_object.attachments.forEach(function(attachment){
-        console.log(attachment.fileName);
-    });
-});
-```
-#### Default behavior
-
-By default attachments will be included in the attachment objects as Buffers.
-```javascript
-attachments = [{
-    contentType: 'image/png',
-    fileName: 'image.png',
-    contentDisposition: 'attachment',
-    contentId: '5.1321281380971@localhost',
-    transferEncoding: 'base64',
-    length: 126,
-    generatedFileName: 'image.png',
-    checksum: 'e4cef4c6e26037bcf8166905207ea09b',
-    content: <Buffer ...>
-}];
-```
-The property `generatedFileName` is usually the same as `fileName` but if several
-different attachments with the same name exist or there is no `fileName` set, an
-unique name is generated.
-
-Property `content` is always a Buffer object (or SlowBuffer on some occasions)
-
-#### Attachment streaming
-
-Attachment streaming can be used when providing an optional options parameter
-to the `MailParser` constructor.
-```javascript
-var mp = new MailParser({
-    streamAttachments: true
+{
+    value: [
+        {
+            address: 'andris+123@kreata.ee',
+            name: 'Andris Reinman'
+        },
+        {
+            address: 'andris.reinman@gmail.com',
+            name: ''
+        }
+    ],
+    html: '<span class="mp_address_name">Andris Reinman</span> <<a href="mailto:andris+123@kreata.ee" class="mp_address_email">andris+123@kreata.ee</a>>, <a href="mailto:andris.reinman@gmail.com" class="mp_address_email">andris.reinman@gmail.com</a>',
+    text: 'Andris Reinman <andris+123@kreata.ee>, andris.reinman@gmail.com'
 }
 ```
-This way there will be no `content` property on final attachment objects
-(but the other fields will remain).
 
-To catch the streams you should listen for `attachment` events on the MailParser
-object. The parameter provided includes file information (`contentType`,
-`fileName`, `contentId`) and a readable Stream object `stream`.
+### headers Map
+
+`headers` is a Map with lowercase header keys. So if you want to check for the Subject: header then you can do it like this:
+
 ```javascript
-var mp = new MailParser({
-    streamAttachments: true
+if (mail.headers.has('subject')) {
+    console.log(mail.headers.get('subject'));
 }
+```
 
-mp.on("attachment", function(attachment, mail){
-    var output = fs.createWriteStream(attachment.generatedFileName);
-    attachment.stream.pipe(output);
+The format of a header depends on the specific key. For most header keys the value is either a string (a single header) or an array of strings (multiple headers with the same key were found).
+
+Special header keys are the following:
+
+1. All address headers are converted into address objects
+
+  - **from**
+  - **to**
+  - **cc**
+  - **bcc**
+  - **sender**
+  - **reply-to**
+  - **delivered-to**
+  - **return-path**
+
+2. All different priority headers are converted into **priority** with the following values:
+
+  - **'high'**
+  - **'normal'**
+  - **'low'**
+
+3. **references** is a string if only a single reference-id exists or an array if multiple ids exist
+
+4. **date** value is a Date object
+5. The following headers are parsed into structured objects, where `value` property includes the main value as string and `params` property holds an object of additional arguments as key-value pairs
+
+  - **content-type**
+  - **content-disposition**
+  - **dkim-signature**
+
+Some headers are also automaticaly mime-word decoded
+
+- all address headers (name parts and punycode encoded domains are converted to unicode)
+- **subject** is converted to unicode
+
+### attachment object
+
+Attachment objects have the following structure:
+
+- **filename** (if available) file name of the attachment
+- **contentType** MIME type of the message
+- **contentDisposition** content disposition type for the attachment, most probably "attachment"
+- **checksum** a MD5 hash of the message content
+- **size** message size in bytes
+- **headers** a Map value that holds MIME headers for the attachment node
+- **content** a Buffer that contains the attachment contents
+- **contentId** the header value from 'Content-ID' (if present)
+- **cid** contentId without < and >
+- **related** if true then this attachment should not be offered for download (at least not in the main attachments list)
+
+## MailParser
+
+`MailParser` is a lower-level email parsing class. It is a transform stream that takes email source as bytestream for the input and emits data objects for attachments and text contents.
+
+```javascript
+const MailParser = require('mailparser').MailParser;
+let parser = new MailParser()
+```
+
+### Event 'headers'
+
+The parser emits 'headers' once message headers have been processed. The headers object is a Map. Different header keys have different kind of values, for example address headers have the address object/array as the value while subject value is string.
+
+Header keys in the Map are lowercase.
+
+```javascript
+parser.on('headers', headers = {
+    console.log(headers.get('subject'));
 });
 ```
-`generatedFileName` is unique for the parsed mail - if several attachments with
-the same name exist, `generatedFileName` is updated accordingly. Also there
-might not be `fileName` parameter at all, so it is better to rely on
-`generatedFileName`.
 
-#### Testing attachment integrity
+### Event 'data'
 
-Attachment objects include `length` property which is the length of the attachment
-in bytes and `checksum` property which is a `md5` hash of the file.
+Event 'data' or 'readable' emits message content objects. The type of the object can be determine by the `type` property. Currently there are two kind of data objects
 
-### Running tests
+- 'attachment' indicates that this object is an attachment
+- 'text' indicates that this object includes the html and text parts of the message. This object is emitted once and it includes both values
 
-Install **MailParser** with dev dependencies
-```bash
-npm install --dev mailparser
+### attachment object
+
+Attachment object is the same as in `simpleParser` except that `content` is not a buffer but a stream. Additionally there's a method `release()` that must be called once you have processed the attachment. The property `related` is set after message processing is ended, so at the `data` event this value is not yet available.
+
+```javascript
+parser.on('data', data => {
+    if(data.type === 'attachment'){
+        console.log(data.filename);
+        data.content.pipe(process.stdout);
+        data.on('end', ()=>data.release());
+    }
+});
 ```
-And then run
-```bash
-npm test mailparser
+
+If you do not call `release()` then the message processing is paused.
+
+### text object
+
+Text object has the following keys:
+
+- **text** includes the plaintext version of the message. Is set if the message has at least one 'text/plain' node
+- **html** includes the HTML version of the message. Is set if the message has at least one 'text/html' node
+- **textAsHtml** includes the plaintext version of the message in HTML format. Is set if the message has at least one 'text/plain' node.
+
+```javascript
+parser.on('data', data => {
+    if(data.type === 'text'){
+        console.log(data.html);
+    }
+});
 ```
-There aren't many tests yet but basics should be covered.
 
 ## Issues
 
-**S/MIME**
-
-Currently it is not possible to verify signed content as the incoming text is
-split to lines when parsing and line ending characters are not preserved. One
-can assume it is always \r\n but this might not be always the case.
-
-**Seeking**
-
-Due to the line based parsing it is also not possible to explicitly state
-the beginning and ending bytes of the attachments for later source seeking.
-Node.js doesn't support the concept of seeking very well anyway.
+Charset decoding is handled using [iconv-lite](https://github.com/ashtuchkin/iconv-lite) that is missing some charsets, especially some Japanese ones. If required then it would be possible to switch to native iconv bindings with [node-iconv](https://github.com/bnoordhuis/node-iconv) to handle these missing charsets but for now this option is not used for easier packaging.
 
 ## License
 
-**MIT**
+European Union Public License 1.1\. Commercial licenses available upon request. Contact [cales@nodemailer.com](mailto:sales@nodemailer.com) for details.
+
+© 2017 Kreata OÜ
