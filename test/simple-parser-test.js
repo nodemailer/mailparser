@@ -1,6 +1,6 @@
 'use strict';
 
-const simpleParser = require('..').SimpleParser;
+const simpleParser = require('..').simpleParser;
 const fs = require('fs');
 
 module.exports['Parse message'] = test => {
