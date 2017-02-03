@@ -21,7 +21,7 @@ npm install mailparser
 `simpleParser` is the easiest way to parse emails. You only need to provide a message source to get a parsed email structure in return. As an additional bonus all embedded images in HTML (eg. the images that point to attachments using cid: URIs) are replaced with base64 encoded data URIs, so the message can be displayed without any additional processing. Be aware though that this module does not do any security cleansing (eg. removing javascript and so on), this is left to your own application.
 
 ```javascript
-const simpleParser = require('mailparser').simpleParser;
+const simpleParser = require('mailparser').SimpleParser;
 simpleParser(source, (err, mail)=>{})
 ```
 
