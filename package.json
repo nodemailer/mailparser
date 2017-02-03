@@ -14,7 +14,7 @@
     "html-to-text": "3.1.0",
     "iconv-lite": "0.4.15",
     "libmime": "3.1.0",
-    "mailsplit": "3.1.2",
+    "mailsplit": "4.0.0",
     "marked": "0.3.6"
   },
   "devDependencies": {
