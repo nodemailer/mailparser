@@ -8,7 +8,7 @@ The module exposes two separate modes, a lower level `MailParser` class and `sim
 
 For older version of MailParser see the docs [here](https://github.com/andris9/mailparser/blob/b8488c5b6a73920b58bcd2f62a5c3be115940fe4/README.md)
 
-> Starting from v2.0.0 MailParser is licensed under the [European Union Public License 1.1](http://ec.europa.eu/idabc/eupl.html). In general, EUPLv1.1 is a _copyleft_ license compatible with GPLv2, so if you're OK using GPL then you should be OK using MailParser. Previous versions of MailParser are licensed under the MIT license.
+> This module is part of the [Nodemailer bundle](https://nodemailer.com/about/pricing/). Starting from v2.0.0 MailParser is licensed under the [European Union Public License 1.1](http://ec.europa.eu/idabc/eupl.html). In general, EUPLv1.1 is a _copyleft_ license compatible with GPLv2, so if you're OK using GPL then you should be OK using MailParser. Previous versions of MailParser are licensed under the MIT license.
 
 ## Install
 
