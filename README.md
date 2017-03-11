@@ -187,7 +187,7 @@ parser.on('data', data => {
     if(data.type === 'attachment'){
         console.log(data.filename);
         data.content.pipe(process.stdout);
-        data.on('end', ()=>data.release());
+        data.content.on('end', ()=>data.release());
     }
 });
 ```
