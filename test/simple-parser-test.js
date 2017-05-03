@@ -29,3 +29,16 @@ module.exports['Parse message'] = test => {
         test.done();
     });
 };
+
+module.exports['Parse message with large plaintext content'] = test => {
+    simpleParser(fs.createReadStream(__dirname + '/fixtures/large_text.eml'), (err, mail) => {
+        test.ifError(err);
+
+        test.ok(mail);
+        test.ok(mail.textAsHtml);
+        test.ok(mail.text);
+        test.ok(!mail.html);
+
+        test.done();
+    });
+};

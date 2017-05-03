@@ -1,6 +1,6 @@
 {
   "name": "mailparser",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Parse e-mails",
   "main": "index.js",
   "scripts": {
@@ -10,12 +10,11 @@
   "license": "EUPL-1.1",
   "dependencies": {
     "addressparser": "1.0.1",
-    "he": "1.1.1",
+    "he": "^1.1.1",
     "html-to-text": "3.2.0",
-    "iconv-lite": "0.4.15",
+    "iconv-lite": "0.4.17",
     "libmime": "3.1.0",
-    "mailsplit": "4.0.2",
-    "marked": "0.3.6"
+    "mailsplit": "4.0.2"
   },
   "devDependencies": {
     "eslint-config-nodemailer": "^1.0.0",

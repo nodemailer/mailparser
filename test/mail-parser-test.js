@@ -1169,7 +1169,7 @@ exports['Multipart content'] = {
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
             test.equal(mailparser.text, 'ÕÄÖÜ2\nÕÄÖÜ1');
-            test.equal(mailparser.html, 'ÕÄÖÜ2<br/>\n<p>ÕÄÖÜ1</p>\n');
+            test.equal(mailparser.html, 'ÕÄÖÜ2<br/>\n<p>&Otilde;&Auml;&Ouml;&Uuml;1</p>');
             test.done();
         });
     }
@@ -1542,7 +1542,7 @@ exports['Additional text'] = test => {
     mailparser.on('data', () => false);
     mailparser.on('end', () => {
         test.equal(mailparser.text, '\nThis e-mail message has been scanned for Viruses and Content and cleared\n\nGood Morning;\n\n');
-        test.equal(mailparser.html, '<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\n<br/>\n<p>Good Morning;</p>\n');
+        test.equal(mailparser.html, '<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\n<br/>\n<p>Good Morning;</p>');
         test.done();
     });
 };
