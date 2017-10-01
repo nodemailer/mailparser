@@ -9,4 +9,3 @@ See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documen
 ### License
 
 **EUPL-v1.1**
-

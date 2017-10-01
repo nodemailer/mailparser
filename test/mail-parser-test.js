@@ -6,10 +6,7 @@ const fs = require('fs');
 
 exports['General tests'] = {
     'Many chunks': test => {
-        let encodedText = 'Content-Type: text/plain; charset=utf-8\r\n' +
-            '\r\n' +
-            'ÕÄ\r\n' +
-            'ÖÜ', // \r\nÕÄÖÜ
+        let encodedText = 'Content-Type: text/plain; charset=utf-8\r\n\r\nÕÄ\r\nÖÜ', // \r\nÕÄÖÜ
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -30,16 +27,12 @@ exports['General tests'] = {
     },
 
     'Many chunks - split line endings': test => {
-        let chunks = [
-            'Content-Type: text/plain; charset=utf-8\r',
-            '\nSubject: Hi Mom\r\n\r\n',
-            'hello'
-        ];
+        let chunks = ['Content-Type: text/plain; charset=utf-8\r', '\nSubject: Hi Mom\r\n\r\n', 'hello'];
 
         test.expect(1);
         let mailparser = new MailParser();
 
-        let writeNextChunk = function () {
+        let writeNextChunk = function() {
             let chunk = chunks.shift();
             if (chunk) {
                 mailparser.write(chunk, 'utf8');
@@ -67,8 +60,7 @@ exports['General tests'] = {
     },
 
     'Headers only': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\n' +
-            'Subject: ÕÄÖÜ',
+        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nSubject: ÕÄÖÜ',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -82,8 +74,7 @@ exports['General tests'] = {
     },
 
     'Body only': test => {
-        let encodedText = '\r\n' +
-            '===',
+        let encodedText = '\r\n===',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -97,13 +88,7 @@ exports['General tests'] = {
     },
 
     'Different line endings': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\n' +
-            'Subject: ÕÄÖÜ\n' +
-            '\n' +
-            '1234\r\n' +
-            'ÕÄÖÜ\r\n' +
-            'ÜÖÄÕ\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain; charset=utf-8\nSubject: ÕÄÖÜ\n\n1234\r\nÕÄÖÜ\r\nÜÖÄÕ\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(2);
@@ -118,17 +103,18 @@ exports['General tests'] = {
     },
 
     'Headers event': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            'X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n' +
-            'Subject: ABCDEF\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            'Content-Disposition: attachment; filename="test.pdf"\r\n' +
-            '\r\n' +
-            'AAECAwQFBg==\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                'X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n' +
+                'Subject: ABCDEF\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment; filename="test.pdf"\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(3);
@@ -154,10 +140,7 @@ exports['General tests'] = {
     },
 
     'No priority': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\n' +
-            'Subject: ÕÄÖÜ\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nSubject: ÕÄÖÜ\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -171,11 +154,7 @@ exports['General tests'] = {
     },
 
     'MS Style priority': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\n' +
-            'Subject: ÕÄÖÜ\n' +
-            'X-Priority: 1 (Highest)\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nSubject: ÕÄÖÜ\nX-Priority: 1 (Highest)\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -189,10 +168,7 @@ exports['General tests'] = {
     },
 
     'Single reference': test => {
-        let encodedText = 'Content-type: text/plain\r\n' +
-            'References: <mail1>\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain\r\nReferences: <mail1>\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -206,11 +182,7 @@ exports['General tests'] = {
     },
 
     'Multiple reference values': test => {
-        let encodedText = 'Content-type: text/plain\r\n' +
-            'References: <mail1>\n' +
-            '    <mail2> <mail3>\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain\r\nReferences: <mail1>\n    <mail2> <mail3>\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -224,11 +196,7 @@ exports['General tests'] = {
     },
 
     'Multiple reference fields': test => {
-        let encodedText = 'Content-type: text/plain\r\n' +
-            'References: <mail1>\n' +
-            'References: <mail3>\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain\r\nReferences: <mail1>\nReferences: <mail3>\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -242,10 +210,7 @@ exports['General tests'] = {
     },
 
     'Single in-reply-to': test => {
-        let encodedText = 'Content-type: text/plain\r\n' +
-            'in-reply-to: <mail1>\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain\r\nin-reply-to: <mail1>\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -259,11 +224,7 @@ exports['General tests'] = {
     },
 
     'Multiple in-reply-to values': test => {
-        let encodedText = 'Content-type: text/plain\r\n' +
-            'in-reply-to: <mail1>\n' +
-            '    <mail2> <mail3>\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain\r\nin-reply-to: <mail1>\n    <mail2> <mail3>\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -277,11 +238,7 @@ exports['General tests'] = {
     },
 
     'Multiple in-reply-to fields': test => {
-        let encodedText = 'Content-type: text/plain\r\n' +
-            'in-reply-to: <mail1>\n' +
-            'in-reply-to: <mail3>\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Content-type: text/plain\r\nin-reply-to: <mail1>\nin-reply-to: <mail3>\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -295,10 +252,7 @@ exports['General tests'] = {
     },
 
     'Reply To address': test => {
-        let encodedText = 'Reply-TO: andris <andris@disposebox.com>\r\n' +
-            'Subject: ÕÄÖÜ\n' +
-            '\r\n' +
-            '1234',
+        let encodedText = 'Reply-TO: andris <andris@disposebox.com>\r\nSubject: ÕÄÖÜ\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -306,18 +260,18 @@ exports['General tests'] = {
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.deepEqual(mailparser.replyTo.value, [{
-                name: 'andris',
-                address: 'andris@disposebox.com'
-            }]);
+            test.deepEqual(mailparser.replyTo.value, [
+                {
+                    name: 'andris',
+                    address: 'andris@disposebox.com'
+                }
+            ]);
             test.done();
         });
     }
-
 };
 
 exports['Text encodings'] = {
-
     'Plaintext encoding: Default': test => {
         let encodedText = [13, 10, 213, 196, 214, 220], // \r\nÕÄÖÜ
             mail = Buffer.from(encodedText);
@@ -334,9 +288,7 @@ exports['Text encodings'] = {
     },
 
     'Plaintext encoding: Header defined': test => {
-        let encodedText = 'Content-Type: TEXT/PLAIN; CHARSET=UTF-8\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ',
+        let encodedText = 'Content-Type: TEXT/PLAIN; CHARSET=UTF-8\r\n\r\nÕÄÖÜ',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -350,9 +302,7 @@ exports['Text encodings'] = {
     },
 
     'HTML encoding: Header defined': test => {
-        let encodedText = 'Content-Type: text/html; charset=iso-UTF-8\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ',
+        let encodedText = 'Content-Type: text/html; charset=iso-UTF-8\r\n\r\nÕÄÖÜ',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(1);
@@ -366,10 +316,11 @@ exports['Text encodings'] = {
     },
 
     'Mime Words': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\n' +
-            'From: =?utf-8?q?_?= <sender@email.com>\r\n' +
-            'To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <to@email.com>\r\n' +
-            'Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
+        let encodedText =
+                'Content-type: text/plain; charset=utf-8\r\n' +
+                'From: =?utf-8?q?_?= <sender@email.com>\r\n' +
+                'To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <to@email.com>\r\n' +
+                'Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -386,10 +337,7 @@ exports['Text encodings'] = {
 
 exports['Binary attachment encodings'] = {
     'Quoted-Printable': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText = 'Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -407,15 +355,12 @@ exports['Binary attachment encodings'] = {
             }
         });
         mailparser.on('end', () => {
-            test.equal(Array.prototype.slice.apply(attachments[0].content && attachments[0].content || []).join(','), '0,1,2,3,253,254,255');
+            test.equal(Array.prototype.slice.apply((attachments[0].content && attachments[0].content) || []).join(','), '0,1,2,3,253,254,255');
             test.done();
         });
     },
     Base64: test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            '\r\n' +
-            'AAECA/3+/w==',
+        let encodedText = 'Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: base64\r\n\r\nAAECA/3+/w==',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -433,14 +378,12 @@ exports['Binary attachment encodings'] = {
             }
         });
         mailparser.on('end', () => {
-            test.equal(Array.prototype.slice.apply(attachments[0].content && attachments[0].content || []).join(','), '0,1,2,3,253,254,255');
+            test.equal(Array.prototype.slice.apply((attachments[0].content && attachments[0].content) || []).join(','), '0,1,2,3,253,254,255');
             test.done();
         });
     },
     '8bit': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ',
+        let encodedText = 'Content-Type: application/octet-stream\r\n\r\nÕÄÖÜ',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -458,7 +401,7 @@ exports['Binary attachment encodings'] = {
             }
         });
         mailparser.on('end', () => {
-            test.equal(Array.prototype.slice.apply(attachments[0].content && attachments[0].content || []).join(','), '195,149,195,132,195,150,195,156');
+            test.equal(Array.prototype.slice.apply((attachments[0].content && attachments[0].content) || []).join(','), '195,149,195,132,195,150,195,156');
             test.done();
         });
     }
@@ -466,11 +409,12 @@ exports['Binary attachment encodings'] = {
 
 exports['Attachment Content-Id'] = {
     Default: test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment; filename="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment; filename="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -494,12 +438,13 @@ exports['Attachment Content-Id'] = {
     },
 
     Defined: test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment; filename="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
-            'Content-Id: <test@localhost>\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment; filename="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
+                'Content-Id: <test@localhost>\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -524,13 +469,13 @@ exports['Attachment Content-Id'] = {
 };
 
 exports['Attachment filename'] = {
-
     'Content-Disposition filename': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment; filename="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment; filename="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -553,11 +498,12 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Disposition filename*': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment; filename*="UTF-8\'\'%C3%95%C3%84%C3%96%C3%9C"\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment; filename*="UTF-8\'\'%C3%95%C3%84%C3%96%C3%9C"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -580,14 +526,15 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Disposition filename*X': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment;\r\n' +
-            '    filename*0=OA;\r\n' +
-            '    filename*1=U;\r\n' +
-            '    filename*2=.txt\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment;\r\n' +
+                '    filename*0=OA;\r\n' +
+                '    filename*1=U;\r\n' +
+                '    filename*2=.txt\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -610,13 +557,14 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Disposition filename*X*': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment;\r\n' +
-            '    filename*0*=UTF-8\'\'%C3%95%C3%84;\r\n' +
-            '    filename*1*=%C3%96%C3%9C\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment;\r\n' +
+                '    filename*0*=UTF-8\'\'%C3%95%C3%84;\r\n' +
+                '    filename*1*=%C3%96%C3%9C\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -639,14 +587,15 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Disposition filename*X* mixed': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            'Content-Disposition: attachment;\r\n' +
-            '    filename*0*=UTF-8\'\'%C3%95%C3%84;\r\n' +
-            '    filename*1*=%C3%96%C3%9C;\r\n' +
-            '    filename*2=.txt\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                'Content-Disposition: attachment;\r\n' +
+                '    filename*0*=UTF-8\'\'%C3%95%C3%84;\r\n' +
+                '    filename*1*=%C3%96%C3%9C;\r\n' +
+                '    filename*2=.txt\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -670,10 +619,11 @@ exports['Attachment filename'] = {
     },
 
     'Content-Type name': test => {
-        let encodedText = 'Content-Type: application/octet-stream; name="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream; name="=?UTF-8?Q?=C3=95=C3=84=C3=96=C3=9C?="\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -696,10 +646,7 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Type unknown; name': test => {
-        let encodedText = 'Content-Type: unknown; name="test"\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText = 'Content-Type: unknown; name="test"\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\n=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -722,11 +669,12 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Type name*': test => {
-        let encodedText = 'Content-Type: application/octet-stream;\r\n' +
-            '    name*=UTF-8\'\'%C3%95%C3%84%C3%96%C3%9C\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream;\r\n' +
+                '    name*=UTF-8\'\'%C3%95%C3%84%C3%96%C3%9C\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -749,12 +697,13 @@ exports['Attachment filename'] = {
         });
     },
     'Content-Type name*X*': test => {
-        let encodedText = 'Content-Type: application/octet-stream;\r\n' +
-            '    name*0*=UTF-8\'\'%C3%95%C3%84;\r\n' +
-            '    name*1*=%C3%96%C3%9C\r\n' +
-            'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF',
+        let encodedText =
+                'Content-Type: application/octet-stream;\r\n' +
+                '    name*0*=UTF-8\'\'%C3%95%C3%84;\r\n' +
+                '    name*1*=%C3%96%C3%9C\r\n' +
+                'Content-Transfer-Encoding: QUOTED-PRINTABLE\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -777,17 +726,18 @@ exports['Attachment filename'] = {
         });
     },
     'Multiple filenames - Same': test => {
-        let encodedText = 'Content-Type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream; name="test.txt"\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream; name="test.txt"\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-Type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream; name="test.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream; name="test.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -811,17 +761,18 @@ exports['Attachment filename'] = {
         });
     },
     'Multiple filenames - Different': test => {
-        let encodedText = 'Content-Type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream; name="test.txt"\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-Type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream; name="test.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -845,13 +796,14 @@ exports['Attachment filename'] = {
         });
     },
     'Filename with semicolon': test => {
-        let encodedText = 'Content-Type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Disposition: attachment; filename="hello;world;test.txt"\r\n' +
-            '\r\n' +
-            '=00=01=02=03=FD=FE=FF\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-Type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Disposition: attachment; filename="hello;world;test.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=FD=FE=FF\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -901,9 +853,7 @@ exports['Plaintext format'] = {
         });
     },
     'Flowed Signature': test => {
-        let encodedText = 'Content-Type: text/plain; format=flowed\r\n\r\nHow are you today?\r\n\r\n' +
-            '-- \r\n' +
-            'Signature\r\n',
+        let encodedText = 'Content-Type: text/plain; format=flowed\r\n\r\nHow are you today?\r\n\r\n-- \r\nSignature\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -990,7 +940,8 @@ exports['Transfer encoding'] = {
         });
     },
     'Mime Words': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nSubject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
+        let encodedText =
+                'Content-type: text/plain; charset=utf-8\r\nSubject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -1046,10 +997,12 @@ exports['Transfer encoding'] = {
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.deepEqual(mailparser.from.value, [{
-                address: 'user@ldkf.com.tw',
-                name: '游采樺'
-            }]);
+            test.deepEqual(mailparser.from.value, [
+                {
+                    address: 'user@ldkf.com.tw',
+                    name: '游采樺'
+                }
+            ]);
             test.done();
         });
     },
@@ -1105,17 +1058,18 @@ exports['Multipart content'] = {
         });
     },
     Nested: test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-type: multipart/related; boundary=DEF\r\n' +
-            '\r\n' +
-            '--DEF\r\n' +
-            'Content-type: text/plain; charset=utf-8\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ\r\n' +
-            '--DEF--\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-type: multipart/related; boundary=DEF\r\n' +
+                '\r\n' +
+                '--DEF\r\n' +
+                'Content-type: text/plain; charset=utf-8\r\n' +
+                '\r\n' +
+                'ÕÄÖÜ\r\n' +
+                '--DEF--\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -1127,15 +1081,16 @@ exports['Multipart content'] = {
         });
     },
     'Inline text (Sparrow)': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: text/plain; charset="utf-8"\r\n' +
-            'Content-Transfer-Encoding: 8bit\r\n' +
-            'Content-Disposition: inline\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: text/plain; charset="utf-8"\r\n' +
+                'Content-Transfer-Encoding: 8bit\r\n' +
+                'Content-Disposition: inline\r\n' +
+                '\r\n' +
+                'ÕÄÖÜ\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -1147,21 +1102,22 @@ exports['Multipart content'] = {
         });
     },
     'Different Levels': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-type: text/html; charset=utf-8\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ2\r\n' +
-            '--ABC\r\n' +
-            'Content-type: multipart/related; boundary=DEF\r\n' +
-            '\r\n' +
-            '--DEF\r\n' +
-            'Content-type: text/plain; charset=utf-8\r\n' +
-            '\r\n' +
-            'ÕÄÖÜ1\r\n' +
-            '--DEF--\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-type: text/html; charset=utf-8\r\n' +
+                '\r\n' +
+                'ÕÄÖÜ2\r\n' +
+                '--ABC\r\n' +
+                'Content-type: multipart/related; boundary=DEF\r\n' +
+                '\r\n' +
+                '--DEF\r\n' +
+                'Content-type: text/plain; charset=utf-8\r\n' +
+                '\r\n' +
+                'ÕÄÖÜ1\r\n' +
+                '--DEF--\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -1177,15 +1133,16 @@ exports['Multipart content'] = {
 
 exports['Attachment info'] = {
     'Included integrity': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: quoted-printable\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            '=00=01=02=03=04=05=06\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--ABC--',
             expectedHash = '9aa461e1eca4086f9230aa49c90b0c61',
             mail = Buffer.from(encodedText, 'utf-8');
 
@@ -1215,15 +1172,16 @@ exports['Attachment info'] = {
         });
     },
     'Stream integrity base64': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            'AAECAwQFBg==\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC--',
             expectedHash = '9aa461e1eca4086f9230aa49c90b0c61',
             mail = Buffer.from(encodedText, 'utf-8');
 
@@ -1256,16 +1214,17 @@ exports['Attachment info'] = {
         });
     },
     'Stream integrity - 8bit': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: 8bit\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            'ÕÄ\r\n' +
-            'ÖÜ\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: 8bit\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'ÕÄ\r\n' +
+                'ÖÜ\r\n' +
+                '--ABC--',
             expectedHash = 'cad0f72629a7245dd3d2cbf41473e3ca',
             mail = Buffer.from(encodedText, 'utf-8');
 
@@ -1298,17 +1257,18 @@ exports['Attachment info'] = {
         });
     },
     'Stream integrity - binary, non utf-8': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: 8bit\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            'ÕÄ\r\n' +
-            'ÖÜ\r\n' +
-            'ŽŠ\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: 8bit\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'ÕÄ\r\n' +
+                'ÖÜ\r\n' +
+                'ŽŠ\r\n' +
+                '--ABC--',
             expectedHash = '34bca86f8cc340bbd11446ee16ee3cae',
             mail = iconv.encode(encodedText, 'iso-8859-13');
 
@@ -1341,17 +1301,18 @@ exports['Attachment info'] = {
         });
     },
     'Stream integrity - qp, non utf-8': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream; charset=iso-8859-13\r\n' +
-            'Content-Transfer-Encoding: quoted-printable\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            '=d5=c4\r\n' +
-            '=d6=dc\r\n' +
-            '=de=d0\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream; charset=iso-8859-13\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                '=d5=c4\r\n' +
+                '=d6=dc\r\n' +
+                '=de=d0\r\n' +
+                '--ABC--',
             expectedHash = '34bca86f8cc340bbd11446ee16ee3cae',
             mail = Buffer.from(encodedText, 'utf-8');
 
@@ -1384,12 +1345,13 @@ exports['Attachment info'] = {
         });
     },
     'Attachment in root node': test => {
-        let encodedText = 'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: 8bit\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            'ÕÄ\r\n' +
-            'ÖÜ',
+        let encodedText =
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: 8bit\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'ÕÄ\r\n' +
+                'ÖÜ',
             expectedHash = 'cad0f72629a7245dd3d2cbf41473e3ca',
             mail = Buffer.from(encodedText, 'utf-8');
 
@@ -1424,27 +1386,28 @@ exports['Attachment info'] = {
         });
     },
     'Stream multiple attachments': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            'AAECAwQFBg==\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            'Content-Disposition: attachment\r\n' +
-            '\r\n' +
-            'AAECAwQFBg==\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            'Content-Disposition: attachment; filename="test.txt"\r\n' +
-            '\r\n' +
-            'AAECAwQFBg==\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment; filename="test.txt"\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -1473,15 +1436,16 @@ exports['Attachment info'] = {
         });
     },
     'Detect Content-Type by filename': test => {
-        let encodedText = 'Content-type: multipart/mixed; boundary=ABC\r\n' +
-            '\r\n' +
-            '--ABC\r\n' +
-            'Content-Type: application/octet-stream\r\n' +
-            'Content-Transfer-Encoding: base64\r\n' +
-            'Content-Disposition: attachment; filename="test.pdf"\r\n' +
-            '\r\n' +
-            'AAECAwQFBg==\r\n' +
-            '--ABC--',
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment; filename="test.pdf"\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC--',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let attachments = [];
@@ -1542,7 +1506,10 @@ exports['Additional text'] = test => {
     mailparser.on('data', () => false);
     mailparser.on('end', () => {
         test.equal(mailparser.text, '\nThis e-mail message has been scanned for Viruses and Content and cleared\n\nGood Morning;\n\n');
-        test.equal(mailparser.html, '<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\n<br/>\n<p>Good Morning;</p>');
+        test.equal(
+            mailparser.html,
+            '<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\n<br/>\n<p>Good Morning;</p>'
+        );
         test.done();
     });
 };

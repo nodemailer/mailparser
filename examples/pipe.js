@@ -58,12 +58,15 @@ parser.on('data', data => {
 parser.on('end', () => {
     console.log('READY');
 
-    parser.updateImageLinks((attachment, done) => done(false, 'data:' + attachment.contentType + ';base64,' + attachment.buf.toString('base64')), (err, html) => {
-        if (err) {
-            console.log(err);
+    parser.updateImageLinks(
+        (attachment, done) => done(false, 'data:' + attachment.contentType + ';base64,' + attachment.buf.toString('base64')),
+        (err, html) => {
+            if (err) {
+                console.log(err);
+            }
+            if (html) {
+                console.log(html);
+            }
         }
-        if (html) {
-            console.log(html);
-        }
-    });
+    );
 });
