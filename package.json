@@ -1,13 +1,13 @@
 {
     "name": "mailparser",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
         "test": "grunt"
     },
     "author": "Andris Reinman",
-    "license": "EUPL-1.1",
+    "license": "EUPL-1.1+",
     "dependencies": {
         "addressparser": "1.0.1",
         "he": "^1.1.1",
@@ -15,16 +15,16 @@
         "iconv-lite": "0.4.19",
         "libmime": "3.1.0",
         "linkify-it": "2.0.3",
-        "mailsplit": "4.0.2",
-        "tlds": "1.197.0"
+        "mailsplit": "4.1.2",
+        "tlds": "1.199.0"
     },
     "devDependencies": {
         "eslint-config-nodemailer": "^1.2.0",
-        "grunt": "^1.0.1",
+        "grunt": "^1.0.2",
         "grunt-cli": "^1.2.0",
         "grunt-contrib-nodeunit": "^1.0.0",
         "grunt-eslint": "^20.1.0",
-        "libbase64": "^0.2.0",
+        "libbase64": "^1.0.2",
         "libqp": "^1.1.0",
         "random-message": "^1.1.0"
     },
