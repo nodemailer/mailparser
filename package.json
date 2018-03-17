@@ -1,5 +1,5 @@
 {
-    "name": "mailparser",
+    "name": "noinfopath-mailparser",
     "version": "2.2.0",
     "description": "Parse e-mails",
     "main": "index.js",
@@ -33,9 +33,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/andris9/mailparser.git"
+        "url": "https://github.com/noInfoPath/noinfopath-mailparser.git"
     },
     "bugs": {
-        "url": "https://github.com/andris9/mailparser/issues"
+        "url": "https://github.com/noInfoPath/noinfopath-mailparser/issues"
     }
 }
