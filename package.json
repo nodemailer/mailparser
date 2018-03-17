@@ -7,6 +7,9 @@
         "test": "grunt"
     },
     "author": "Andris Reinman",
+    "contributors": {
+        "name" : "Jeff Gochin", "email" : "jeff@gochin.com"
+    }
     "license": "EUPL-1.1+",
     "dependencies": {
         "addressparser": "1.0.1",
