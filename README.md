@@ -6,23 +6,6 @@ Advanced email parser for Node.js. Everything is handled as a stream which shoul
 
 See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documentation and terms.
 
-### License
-
-**EUPL-v1.1** or later
-
-
-<div id="body-inner">
-
-# Mailparser
-
-# NB! This project is deprecated
-
-All users of this project are urged to find an alternative as it is not maintained anymore. Read more [here](https://blog.nodemailer.com/2018/03/11/spring-cleaning/)
-
-* * *
-
-Advanced email parser for Node.js. Everything is handled as a stream which should make it able to parse even very large messages (100MB+) with relatively low overhead.
-
 The module exposes two separate modes, a lower level **MailParser** class and **simpleParser** function. The latter is simpler to use (hence the name) but is less resource efficient as it buffers attachment contents in memory.
 
 ## Install<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#install"></span>
@@ -213,4 +196,3 @@ Charset decoding is handled using [iconv-lite](https://github.com/ashtuchkin/ico
 
 **EUPLv1.1**
 
-</div>
