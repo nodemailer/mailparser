@@ -370,7 +370,7 @@ exports['Binary attachment encodings'] = {
             if (data.type === 'attachment') {
                 let chunks = [];
                 data.content.on('data', chunk => chunks.push(chunk));
-                data.content.on('end', () => {
+                data.content.on('finish', () => {
                     data.content = Buffer.concat(chunks);
                     data.release();
                 });
@@ -916,7 +916,7 @@ exports['Transfer encoding'] = {
         });
     },
     'Base64 Default charset': test => {
-        let encodedText = 'Content-type: text/plain\r\nContent-Transfer-Encoding: bAse64\r\n\r\n1cTW3A==',
+        let encodedText = 'Content-type: text/plain\r\nContent-Transfer-Encoding: base64\r\n\r\n1cTW3A==',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -928,7 +928,7 @@ exports['Transfer encoding'] = {
         });
     },
     'Base64 UTF-8': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: bAse64\r\n\r\nw5XDhMOWw5w=',
+        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nw5XDhMOWw5w=',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
