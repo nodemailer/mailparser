@@ -39,9 +39,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/noInfoPath/noinfopath-mailparser.git"
+        "url": "https://github.com/javascriptlove/mailparse"
     },
     "bugs": {
-        "url": "https://github.com/noInfoPath/noinfopath-mailparser/issues"
+        "url": "https://github.com/javascriptlove/mailparse/issues"
     }
 }
