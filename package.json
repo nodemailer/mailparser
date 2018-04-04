@@ -20,7 +20,7 @@
         "html-to-text": "^4.0.0",
         "iconv-lite": "^0.4.19",
         "libmime": "3.1.0",
-        "linkify-it": "3.1.0",
+        "linkify-it": "2.0.3",
         "mailsplit": "4.1.2",
         "tlds": "1.199.0"
     },
