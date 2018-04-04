@@ -1,4 +1,6 @@
-# mailparse
+[![Build Status](https://travis-ci.org/javascriptlove/mailparse.svg?branch=master)](https://travis-ci.org/javascriptlove/mailparse)
+
+# mailparse 
 
 Forked from the original nodemailer/mailparser project, which is now deprecated.  Maintaining here because a project we have has a dependency on it.
 
@@ -188,9 +190,13 @@ Text object has the following keys:
         }
     });
 
+## Testing
+
+Tests are run on Node versions 6, 7, 8 and 9.
+
 ## Issues<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#issues"></span>
 
-Charset decoding is handled using [iconv-lite](https://github.com/ashtuchkin/iconv-lite) that is missing some charsets, especially some Japanese ones. If required then it would be possible to switch to native iconv bindings with [node-iconv](https://github.com/bnoordhuis/node-iconv) to handle these missing charsets but for now this option is not used for easier packaging.
+Submitting issues is welcome
 
 ## License<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#license"></span>
 
