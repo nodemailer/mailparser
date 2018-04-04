@@ -16,7 +16,7 @@ The module exposes two separate modes, a lower level **MailParser** class and **
 
 **simpleParser** is the easiest way to parse emails. You only need to provide a message source to get a parsed email structure in return. As an additional bonus all embedded images in HTML (eg. the images that point to attachments using cid: URIs) are replaced with base64 encoded data URIs, so the message can be displayed without any additional processing. Be aware though that this module does not do any security cleansing (eg. removing javascript and so on), this is left to your own application.
 
-    const simpleParser = require('mailparser').simpleParser;
+    const simpleParser = require('mailparse').simpleParser;
     simpleParser(source, (err, mail)=>{})
 
 or as a Promise:
@@ -140,7 +140,7 @@ Attachment objects have the following structure:
 
 **MailParser** is a lower-level email parsing class. It is a transform stream that takes email source as bytestream for the input and emits data objects for attachments and text contents.
 
-    const MailParser = require('mailparser').MailParser;
+    const MailParser = require('mailparse').MailParser;
     let parser = new MailParser()
 
 ### Event ‘headers’<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#event-headers"></span>
