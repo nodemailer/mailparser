@@ -1,4 +1,4 @@
-# noinfopath-mailparser
+# mailparse
 
 Forked from the original nodemailer/mailparser project, which is now deprecated.  Maintaining here because a project we have has a dependency on it.
 
@@ -10,7 +10,7 @@ The module exposes two separate modes, a lower level **MailParser** class and **
 
 ## Install<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#install"></span>
 
-    npm install mailparser --save
+    npm install mailparse --save
 
 ## simpleParser<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#simpleparser"></span>
 
