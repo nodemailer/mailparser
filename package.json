@@ -1,6 +1,6 @@
 {
     "name": "mailparse",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
