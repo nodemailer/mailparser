@@ -18,12 +18,28 @@ The module exposes two separate modes, a lower level **MailParser** class and **
 
 **simpleParser** is the easiest way to parse emails. You only need to provide a message source to get a parsed email structure in return. As an additional bonus all embedded images in HTML (eg. the images that point to attachments using cid: URIs) are replaced with base64 encoded data URIs, so the message can be displayed without any additional processing. Be aware though that this module does not do any security cleansing (eg. removing javascript and so on), this is left to your own application.
 
-    const simpleParser = require('mailparse').simpleParser;
-    simpleParser(source, (err, mail)=>{})
+```
+const simpleParser = require('mailparse').simpleParser;
+simpleParser(source, (err, mail) => {
+    
+});
+```
 
 or as a Promise:
 
-    simpleParser(source).then(mail=>{}).catch(err=>{})
+```
+simpleParser(source).then(mail => {
+
+}).catch(err => {
+
+});
+```
+
+or with async/await:
+
+```
+var mail = await simpleParser(source);
+```
 
 Where
 
@@ -66,20 +82,22 @@ Address objects have the following structure:
 
 **Example**
 
-    {
-        value: [
-            {
-                address: 'andris+123@kreata.ee',
-                name: 'Andris Reinman'
-            },
-            {
-                address: 'andris.reinman@gmail.com',
-                name: ''
-            }
-        ],
-        html: '<span class="mp_address_name">Andris Reinman</span> <<a href="mailto:andris+123@kreata.ee" class="mp_address_email">andris+123@kreata.ee</a>>, <a href="mailto:andris.reinman@gmail.com" class="mp_address_email">andris.reinman@gmail.com</a>',
-        text: 'Andris Reinman <andris+123@kreata.ee>, andris.reinman@gmail.com'
-    }
+```
+{
+    value: [
+        {
+            address: 'email@example.com',
+            name: 'Fellow Javascriptian'
+        },
+        {
+            address: 'secondemail@example.com',
+            name: ''
+        }
+    ],
+    html: '<span class="mp_address_name">Fellow Javascriptian</span> <<a href="mailto:email@example.com" class="mp_address_email">email@example.com</a>>, <a href="mailto:secondemail@example.com" class="mp_address_email">secondemail@example.com</a>',
+    text: 'Fellow Javascriptian <email@example.com>, secondemail@example.com'
+}
+```
 
 ### headers Map<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#headers-map"></span>
 
@@ -142,8 +160,10 @@ Attachment objects have the following structure:
 
 **MailParser** is a lower-level email parsing class. It is a transform stream that takes email source as bytestream for the input and emits data objects for attachments and text contents.
 
-    const MailParser = require('mailparse').MailParser;
-    let parser = new MailParser()
+```
+const MailParser = require('mailparse').MailParser;
+let parser = new MailParser()
+```
 
 ### Event ‘headers’<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#event-headers"></span>
 
@@ -151,9 +171,11 @@ The parser emits ‘headers’ once message headers have been processed. The hea
 
 Header keys in the Map are lowercase.
 
-    parser.on('headers', headers => {
-        console.log(headers.get('subject'));
-    });
+```
+parser.on('headers', headers => {
+    console.log(headers.get('subject'));
+});
+```
 
 ### Event ‘data’<span class="anchor" data-clipboard-text="https://nodemailer.com/extras/mailparser/#event-data"></span>
 
@@ -166,13 +188,15 @@ Event ‘data’ or ‘readable’ emits message content objects. The type of th
 
 Attachment object is the same as in _simpleParser_ except that _content_ is not a buffer but a stream. Additionally there’s a method **release()** that must be called once you have processed the attachment. The property _related_ is set after message processing is ended, so at the _data_ event this value is not yet available.
 
-    parser.on('data', data => {
-        if(data.type === 'attachment'){
-            console.log(data.filename);
-            data.content.pipe(process.stdout);
-            data.content.on('end', ()=>data.release());
-        }
-    });
+```
+parser.on('data', data => {
+    if(data.type === 'attachment'){
+        console.log(data.filename);
+        data.content.pipe(process.stdout);
+        data.content.on('end', ()=>data.release());
+    }
+});
+```
 
 If you do not call **release()** then the message processing is paused.
 
@@ -184,11 +208,13 @@ Text object has the following keys:
 *   **html** includes the HTML version of the message. Is set if the message has at least one ‘text/html’ node
 *   **textAsHtml** includes the plaintext version of the message in HTML format. Is set if the message has at least one ‘text/plain’ node.
 
-    parser.on('data', data => {
-        if(data.type === 'text'){
-            console.log(data.html);
-        }
-    });
+```
+parser.on('data', data => {
+    if(data.type === 'text'){
+        console.log(data.html);
+    }
+});
+```
 
 ## Testing
 
