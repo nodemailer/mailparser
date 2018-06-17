@@ -7,6 +7,13 @@
         "test": "grunt"
     },
     "author": "Andris Reinman",
+    "contributors": [
+        {
+            "name": "Peter Salomonsen",
+            "email": "petersalomonsen@runbox.com",
+            "url": "https://github.com/petersalomonsen"
+        }
+    ],
     "license": "EUPL-1.1+",
     "dependencies": {
         "he": "1.1.1",
@@ -35,9 +42,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/andris9/mailparser.git"
+        "url": "https://github.com/runbox/mailparser.git"
     },
     "bugs": {
-        "url": "https://github.com/andris9/mailparser/issues"
+        "url": "https://github.com/runbox/mailparser/issues"
     }
 }
