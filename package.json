@@ -1,7 +1,7 @@
 {
   "name": "front-mailparser",
   "description": "Asynchronous and non-blocking parser for mime encoded e-mail messages",
-  "version": "0.6.1-1",
+  "version": "0.6.1-2",
   "author": "Andris Reinman",
   "maintainers": [{
     "name": "andris",
