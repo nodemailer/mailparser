@@ -44,16 +44,18 @@ let processNext = () => {
     }
 
     let parser = new MailParser();
-    parser.on('data', data => {
-        if (data.type === 'attachment') {
-            data.content.on('data', () => false);
-            data.content.on('end', () => data.release());
+    parser.on('readable', () => {
+        let data;
+        while ((data = parser.read()) !== null) {
+            if (data.type === 'attachment') {
+                data.content.on('data', () => false);
+                data.content.on('end', data.release);
+            }
         }
     });
 
     parser.on('end', () => {
         parser = false;
-
         setImmediate(processNext);
     });
 
