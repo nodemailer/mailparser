@@ -133,6 +133,7 @@ exports['General tests'] = {
                 data.release();
             }
         });
+
         mailparser.on('end', () => {
             test.ok(1, 'Parsing ended');
             test.done();
