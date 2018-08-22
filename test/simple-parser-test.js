@@ -43,3 +43,12 @@ module.exports['Parse message with large plaintext content'] = test => {
         test.done();
     });
 };
+
+module.exports['Parse spam message'] = test => {
+    simpleParser(fs.createReadStream(__dirname + '/fixtures/spam.eml'), (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+        test.ok(mail.html.trim());
+        test.done();
+    });
+};
