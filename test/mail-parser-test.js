@@ -1590,3 +1590,33 @@ exports['Additional text'] = test => {
         test.done();
     });
 };
+
+exports['Fail on HTML parser callstack error'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/htmllargecallstack.eml');
+
+    test.expect(4);
+    let mailparser = new MailParser();
+
+    for (let i = 0, len = mail.length; i < len; i++) {
+        mailparser.write(Buffer.from([mail[i]]));
+    }
+
+    
+    mailparser.end();
+    
+    let mailobj = {};
+
+    mailparser.on('data', data => {                
+        mailobj.text = data;        
+    });    
+    mailparser.on('error', err => {
+        test.equal(err.name, 'Error');        
+        test.equal(err.message, 'Failed to parse HTML');        
+    });
+    mailparser.on('end', () => {        
+        test.equal('Invalid HTML content', mailobj.text.text);
+        test.equal(undefined, mailobj.text.html);
+        test.done();
+    });
+};
+
