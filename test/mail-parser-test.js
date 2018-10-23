@@ -1554,7 +1554,7 @@ exports['Skip text to html'] = test => {
     let mail = fs.readFileSync(__dirname + '/fixtures/large_text.eml');
 
     test.expect(2);
-    let mailparser = new MailParser({skipTextToHtml: true});
+    let mailparser = new MailParser({ skipTextToHtml: true });
 
     for (let i = 0, len = mail.length; i < len; i++) {
         mailparser.write(Buffer.from([mail[i]]));
@@ -1601,22 +1601,20 @@ exports['Fail on HTML parser callstack error'] = test => {
         mailparser.write(Buffer.from([mail[i]]));
     }
 
-    
     mailparser.end();
-    
+
     let mailobj = {};
 
-    mailparser.on('data', data => {                
-        mailobj.text = data;        
-    });    
-    mailparser.on('error', err => {
-        test.equal(err.name, 'Error');        
-        test.equal(err.message, 'Failed to parse HTML');        
+    mailparser.on('data', data => {
+        mailobj.text = data;
     });
-    mailparser.on('end', () => {        
+    mailparser.on('error', err => {
+        test.equal(err.name, 'Error');
+        test.equal(err.message, 'Failed to parse HTML');
+    });
+    mailparser.on('end', () => {
         test.equal('Invalid HTML content', mailobj.text.text);
         test.equal(undefined, mailobj.text.html);
         test.done();
     });
 };
-
