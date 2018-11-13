@@ -54,7 +54,7 @@ Content-Type: multipart/alternative;
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-Hello to myself!
+Hello to myself! http://www.nodemailer.com/
 ------sinikael-?=_2-14763587882000.8241290969717285
 Content-Type: text/watch-html
 Content-Transfer-Encoding: 7bit
