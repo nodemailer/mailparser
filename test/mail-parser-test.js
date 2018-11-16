@@ -3,6 +3,7 @@
 const MailParser = require('..').MailParser;
 const iconv = require('iconv-lite');
 const fs = require('fs');
+const crypto = require('crypto');
 
 exports['General tests'] = {
     /*'Simple with part as rfc822 of headers only': test => {
@@ -1615,6 +1616,41 @@ exports['Fail on HTML parser callstack error'] = test => {
     mailparser.on('end', () => {
         test.equal('Invalid HTML content', mailobj.text.text);
         test.equal(undefined, mailobj.text.html);
+        test.done();
+    });
+};
+
+exports['Base64 encoded root node'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/base64encodedroot.eml');
+
+    test.expect(2);
+    let mailparser = new MailParser();
+
+    for (let i = 0, len = mail.length; i < len; i++) {
+        mailparser.write(Buffer.from([mail[i]]));
+    }
+    
+    mailparser.end();
+    const attachments = [];
+    
+    mailparser.on('data', data => {                
+        if (data.type === 'attachment') {
+            let chunks = [];
+            data.content.on('data', chunk => chunks.push(chunk));
+            data.content.on('end', () => {
+                data.content = Buffer.concat(chunks);
+                data.release();
+            });            
+            attachments.push(data);        
+        }         
+    });
+    
+    mailparser.on('end', () => {        
+        test.equal(1, attachments.length);
+        
+        const hash = crypto.createHash('sha256');
+        hash.update(attachments[0].content);
+        test.equal(hash.digest('hex'),'3d0c2d17edd1fed968f66ca200e7c165efd63834b488eec53deb24cca49c3d7b');
         test.done();
     });
 };
