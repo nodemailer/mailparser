@@ -1654,3 +1654,30 @@ exports['Base64 encoded root node'] = test => {
         test.done();
     });
 };
+exports['Out of memory error'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/outofmemory.eml');
+
+    test.expect(4);
+    let mailparser = new MailParser({maxHtmlLengthToParse: 128*1024});
+
+    for (let i = 0, len = mail.length; i < len; i++) {
+        mailparser.write(Buffer.from([mail[i]]));
+    }
+    
+    let mailobj = {};
+
+    mailparser.end();
+    
+    mailparser.on('data', data => {         
+        mailobj.text = data; 
+    });
+    mailparser.on('error', err => {
+        test.equal(err.name, 'Error');
+        test.equal(err.message, 'HTML too long for parsing 1139579 bytes');
+    });
+    mailparser.on('end', () => {        
+        test.equal('Invalid HTML content (too long)', mailobj.text.text);
+        test.equal(undefined, mailobj.text.html);
+        test.done();
+    });
+};
