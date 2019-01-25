@@ -1681,3 +1681,105 @@ exports['Out of memory error'] = test => {
         test.done();
     });
 };
+
+exports['Attachment partId'] = {
+    'single part': test => {
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=part1\r\n' +
+                '\r\n' +
+                '--part1\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--part1--',
+                mail = Buffer.from(encodedText, 'utf-8');
+
+        let attachments = [];
+        let mailparser = new MailParser();
+        mailparser.on('data', data => {
+            if (data.type === 'attachment') {
+                let chunks = [];
+                data.content.on('data', chunk => chunks.push(chunk));
+                data.content.on('end', () => {
+                    data.content = Buffer.concat(chunks);
+                    data.release();
+                });
+                attachments.push(data);
+            }
+        });
+
+        for (let i = 0, len = mail.length; i < len; i++) {
+            mailparser.write(Buffer.from([mail[i]]));
+        }
+        mailparser.end();
+
+        mailparser.on('end', () => {
+            test.equal(attachments[0].partId, "1");
+            test.done();
+        });
+    },
+    'nested part': test => {
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=part1\r\n' +
+                '\r\n' +
+                '--part1\r\n' +
+                'Content-Type: multipart/related; type="text/html";boundary=part2\r\n'+
+                '\r\n'+
+                '--part2\r\n'+
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment; filename="test.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n'+
+                '--part2\r\n'+
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment; filename="test2.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n'+
+                '--part2\r\n'+
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment; filename="test3.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n'+
+                '--part2--\r\n\r\n'+
+                '--part1\r\n'+
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--part1--',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        let attachments = [];
+        let mailparser = new MailParser();
+        mailparser.on('data', data => {
+            if (data.type === 'attachment') {
+                let chunks = [];
+                data.content.on('data', chunk => chunks.push(chunk));
+                data.content.on('end', () => {
+                    data.content = Buffer.concat(chunks);
+                    data.release();
+                });
+                attachments.push(data);
+            }
+        });
+
+        for (let i = 0, len = mail.length; i < len; i++) {
+            mailparser.write(Buffer.from([mail[i]]));
+        }
+        mailparser.end();
+
+        mailparser.on('end', () => {
+            test.equal(attachments[0].partId, "1.1");
+            test.equal(attachments[1].partId, "1.2");
+            test.equal(attachments[2].partId, "1.3");
+            test.equal(attachments[3].partId, "2");
+            test.done();
+        });
+    }
+}
