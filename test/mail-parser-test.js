@@ -1783,3 +1783,28 @@ exports['Attachment partId'] = {
         });
     }
 }
+
+exports['Decoder already ended on cleanup'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/decoderended.eml');
+
+    test.expect(1);
+    let mailparser = new MailParser();
+
+    for (let i = 0, len = mail.length; i < len; i++) {
+        mailparser.write(Buffer.from([mail[i]]));
+    }
+    
+    mailparser.end();
+    let mailbodytext = null;
+    
+    mailparser.on('data', data => {                
+        if (data.type === 'text') {
+            mailbodytext = data.text;
+        }         
+    });
+    
+    mailparser.on('end', () => {        
+        test.equal('\n\nNote: forwarded message attached.\n       \n---------------------------------\nBe a better something.\nCheck it out.', mailbodytext);
+        test.done();
+    });
+};
