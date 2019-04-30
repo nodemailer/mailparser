@@ -16,7 +16,6 @@
     ],
     "license": "(MIT OR EUPL-1.1+)",
     "dependencies": {
-        "eslint": "^5.15.3",
         "he": "1.2.0",
         "html-to-text": "5.0.0",
         "iconv-lite": "0.4.24",
@@ -28,6 +27,7 @@
     },
     "devDependencies": {
         "ajv": "6.10.0",
+        "eslint": "^5.15.3",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "4.1.0",
         "grunt": "1.0.4",
