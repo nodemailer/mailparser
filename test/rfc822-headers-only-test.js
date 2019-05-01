@@ -14,8 +14,6 @@ Content-Type: message/rfc822
 
 Content-Type: text/plain; charset=utf-8
 Subject: OK
-
-ok
 --ABC--`,
             mail = Buffer.from(encodedText, 'utf-8');
 
@@ -23,7 +21,7 @@ ok
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.equal(mailparser.text, '\nSubject: OK\n\nok');
+            test.equal(mailparser.text, '\nSubject: OK\n');
             test.done();
         });
     }

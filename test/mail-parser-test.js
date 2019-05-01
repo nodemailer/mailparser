@@ -6,28 +6,6 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 exports['General tests'] = {
-    /*'Simple with part as rfc822 of headers only': test => {
-        if (Date.now() < 1) {
-            return test.done();
-        }
-        let encodedText = `Content-Type: multipart/mixed; boundary="ABC"
-
---ABC
-Content-Type: message/rfc822
-
-Content-Type: text/plain; charset=utf-8
-Subject: OK
---ABC--`,
-            mail = Buffer.from(encodedText, 'utf-8');
-
-        let mailparser = new MailParser();
-        mailparser.end(mail);
-        mailparser.on('data', () => false);
-        mailparser.on('end', () => {
-            test.equal(mailparser.text, '\nSubject: OK\n\nok');
-            test.done();
-        });
-    },*/
     'Many chunks': test => {
         let encodedText = 'Content-Type: text/plain; charset=utf-8\r\n\r\nÕÄ\r\nÖÜ', // \r\nÕÄÖÜ
             mail = Buffer.from(encodedText, 'utf-8');
@@ -1629,28 +1607,28 @@ exports['Base64 encoded root node'] = test => {
     for (let i = 0, len = mail.length; i < len; i++) {
         mailparser.write(Buffer.from([mail[i]]));
     }
-    
+
     mailparser.end();
     const attachments = [];
-    
-    mailparser.on('data', data => {                
+
+    mailparser.on('data', data => {
         if (data.type === 'attachment') {
             let chunks = [];
             data.content.on('data', chunk => chunks.push(chunk));
             data.content.on('end', () => {
                 data.content = Buffer.concat(chunks);
                 data.release();
-            });            
-            attachments.push(data);        
-        }         
+            });
+            attachments.push(data);
+        }
     });
-    
-    mailparser.on('end', () => {        
+
+    mailparser.on('end', () => {
         test.equal(1, attachments.length);
-        
+
         const hash = crypto.createHash('sha256');
         hash.update(attachments[0].content);
-        test.equal(hash.digest('hex'),'3d0c2d17edd1fed968f66ca200e7c165efd63834b488eec53deb24cca49c3d7b');
+        test.equal(hash.digest('hex'), '3d0c2d17edd1fed968f66ca200e7c165efd63834b488eec53deb24cca49c3d7b');
         test.done();
     });
 };
@@ -1658,24 +1636,24 @@ exports['Out of memory error'] = test => {
     let mail = fs.readFileSync(__dirname + '/fixtures/outofmemory.eml');
 
     test.expect(4);
-    let mailparser = new MailParser({maxHtmlLengthToParse: 128*1024});
+    let mailparser = new MailParser({ maxHtmlLengthToParse: 128 * 1024 });
 
     for (let i = 0, len = mail.length; i < len; i++) {
         mailparser.write(Buffer.from([mail[i]]));
     }
-    
+
     let mailobj = {};
 
     mailparser.end();
-    
-    mailparser.on('data', data => {         
-        mailobj.text = data; 
+
+    mailparser.on('data', data => {
+        mailobj.text = data;
     });
     mailparser.on('error', err => {
         test.equal(err.name, 'Error');
         test.equal(err.message, 'HTML too long for parsing 1139579 bytes');
     });
-    mailparser.on('end', () => {        
+    mailparser.on('end', () => {
         test.equal('Invalid HTML content (too long)', mailobj.text.text);
         test.equal(undefined, mailobj.text.html);
         test.done();
@@ -1688,65 +1666,6 @@ exports['Attachment partId'] = {
                 'Content-type: multipart/mixed; boundary=part1\r\n' +
                 '\r\n' +
                 '--part1\r\n' +
-                'Content-Type: application/octet-stream\r\n' +
-                'Content-Transfer-Encoding: quoted-printable\r\n' +
-                'Content-Disposition: attachment\r\n' +
-                '\r\n' +
-                '=00=01=02=03=04=05=06\r\n' +
-                '--part1--',
-                mail = Buffer.from(encodedText, 'utf-8');
-
-        let attachments = [];
-        let mailparser = new MailParser();
-        mailparser.on('data', data => {
-            if (data.type === 'attachment') {
-                let chunks = [];
-                data.content.on('data', chunk => chunks.push(chunk));
-                data.content.on('end', () => {
-                    data.content = Buffer.concat(chunks);
-                    data.release();
-                });
-                attachments.push(data);
-            }
-        });
-
-        for (let i = 0, len = mail.length; i < len; i++) {
-            mailparser.write(Buffer.from([mail[i]]));
-        }
-        mailparser.end();
-
-        mailparser.on('end', () => {
-            test.equal(attachments[0].partId, "1");
-            test.done();
-        });
-    },
-    'nested part': test => {
-        let encodedText =
-                'Content-type: multipart/mixed; boundary=part1\r\n' +
-                '\r\n' +
-                '--part1\r\n' +
-                'Content-Type: multipart/related; type="text/html";boundary=part2\r\n'+
-                '\r\n'+
-                '--part2\r\n'+
-                'Content-Type: application/octet-stream\r\n' +
-                'Content-Transfer-Encoding: quoted-printable\r\n' +
-                'Content-Disposition: attachment; filename="test.txt"\r\n' +
-                '\r\n' +
-                '=00=01=02=03=04=05=06\r\n'+
-                '--part2\r\n'+
-                'Content-Type: application/octet-stream\r\n' +
-                'Content-Transfer-Encoding: quoted-printable\r\n' +
-                'Content-Disposition: attachment; filename="test2.txt"\r\n' +
-                '\r\n' +
-                '=00=01=02=03=04=05=06\r\n'+
-                '--part2\r\n'+
-                'Content-Type: application/octet-stream\r\n' +
-                'Content-Transfer-Encoding: quoted-printable\r\n' +
-                'Content-Disposition: attachment; filename="test3.txt"\r\n' +
-                '\r\n' +
-                '=00=01=02=03=04=05=06\r\n'+
-                '--part2--\r\n\r\n'+
-                '--part1\r\n'+
                 'Content-Type: application/octet-stream\r\n' +
                 'Content-Transfer-Encoding: quoted-printable\r\n' +
                 'Content-Disposition: attachment\r\n' +
@@ -1775,14 +1694,73 @@ exports['Attachment partId'] = {
         mailparser.end();
 
         mailparser.on('end', () => {
-            test.equal(attachments[0].partId, "1.1");
-            test.equal(attachments[1].partId, "1.2");
-            test.equal(attachments[2].partId, "1.3");
-            test.equal(attachments[3].partId, "2");
+            test.equal(attachments[0].partId, '1');
+            test.done();
+        });
+    },
+    'nested part': test => {
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=part1\r\n' +
+                '\r\n' +
+                '--part1\r\n' +
+                'Content-Type: multipart/related; type="text/html";boundary=part2\r\n' +
+                '\r\n' +
+                '--part2\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment; filename="test.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--part2\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment; filename="test2.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--part2\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment; filename="test3.txt"\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--part2--\r\n\r\n' +
+                '--part1\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: quoted-printable\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                '=00=01=02=03=04=05=06\r\n' +
+                '--part1--',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        let attachments = [];
+        let mailparser = new MailParser();
+        mailparser.on('data', data => {
+            if (data.type === 'attachment') {
+                let chunks = [];
+                data.content.on('data', chunk => chunks.push(chunk));
+                data.content.on('end', () => {
+                    data.content = Buffer.concat(chunks);
+                    data.release();
+                });
+                attachments.push(data);
+            }
+        });
+
+        for (let i = 0, len = mail.length; i < len; i++) {
+            mailparser.write(Buffer.from([mail[i]]));
+        }
+        mailparser.end();
+
+        mailparser.on('end', () => {
+            test.equal(attachments[0].partId, '1.1');
+            test.equal(attachments[1].partId, '1.2');
+            test.equal(attachments[2].partId, '1.3');
+            test.equal(attachments[3].partId, '2');
             test.done();
         });
     }
-}
+};
 
 exports['Decoder already ended on cleanup'] = test => {
     let mail = fs.readFileSync(__dirname + '/fixtures/decoderended.eml');
@@ -1793,17 +1771,17 @@ exports['Decoder already ended on cleanup'] = test => {
     for (let i = 0, len = mail.length; i < len; i++) {
         mailparser.write(Buffer.from([mail[i]]));
     }
-    
+
     mailparser.end();
     let mailbodytext = null;
-    
-    mailparser.on('data', data => {                
+
+    mailparser.on('data', data => {
         if (data.type === 'text') {
             mailbodytext = data.text;
-        }         
+        }
     });
-    
-    mailparser.on('end', () => {        
+
+    mailparser.on('end', () => {
         test.equal('\n\nNote: forwarded message attached.\n       \n---------------------------------\nBe a better something.\nCheck it out.', mailbodytext);
         test.done();
     });
