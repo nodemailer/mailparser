@@ -1529,6 +1529,23 @@ exports['Advanced nested HTML'] = test => {
     });
 };
 
+exports['Skip html to text'] = test => {
+    let encodedText = Buffer.from('Content-type: text/html; charset=utf-8\r\n' +
+            '\r\n' +
+            '<div>text</div>'),
+        mail = Buffer.from(encodedText, 'utf-8');
+
+    test.expect(2);
+    let mailparser = new MailParser({ skipHtmlToText: true });
+    mailparser.end(mail);
+    mailparser.on('data', () => false);
+    mailparser.on('end', () => {
+        test.equal(mailparser.text, '');
+        test.equal(mailparser.html, '<div>text</div>');
+        test.done();
+    });
+};
+
 exports['Skip text to html'] = test => {
     let mail = fs.readFileSync(__dirname + '/fixtures/large_text.eml');
 
