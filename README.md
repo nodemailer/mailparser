@@ -10,4 +10,4 @@ See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documen
 
 ### License
 
-Dual licensed under **MIT** or **EUPLv1.1+**
+**EUPL-v1.1** or later

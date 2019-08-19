@@ -10,6 +10,6 @@ node_js:
 notifications:
   email:
     recipients:
-      - kmz111@gmail.com
+      - andris@kreata.ee
     on_success: change
     on_failure: change
