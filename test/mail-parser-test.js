@@ -928,7 +928,7 @@ exports['Transfer encoding'] = {
         });
     },
     'Base64 UTF-8': test => {
-        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nw5XDhMOWw5w=',
+        let encodedText = 'Content-type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: bAse64\r\n\r\nw5XDhMOWw5w=',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
