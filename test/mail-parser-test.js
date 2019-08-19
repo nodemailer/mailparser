@@ -916,7 +916,7 @@ exports['Transfer encoding'] = {
         });
     },
     'Base64 Default charset': test => {
-        let encodedText = 'Content-type: text/plain\r\nContent-Transfer-Encoding: base64\r\n\r\n1cTW3A==',
+        let encodedText = 'Content-type: text/plain\r\nContent-Transfer-Encoding: bAse64\r\n\r\n1cTW3A==',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
