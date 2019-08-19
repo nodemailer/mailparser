@@ -861,7 +861,7 @@ exports['Plaintext format'] = {
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.equal(mailparser.text, 'How are you today?\n-- \nSignature\n');
+            test.equal(mailparser.text, 'How are you today?\n\n-- \nSignature\n');
             test.done();
         });
     },
