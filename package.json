@@ -1,18 +1,21 @@
 {
     "name": "mailparse",
-    "version": "2.2.1",
+    "version": "2.2.0",
     "description": "Parse e-mails",
+    "keywords": [
+        "email",
+        "mail",
+        "parse",
+        "pop3",
+        "imap",
+        "mailparser",
+        "mailparse"
+    ],
     "main": "index.js",
     "scripts": {
         "test": "grunt"
     },
     "author": "Andris Reinman",
-    "contributors": [
-        {
-            "name": "Alexander Kuzmenok",
-            "email": "kmz111@gmail.com"
-        }
-    ],
     "license": "EUPL-1.1+",
     "dependencies": {
         "addressparser": "1.0.1",
@@ -20,7 +23,7 @@
         "html-to-text": "^4.0.0",
         "iconv-lite": "^0.4.19",
         "libmime": "3.1.0",
-        "linkify-it": "3.1.0",
+        "linkify-it": "2.0.3",
         "mailsplit": "4.1.2",
         "tlds": "1.199.0"
     },
@@ -39,9 +42,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/noInfoPath/noinfopath-mailparser.git"
+        "url": "https://github.com/andris9/mailparser.git"
     },
     "bugs": {
-        "url": "https://github.com/noInfoPath/noinfopath-mailparser/issues"
+        "url": "https://github.com/andris9/mailparser/issues"
     }
 }

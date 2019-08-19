@@ -5,9 +5,11 @@ node_js:
   - 7
   - 8
   - 9
+  - 10
+  - 12
 notifications:
   email:
     recipients:
-      - kmz111@gmail.com
+      - andris@kreata.ee
     on_success: change
     on_failure: change
