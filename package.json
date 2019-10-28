@@ -16,10 +16,11 @@
     ],
     "license": "(MIT OR EUPL-1.1+)",
     "dependencies": {
+        "encoding-japanese": "1.0.30",
         "he": "1.2.0",
         "html-to-text": "5.1.1",
         "iconv-lite": "0.5.0",
-        "libmime": "4.1.4",
+        "libmime": "4.2.1",
         "linkify-it": "2.2.0",
         "mailsplit": "4.4.1",
         "nodemailer": "6.3.1",

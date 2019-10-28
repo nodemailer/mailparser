@@ -92,3 +92,24 @@ Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
         test.done();
     });
 };
+
+module.exports['Parse using encoding-japanese'] = test => {
+    let source = Buffer.concat([
+        Buffer.from(`Content-Type: text/plain; charset=ISO-2022-JP
+Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
+
+`),
+        Buffer.from('GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC', 'base64')
+    ]);
+
+    let expected = '学校技術員研修検討会報告';
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+        test.equal(mail.headers.get('subject').trim(), expected);
+        test.equal(mail.text.trim(), expected);
+
+        test.done();
+    });
+};
