@@ -113,3 +113,24 @@ Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
         test.done();
     });
 };
+
+module.exports['Parse encoded address string'] = test => {
+    let source = Buffer.from(
+        `From: test@example.com
+To: =?utf-8?B?IlJ5ZGVsIiA8UnlkZWxrYWxvdEAxN2d1YWd1YS5jb20+?=, andris@tr.ee
+
+test`
+    );
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+
+        test.deepEqual(mail.to.value, [
+            { address: 'andris@tr.ee', name: '' },
+            { address: 'Rydelkalot@17guagua.com', name: 'Rydel' }
+        ]);
+
+        test.done();
+    });
+};
