@@ -333,6 +333,25 @@ exports['Text encodings'] = {
             test.equal(mailparser.to.value[0].name, 'Keld Jørn Simonsen');
             test.done();
         });
+    },
+
+    'Mime Words With Colon': test => {
+        let encodedText =
+		'Content-type: text/plain; charset=utf-8\r\n' +
+		'From: =?utf-8?Q?=3A.Good=20Test.=3A?= <sender@email.com>\r\n' +
+                'To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <to@email.com>\r\n' +
+		'Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        let mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on('data', () => false);
+        mailparser.on('end', () => {
+            test.equal(mailparser.subject, 'Avaldus lepingu lõpetamiseks');
+            test.equal(mailparser.from.value[0].name, ':.Good Test.:');
+            test.equal(mailparser.to.value[0].name, 'Keld Jørn Simonsen');
+            test.done();
+        });
     }
 };
 
