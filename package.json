@@ -22,7 +22,7 @@
         "iconv-lite": "0.5.0",
         "libmime": "4.2.1",
         "linkify-it": "2.2.0",
-        "mailsplit": "4.6.2",
+        "mailsplit": "4.6.3",
         "nodemailer": "6.4.0",
         "tlds": "1.207.0"
     },

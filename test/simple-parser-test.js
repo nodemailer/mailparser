@@ -134,3 +134,21 @@ test`
         test.done();
     });
 };
+
+module.exports['Parse encoded content-disposition'] = test => {
+    let source = Buffer.from(
+        `Content-Disposition: =?utf-8?Q?inline?=
+Subject: test
+
+test`
+    );
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+
+        test.equal(mail.text, 'test');
+
+        test.done();
+    });
+};
