@@ -1,6 +1,6 @@
 {
     "name": "mailparser",
-    "version": "2.8.0",
+    "version": "2.8.1",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
@@ -23,12 +23,12 @@
         "libmime": "5.0.0",
         "linkify-it": "3.0.2",
         "mailsplit": "5.0.0",
-        "nodemailer": "6.4.10",
-        "tlds": "1.207.0"
+        "nodemailer": "6.4.11",
+        "tlds": "1.208.0"
     },
     "devDependencies": {
         "ajv": "6.12.3",
-        "eslint": "7.5.0",
+        "eslint": "7.6.0",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "6.11.0",
         "grunt": "1.2.1",
