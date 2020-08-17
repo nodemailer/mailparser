@@ -352,6 +352,38 @@ exports['Text encodings'] = {
             test.equal(mailparser.to.value[0].name, 'Keld Jørn Simonsen');
             test.done();
         });
+    },
+
+    'Punycode Address': test => {
+        let encodedText =
+                'From: "Sender <sender@xn--mnchen-ost-9db.test.fm>\r\n' +
+                'To: "Test Recipient" <to@email.com>\r\n',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        let mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on('data', () => false);
+        mailparser.on('end', () => {
+            test.equal(mailparser.from.value[0].address, 'sender@münchen-ost.test.fm');
+            test.equal(mailparser.to.value[0].address, 'to@email.com');
+            test.done();
+        });
+    },
+
+    'Punycode Address: Invalid': test => {
+        let encodedText =
+                'From: "Postmaster <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\n' +
+                'To: "Test Recipient" <to@email.com>\r\n',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        let mailparser = new MailParser();
+        mailparser.end(mail);
+        mailparser.on('data', () => false);
+        mailparser.on('end', () => {
+            test.equal(mailparser.from.value[0].address, 'postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com');
+            test.equal(mailparser.to.value[0].address, 'to@email.com');
+            test.done();
+        });
     }
 };
 
