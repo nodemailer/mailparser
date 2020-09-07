@@ -1,6 +1,6 @@
 {
     "name": "mailparser",
-    "version": "2.8.1",
+    "version": "3.0.0",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
@@ -14,7 +14,7 @@
             "url": "https://github.com/petersalomonsen"
         }
     ],
-    "license": "(MIT OR EUPL-1.1+)",
+    "license": "(EUPL-1.1+)",
     "dependencies": {
         "encoding-japanese": "1.0.30",
         "he": "1.2.0",
@@ -24,20 +24,18 @@
         "linkify-it": "3.0.2",
         "mailsplit": "5.0.0",
         "nodemailer": "6.4.11",
-        "tlds": "1.208.0"
+        "tlds": "1.209.0"
     },
     "devDependencies": {
-        "ajv": "6.12.3",
-        "eslint": "7.6.0",
+        "ajv": "6.12.4",
+        "eslint": "7.8.1",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "6.11.0",
-        "grunt": "1.2.1",
+        "grunt": "1.3.0",
         "grunt-cli": "1.3.2",
         "grunt-contrib-nodeunit": "2.1.0",
         "grunt-eslint": "23.0.0",
         "iconv": "3.0.0",
-        "libbase64": "1.2.1",
-        "libqp": "1.1.0",
         "random-message": "1.1.0"
     },
     "repository": {
