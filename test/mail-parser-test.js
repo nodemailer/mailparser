@@ -1469,6 +1469,49 @@ exports['Attachment info'] = {
             test.done();
         });
     },
+    'Attachment checksum: sha256': test => {
+        let encodedText =
+                'Content-type: multipart/mixed; boundary=ABC\r\n' +
+                '\r\n' +
+                '--ABC\r\n' +
+                'Content-Type: application/octet-stream\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                'Content-Disposition: attachment\r\n' +
+                '\r\n' +
+                'AAECAwQFBg==\r\n' +
+                '--ABC--',
+            expectedHash = '57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        let attachments = [];
+        let options = { checksumAlgo: 'sha256' };
+        let mailparser = new MailParser(options);
+
+        for (let i = 0, len = mail.length; i < len; i++) {
+            mailparser.write(Buffer.from([mail[i]]));
+        }
+
+        test.expect(2);
+
+        mailparser.on('data', data => {
+            if (data.type === 'attachment') {
+                let chunks = [];
+                data.content.on('data', chunk => chunks.push(chunk));
+                data.content.on('end', () => {
+                    data.content = Buffer.concat(chunks);
+                    data.release();
+                });
+                attachments.push(data);
+            }
+        });
+
+        mailparser.end();
+        mailparser.on('end', () => {
+            test.equal(attachments[0].checksum, expectedHash);
+            test.equal(attachments[0].size, 7);
+            test.done();
+        });
+    },
     'Stream multiple attachments': test => {
         let encodedText =
                 'Content-type: multipart/mixed; boundary=ABC\r\n' +
