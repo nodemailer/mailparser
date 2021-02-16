@@ -1,0 +1,77 @@
+Delivered-To: xxxxx@gmail.com
+Date: Tue, 16 Feb 2021 00:57:06 +0000
+From: MAILER-DAEMON@amazonses.com
+To: xxxxx@gmail.com
+Message-ID: <xxxxxxxxxxx@email.amazonses.com>
+Subject: Delivery Status Notification (Failure)
+MIME-Version: 1.0
+Content-Type: multipart/report; 
+	boundary="----=_Part_3532716_1471051372.1613437026471"; 
+	report-type=delivery-status
+X-SES-Outgoing: 2021.02.16-0.0.0.0
+Feedback-ID: 1.us-east-1.D1mWDvwUtiZJdKFArGKkGBe9wfRCdAX2ofq5lyeEo20=:AmazonSES
+
+------=_Part_3532716_1471051372.1613437026471
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Content-Description: Notification
+
+An error occurred while trying to deliver the mail to the following recipients:
+xxxx@xxxx.com
+------=_Part_3532716_1471051372.1613437026471
+Content-Type: message/delivery-status
+Content-Transfer-Encoding: 7bit
+Content-Description: Delivery Status Notification
+
+Reporting-MTA: dns; amazonses.com
+
+Action: failed
+Remote-MTA: dns; amazonses.com
+Final-Recipient: rfc822; xxxx@xxxx.com
+Diagnostic-Code: Amazon SES did not send the message to this address because it is on the suppression list for your account. For more information about removing addresses from the suppression list, see the Amazon SES Developer Guide at https://docs.aws.amazon.com/ses/latest/DeveloperGuide/sending-email-suppression-list.html
+Status: 5.1.1
+
+
+------=_Part_3532716_1471051372.1613437026471
+Content-Type: message/rfc822
+Content-Description: Undelivered Message
+
+Received: from xxxx.xxxx (ec2-34-198-5-89.compute-1.amazonaws.com [x.x.x.x])
+        by email-smtp.amazonaws.com
+        with SMTP (SimpleEmailService-d-11MVXUWA9) id aRHDoBiW1yM0CRxRhdPS;
+        Tue, 16 Feb 2021 00:57:06 +0000 (UTC)
+Date: Mon, 15 Feb 2021 17:57:06 -0700
+To: not@found.com
+From: xx xx <xxx@xxx.com>
+Reply-To: xx xx <xxx@xxx.com>
+Subject: =?UTF-8?Q?Fwd:_Fwd:_Access_for_data_-_xxxx@xxxx.com#cpcs=E2=80=8B_|_T?=
+ =?UTF-8?Q?icketID:_SE=123?=
+Message-ID: <xxxxx@email.amazonses.com>
+In-Reply-To: <xxxxxx@email.amazonses.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_UEK9lmOmk2jPQRWgM3Xiqjs7mPRVso71mRP17DZ3qGM"
+Content-Transfer-Encoding: 8bit
+
+This is a multi-part message in MIME format.
+--b1_UEK9lmOmk2jPQRWgM3Xiqjs7mPRVso71mRP17DZ3qGM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+Message
+
+--b1_UEK9lmOmk2jPQRWgM3Xiqjs7mPRVso71mRP17DZ3qGM
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div>Hi,
+<div>&nbsp;</div>
+<div>test email</div>
+</div>
+
+--b1_UEK9lmOmk2jPQRWgM3Xiqjs7mPRVso71mRP17DZ3qGM--
+
+
+------=_Part_3532716_1471051372.1613437026471--
