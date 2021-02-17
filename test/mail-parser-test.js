@@ -33,7 +33,7 @@ exports['General tests'] = {
         test.expect(1);
         let mailparser = new MailParser();
 
-        let writeNextChunk = function() {
+        let writeNextChunk = function () {
             let chunk = chunks.shift();
             if (chunk) {
                 mailparser.write(chunk, 'utf8');
@@ -337,10 +337,10 @@ exports['Text encodings'] = {
 
     'Mime Words With Colon': test => {
         let encodedText =
-		'Content-type: text/plain; charset=utf-8\r\n' +
-		'From: =?utf-8?Q?=3A.Good=20Test.=3A?= <sender@email.com>\r\n' +
+                'Content-type: text/plain; charset=utf-8\r\n' +
+                'From: =?utf-8?Q?=3A.Good=20Test.=3A?= <sender@email.com>\r\n' +
                 'To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <to@email.com>\r\n' +
-		'Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
+                'Subject: =?iso-8859-1?Q?Avaldu?= =?iso-8859-1?Q?s_lepingu_?=\r\n =?iso-8859-1?Q?l=F5petamise?= =?iso-8859-1?Q?ks?=\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -355,9 +355,7 @@ exports['Text encodings'] = {
     },
 
     'Punycode Address': test => {
-        let encodedText =
-                'From: "Sender <sender@xn--mnchen-ost-9db.test.fm>\r\n' +
-                'To: "Test Recipient" <to@email.com>\r\n',
+        let encodedText = 'From: "Sender <sender@xn--mnchen-ost-9db.test.fm>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -371,9 +369,7 @@ exports['Text encodings'] = {
     },
 
     'Punycode Address: Invalid': test => {
-        let encodedText =
-                'From: "Postmaster <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\n' +
-                'To: "Test Recipient" <to@email.com>\r\n',
+        let encodedText = 'From: "Postmaster <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -1581,9 +1577,7 @@ exports['Advanced nested HTML'] = test => {
 };
 
 exports['Skip html to text'] = test => {
-    let encodedText = Buffer.from('Content-type: text/html; charset=utf-8\r\n' +
-            '\r\n' +
-            '<div>text</div>'),
+    let encodedText = Buffer.from('Content-type: text/html; charset=utf-8\r\n' + '\r\n' + '<div>text</div>'),
         mail = Buffer.from(encodedText, 'utf-8');
 
     test.expect(2);
@@ -1634,34 +1628,6 @@ exports['Additional text'] = test => {
             mailparser.html,
             '<HTML><HEAD>\n</HEAD><BODY> \n\n<HR>\nThis e-mail message has been scanned for Viruses and Content and cleared\n<HR>\n</BODY></HTML>\n<br/>\n<p>Good Morning;</p>'
         );
-        test.done();
-    });
-};
-
-exports['Fail on HTML parser callstack error'] = test => {
-    let mail = fs.readFileSync(__dirname + '/fixtures/htmllargecallstack.eml');
-
-    test.expect(4);
-    let mailparser = new MailParser();
-
-    for (let i = 0, len = mail.length; i < len; i++) {
-        mailparser.write(Buffer.from([mail[i]]));
-    }
-
-    mailparser.end();
-
-    let mailobj = {};
-
-    mailparser.on('data', data => {
-        mailobj.text = data;
-    });
-    mailparser.on('error', err => {
-        test.equal(err.name, 'Error');
-        test.equal(err.message, 'Failed to parse HTML');
-    });
-    mailparser.on('end', () => {
-        test.equal('Invalid HTML content', mailobj.text.text);
-        test.equal(undefined, mailobj.text.html);
         test.done();
     });
 };
@@ -1830,6 +1796,7 @@ exports['Attachment partId'] = {
     }
 };
 
+// fails for some reason
 exports['Decoder already ended on cleanup'] = test => {
     let mail = fs.readFileSync(__dirname + '/fixtures/decoderended.eml');
 
@@ -1847,6 +1814,14 @@ exports['Decoder already ended on cleanup'] = test => {
         if (data.type === 'text') {
             mailbodytext = data.text;
         }
+        if (data.type === 'attachment') {
+            data.content.on('data', () => {});
+            data.content.on('end', () => data.release());
+        }
+    });
+
+    mailparser.on('error', err => {
+        test.done(err);
     });
 
     mailparser.on('end', () => {

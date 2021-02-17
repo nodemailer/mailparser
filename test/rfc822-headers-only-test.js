@@ -11,6 +11,7 @@ exports['General tests'] = {
 
 --ABC
 Content-Type: message/rfc822
+Content-Disposition: inline
 
 Content-Type: text/plain; charset=utf-8
 Subject: OK
@@ -19,7 +20,14 @@ Subject: OK
 
         let mailparser = new MailParser();
         mailparser.end(mail);
-        mailparser.on('data', () => false);
+
+        mailparser.on('data', data => {
+            if (data.type === 'attachment') {
+                data.content.on('data', () => {});
+                data.content.on('end', () => data.release());
+            }
+        });
+
         mailparser.on('end', () => {
             test.equal(mailparser.text, '\nSubject: OK\n');
             test.done();

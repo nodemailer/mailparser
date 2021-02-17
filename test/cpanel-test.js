@@ -2,7 +2,7 @@
 
 const MailParser = require('..').MailParser;
 
-exports['Simple with part as rfc822 with bad closing boundary 01'] = (test) => {
+exports['Simple with part as rfc822 with bad closing boundary 01'] = test => {
     let encodedText = `Delivered-To: xxxx@gmail.com
 Date: Wed, 03 Jun 2020 22:50:46 GMT
 From: "cPanel on vps17201.sdfsfsd.com" <cpanel@sdfdsfs.sdfsdffs.com>
@@ -48,7 +48,7 @@ Z2xvcA==
 
     let mailparser = new MailParser();
 
-    mailparser.on('data', (c) => {
+    mailparser.on('data', c => {
         if (c && typeof c.release === 'function') {
             // stream attachment content to /dev/null
             c.content.on('data', () => false);
@@ -64,7 +64,7 @@ Z2xvcA==
     mailparser.end(mail);
 };
 
-exports['Simple with part as rfc822 with bad closing boundary 02'] = (test) => {
+exports['Simple with part as rfc822 with bad closing boundary 02'] = test => {
     let encodedText = `Delivered-To: xxxx@gmail.com
 Date: Wed, 03 Jun 2020 22:50:46 GMT
 From: "cPanel on vps17201.sdfsfsd.com" <cpanel@sdfdsfs.sdfsdffs.com>
@@ -109,7 +109,7 @@ Z2xvcA==
 
     let mailparser = new MailParser();
     mailparser.end(mail);
-    mailparser.on('data', (c) => {
+    mailparser.on('data', c => {
         if (c && typeof c.release === 'function') {
             // stream attachment content to /dev/null
             c.content.on('data', () => false);
