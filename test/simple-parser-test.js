@@ -24,8 +24,7 @@ module.exports['Parse message'] = test => {
                     name: ''
                 }
             ],
-            html:
-                '<span class="mp_address_group"><span class="mp_address_name">Andris Reinman</span> &lt;<a href="mailto:andris+123@kreata.ee" class="mp_address_email">andris+123@kreata.ee</a>&gt;</span>, <span class="mp_address_group"><a href="mailto:andris.reinman@gmail.com" class="mp_address_email">andris.reinman@gmail.com</a></span>',
+            html: '<span class="mp_address_group"><span class="mp_address_name">Andris Reinman</span> &lt;<a href="mailto:andris+123@kreata.ee" class="mp_address_email">andris+123@kreata.ee</a>&gt;</span>, <span class="mp_address_group"><a href="mailto:andris.reinman@gmail.com" class="mp_address_email">andris.reinman@gmail.com</a></span>',
             text: 'Andris Reinman <andris+123@kreata.ee>, andris.reinman@gmail.com'
         });
         test.done();
@@ -148,6 +147,24 @@ test`
         test.ok(mail);
 
         test.equal(mail.text, 'test');
+
+        test.done();
+    });
+};
+
+module.exports['Parse invalid date'] = test => {
+    let source = Buffer.from(
+        `Date: Tue, 06 Jul 2021 19:21:59 CEST
+Subject: test
+
+test`
+    );
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+
+        test.equal(mail.date.toISOString(), '2021-07-06T17:21:59.000Z');
 
         test.done();
     });
