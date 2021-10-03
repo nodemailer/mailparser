@@ -1,6 +1,6 @@
 {
     "name": "mailparser",
-    "version": "3.3.2",
+    "version": "3.3.3",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
@@ -22,7 +22,7 @@
         "html-to-text": "8.0.0",
         "iconv-lite": "0.6.3",
         "libmime": "5.0.0",
-        "linkify-it": "3.0.2",
+        "linkify-it": "3.0.3",
         "mailsplit": "5.2.0",
         "nodemailer": "6.6.5",
         "tlds": "1.222.0"
