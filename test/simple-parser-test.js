@@ -169,3 +169,30 @@ test`
         test.done();
     });
 };
+
+const RFC_2822_date = {
+    '01 Apr 2013 20:18:36 -0500'      : '2013-04-02T01:18:36.000Z',
+    '            01/03/2006'          : '2006-01-03T08:00:00.000Z',
+    '03/11/2014 11:44 AM (GMT-06:00)' : '2014-03-11T18:44:00.000Z',
+    // '2008-10-23, 1:52PM CDT'       : '2008-10-23T13:42:00.000Z',
+    '21 Jan 2013 13:03:51 -0600'      : '2013-01-21T19:03:51.000Z',
+    '4 December 2005'                 : '2005-12-04T08:00:00.000Z',
+    'Fri, 02 Dec 2011 09:27:26 -0600' : '2011-12-02T15:27:26.000Z',
+    'Fri, 07 Mar 2008 02:35:23 -0800 (PST)': '2008-03-07T10:35:23.000Z',
+    'Fri, 07 Mar 2014 11:01:40 UTC'   : '2014-03-07T11:01:40.000Z',
+    'January 6, 2009 4:44:14 PM CST'  : '2009-01-06T22:44:14.000Z',
+}
+
+for (const d in RFC_2822_date) {
+    module.exports[`Parses email date: ${d}`] = test => {
+
+        simpleParser(Buffer.from(`Date: ${d}\r\nSubject: test\r\n\r\ntest`), {}, (err, mail) => {
+            test.ifError(err);
+            test.ok(mail);
+
+            test.equal(mail.date.toISOString(), RFC_2822_date[d]);
+
+            test.done();
+        });
+    }
+};
