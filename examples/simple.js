@@ -6,7 +6,7 @@ const util = require('util');
 const fs = require('fs');
 const simpleParser = require('../lib/simple-parser.js');
 
-let input = fs.createReadStream(__dirname + '/simple.eml');
+let input = fs.createReadStream(process.argv[2] || __dirname + '/simple.eml');
 
 simpleParser(input)
     .then(mail => {
