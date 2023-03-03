@@ -1,6 +1,6 @@
 {
     "name": "mailparser",
-    "version": "3.6.3",
+    "version": "3.6.4",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
@@ -18,20 +18,20 @@
     "dependencies": {
         "encoding-japanese": "2.0.0",
         "he": "1.2.0",
-        "html-to-text": "9.0.3",
+        "html-to-text": "9.0.4",
         "iconv-lite": "0.6.3",
-        "libmime": "5.2.0",
+        "libmime": "5.2.1",
         "linkify-it": "4.0.1",
         "mailsplit": "5.4.0",
-        "nodemailer": "6.8.0",
+        "nodemailer": "6.9.1",
         "tlds": "1.236.0"
     },
     "devDependencies": {
-        "ajv": "8.11.2",
-        "eslint": "8.30.0",
+        "ajv": "8.12.0",
+        "eslint": "8.35.0",
         "eslint-config-nodemailer": "1.2.0",
-        "eslint-config-prettier": "8.5.0",
-        "grunt": "1.5.3",
+        "eslint-config-prettier": "8.6.0",
+        "grunt": "1.6.1",
         "grunt-cli": "1.4.3",
         "grunt-contrib-nodeunit": "4.0.0",
         "grunt-eslint": "24.0.1",
