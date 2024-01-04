@@ -4,7 +4,8 @@
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
-        "test": "grunt"
+        "test": "grunt",
+        "update": "rm -rf node_modules package-lock.json && ncu -u && npm install"
     },
     "author": "Andris Reinman",
     "contributors": [
@@ -21,20 +22,20 @@
         "html-to-text": "9.0.5",
         "iconv-lite": "0.6.3",
         "libmime": "5.2.1",
-        "linkify-it": "4.0.1",
+        "linkify-it": "5.0.0",
         "mailsplit": "5.4.0",
-        "nodemailer": "6.9.3",
-        "tlds": "1.240.0"
+        "nodemailer": "6.9.8",
+        "tlds": "1.248.0"
     },
     "devDependencies": {
         "ajv": "8.12.0",
-        "eslint": "8.44.0",
+        "eslint": "8.56.0",
         "eslint-config-nodemailer": "1.2.0",
-        "eslint-config-prettier": "8.8.0",
+        "eslint-config-prettier": "9.1.0",
         "grunt": "1.6.1",
         "grunt-cli": "1.4.3",
         "grunt-contrib-nodeunit": "5.0.0",
-        "grunt-eslint": "24.2.0",
+        "grunt-eslint": "24.3.0",
         "iconv": "3.0.1",
         "random-message": "1.1.0"
     },
