@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.7](https://github.com/nodemailer/mailparser/compare/v3.6.6...v3.6.7) (2024-02-01)
+
+
+### Bug Fixes
+
+* :arrow_up: update nodemailer dependency to resolve security issue GHSA-9h6g-pr28-7cqp ([#357](https://github.com/nodemailer/mailparser/issues/357)) ([8bc4225](https://github.com/nodemailer/mailparser/commit/8bc42251fca6f538ece599f0a5bebe09b0aeff4f))
+
 ## [3.6.6](https://github.com/nodemailer/mailparser/compare/v3.6.5...v3.6.6) (2024-01-04)
 
 
