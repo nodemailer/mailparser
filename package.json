@@ -21,16 +21,16 @@
         "he": "1.2.0",
         "html-to-text": "9.0.5",
         "iconv-lite": "0.6.3",
-        "libmime": "5.2.1",
+        "libmime": "5.3.4",
         "linkify-it": "5.0.0",
         "mailsplit": "5.4.0",
-        "nodemailer": "6.9.9",
+        "nodemailer": "6.9.10",
         "punycode": "2.3.1",
-        "tlds": "1.248.0"
+        "tlds": "1.250.0"
     },
     "devDependencies": {
         "ajv": "8.12.0",
-        "eslint": "8.56.0",
+        "eslint": "8.57.0",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "9.1.0",
         "grunt": "1.6.1",
