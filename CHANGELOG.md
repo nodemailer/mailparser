@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.8](https://github.com/nodemailer/mailparser/compare/v3.6.7...v3.6.8) (2024-02-29)
+
+
+### Bug Fixes
+
+* **punycode:** Fixes [#355](https://github.com/nodemailer/mailparser/issues/355) Deprecation warning of the punycode module ([#356](https://github.com/nodemailer/mailparser/issues/356)) ([0f35330](https://github.com/nodemailer/mailparser/commit/0f35330c87d715d38e8c853ae6c2f64d098b971d))
+
 ## [3.6.7](https://github.com/nodemailer/mailparser/compare/v3.6.6...v3.6.7) (2024-02-01)
 
 
