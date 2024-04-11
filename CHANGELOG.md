@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/nodemailer/mailparser/compare/v3.6.9...v3.7.0) (2024-04-01)
+
+
+### Features
+
+* **events:** Emit a new headerLines event to gain access the raw headers ([#364](https://github.com/nodemailer/mailparser/issues/364)) ([d33d7ec](https://github.com/nodemailer/mailparser/commit/d33d7ec4b8e32a4eb7a9a664cec5fdb545c274af))
+
 ## [3.6.9](https://github.com/nodemailer/mailparser/compare/v3.6.8...v3.6.9) (2024-02-29)
 
 
