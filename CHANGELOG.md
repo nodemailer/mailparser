@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1](https://github.com/nodemailer/mailparser/compare/v3.7.0...v3.7.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* **deps:** Replaced 'punycode' with 'punycode.js' module ([4a15157](https://github.com/nodemailer/mailparser/commit/4a15157dc9a815aa0e756d9e6ae0e8631842c447))
+
 ## [3.7.0](https://github.com/nodemailer/mailparser/compare/v3.6.9...v3.7.0) (2024-04-01)
 
 
