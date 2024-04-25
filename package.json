@@ -17,16 +17,16 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "encoding-japanese": "2.0.0",
+        "encoding-japanese": "2.1.0",
         "he": "1.2.0",
         "html-to-text": "9.0.5",
         "iconv-lite": "0.6.3",
-        "libmime": "5.3.4",
+        "libmime": "5.3.5",
         "linkify-it": "5.0.0",
         "mailsplit": "5.4.0",
-        "nodemailer": "6.9.11",
-        "punycode": "2.3.1",
-        "tlds": "1.250.0"
+        "nodemailer": "6.9.13",
+        "punycode.js": "2.3.1",
+        "tlds": "1.252.0"
     },
     "devDependencies": {
         "ajv": "8.12.0",
