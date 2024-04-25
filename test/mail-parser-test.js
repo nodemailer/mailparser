@@ -141,6 +141,33 @@ exports['General tests'] = {
         });
     },
 
+    'HeaderLines event': test => {
+        let encodedText = 'X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n' + 'Subject: ABCDEF',
+            mail = Buffer.from(encodedText, 'utf-8');
+
+        test.expect(3);
+        let mailparser = new MailParser();
+
+        mailparser.on('headerLines', headerLines => {
+            test.equal(!!headerLines.find(({ line }) => line === 'X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?='), true);
+            test.equal(!!headerLines.find(({ line }) => line === 'Subject: ABCDEF'), true);
+        });
+
+        mailparser.end(mail);
+        mailparser.on('data', data => {
+            if (data && data.release) {
+                data.content.on('data', () => false);
+                data.content.on('end', () => false);
+                data.release();
+            }
+        });
+
+        mailparser.on('end', () => {
+            test.ok(1, 'Parsing ended');
+            test.done();
+        });
+    },    
+
     'No priority': test => {
         let encodedText = 'Content-type: text/plain; charset=utf-8\r\nSubject: ÕÄÖÜ\n\r\n1234',
             mail = Buffer.from(encodedText, 'utf-8');

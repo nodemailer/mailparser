@@ -1,6 +1,6 @@
 {
     "name": "mailparser",
-    "version": "3.6.9",
+    "version": "3.7.0",
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
