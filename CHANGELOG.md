@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.2](https://github.com/nodemailer/mailparser/compare/v3.7.1...v3.7.2) (2024-11-29)
+
+
+### Bug Fixes
+
+* **deps:** Bumped deps to fix issue with missing whitespace ([92884d0](https://github.com/nodemailer/mailparser/commit/92884d0619efa77042ecc35fbc887e93a59e5a93))
+
 ## [3.7.1](https://github.com/nodemailer/mailparser/compare/v3.7.0...v3.7.1) (2024-04-25)
 
 
