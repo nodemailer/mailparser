@@ -3,6 +3,7 @@ module.exports = {
     reject: [
         // api changes, check and fix
         'eslint',
-        'grunt-eslint'
+        'grunt-eslint',
+        'eslint-config-prettier'
     ]
 };
