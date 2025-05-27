@@ -24,7 +24,7 @@ const mailparser = require('mailparser');
 
 ## Usage
 
-See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documentation and terms.
+See [mailparser homepage](https://nodemailer.com/extras/mailparser) for documentation and terms.
 
 ### License
 
