@@ -166,7 +166,7 @@ exports['General tests'] = {
             test.ok(1, 'Parsing ended');
             test.done();
         });
-    },    
+    },
 
     'No priority': test => {
         let encodedText = 'Content-type: text/plain; charset=utf-8\r\nSubject: ÕÄÖÜ\n\r\n1234',
@@ -935,7 +935,7 @@ exports['Plaintext format'] = {
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.equal(mailparser.text, 'How are you today?\n\n-- \nSignature\n');
+            test.equal(mailparser.text, 'How are you today?\n\n-- \nSignature');
             test.done();
         });
     },
