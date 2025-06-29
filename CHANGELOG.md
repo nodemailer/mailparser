@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.7.4](https://github.com/nodemailer/mailparser/compare/v3.7.3...v3.7.4) (2025-06-29)
+
+
+### Bug Fixes
+
+* Bumped deps ([bb9c014](https://github.com/nodemailer/mailparser/commit/bb9c014c061def565183205a3ba3d269680f8271))
+* Bumped mailsplit to fix flowed parser ([da753e4](https://github.com/nodemailer/mailparser/commit/da753e45ab6d335429bbdb38c5457d04d893d05e))
+
 ## [3.7.3](https://github.com/nodemailer/mailparser/compare/v3.7.2...v3.7.3) (2025-05-20)
 
 
