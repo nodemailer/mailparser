@@ -1899,3 +1899,142 @@ exports['Decoder already ended on cleanup'] = test => {
         test.done();
     });
 };
+
+exports['Text streaming mode'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/mixed.eml');
+
+    test.expect(7); // Expecting multiple text parts from mixed email
+    let mailparser = new MailParser({
+        streamText: true // Enable streaming mode
+    });
+    mailparser.write(mail);
+    mailparser.end();
+    
+    let textParts = [];
+    let streamedContent = '';
+
+    mailparser.on('data', data => {
+        if (data.type === 'text') {
+            textParts.push(data);
+            
+            // Verify it's a stream
+            test.ok(data.content && typeof data.content.pipe === 'function', 'Text content should be a stream');
+            
+            // Read the stream content
+            data.content.on('data', chunk => {
+                streamedContent += chunk.toString();
+            });
+            
+            data.content.on('end', () => {
+                // Stream should be readable
+                test.ok(streamedContent.length > 0, 'Stream should contain content');
+            });
+        }
+        if (data.type === 'attachment') {
+            data.content.on('data', () => {});
+            data.content.on('end', () => data.release());
+        }
+    });
+
+    mailparser.on('error', err => {
+        test.done(err);
+    });
+
+    mailparser.on('end', () => {
+        test.ok(streamedContent.includes('This e-mail message has been scanned for Viruses and Content and cleared'), 'Streamed content should contain expected text');
+        test.done();
+    });
+};
+
+exports['Each text part streams separately'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/mixed.eml');
+
+    test.expect(6); // 3 parts * 2 assertions each (stream check + content validation)
+    let mailparser = new MailParser({
+        streamText: true
+    });
+
+    mailparser.write(mail);
+    mailparser.end();
+    
+    let textParts = [];
+    let expectedContents = [
+        'This e-mail message has been scanned for Viruses and Content and cleared',
+        '<HTML>',
+        'Good Morning'
+    ];
+
+    mailparser.on('data', data => {
+        if (data.type === 'text') {
+            let partIndex = textParts.length;
+            textParts.push({
+                contentType: data.contentType,
+                index: partIndex
+            });
+            
+            // Verify each part is a stream
+            test.ok(typeof data.content.pipe === 'function', `Part ${partIndex + 1} should be a stream`);
+            
+            let partContent = '';
+            data.content.on('data', chunk => {
+                partContent += chunk.toString();
+            });
+            
+            data.content.on('end', () => {
+                // Validate content based on part index
+                let expectedContent = expectedContents[partIndex];
+                test.ok(partContent.includes(expectedContent), 
+                       `Part ${partIndex + 1} should contain "${expectedContent}"`);
+            });
+        }
+        if (data.type === 'attachment') {
+            data.content.on('data', () => {});
+            data.content.on('end', () => data.release());
+        }
+    });
+
+    mailparser.on('end', () => {
+        test.done();
+    });
+
+    mailparser.on('error', err => {
+        test.done(err);
+    });
+};
+
+exports['Traditional mode still works'] = test => {
+    let mail = fs.readFileSync(__dirname + '/fixtures/mixed.eml');
+
+    test.expect(3);
+    let mailparser = new MailParser({
+        streamText: false // Traditional mode (also default)
+    });
+
+    mailparser.write(mail);
+    mailparser.end();
+    
+    let textData = null;
+
+    mailparser.on('data', data => {
+        if (data.type === 'text') {
+            textData = data;
+            
+            // Verify traditional properties exist
+            test.ok(data.text !== undefined, 'Should have text property');
+            test.ok(data.textAsHtml !== undefined, 'Should have textAsHtml property');
+        }
+        if (data.type === 'attachment') {
+            data.content.on('data', () => {});
+            data.content.on('end', () => data.release());
+        }
+    });
+
+    mailparser.on('error', err => {
+        test.done(err);
+    });
+
+    mailparser.on('end', () => {
+        test.ok(textData.text.includes('This e-mail message has been scanned for Viruses and Content and cleared'), 'Traditional text content should contain expected text');
+        test.done();
+    });
+};
