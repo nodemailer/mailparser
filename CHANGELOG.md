@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.5](https://github.com/nodemailer/mailparser/compare/v3.7.4...v3.7.5) (2025-10-09)
+
+
+### Bug Fixes
+
+* bumped deps ([9a13f4e](https://github.com/nodemailer/mailparser/commit/9a13f4efca4b209a40f4d57d2edbd019706a82c7))
+
 ## [3.7.4](https://github.com/nodemailer/mailparser/compare/v3.7.3...v3.7.4) (2025-06-29)
 
 
