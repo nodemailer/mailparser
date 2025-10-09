@@ -20,13 +20,13 @@
         "encoding-japanese": "2.2.0",
         "he": "1.2.0",
         "html-to-text": "9.0.5",
-        "iconv-lite": "0.6.3",
+        "iconv-lite": "0.7.0",
         "libmime": "5.3.7",
         "linkify-it": "5.0.0",
-        "mailsplit": "5.4.5",
-        "nodemailer": "7.0.4",
+        "mailsplit": "5.4.6",
+        "nodemailer": "7.0.9",
         "punycode.js": "2.3.1",
-        "tlds": "1.259.0"
+        "tlds": "1.260.0"
     },
     "devDependencies": {
         "ajv": "8.17.1",
