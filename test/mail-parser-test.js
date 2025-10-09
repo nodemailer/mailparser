@@ -382,7 +382,7 @@ exports['Text encodings'] = {
     },
 
     'Punycode Address': test => {
-        let encodedText = 'From: "Sender <sender@xn--mnchen-ost-9db.test.fm>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
+        let encodedText = 'From: "Sender" <sender@xn--mnchen-ost-9db.test.fm>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -396,7 +396,7 @@ exports['Text encodings'] = {
     },
 
     'Punycode Address: Invalid': test => {
-        let encodedText = 'From: "Postmaster <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
+        let encodedText = 'From: "Postmaster" <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
