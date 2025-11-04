@@ -24,7 +24,7 @@
         "iconv-lite": "0.7.0",
         "libmime": "5.3.7",
         "linkify-it": "5.0.0",
-        "mailsplit": "5.4.6",
+        "@zone-eu/mailsplit": "5.4.7",
         "nodemailer": "7.0.10",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
@@ -35,11 +35,11 @@
         "ajv": "8.17.1",
         "eslint": "^9.39.1",
         "eslint-config-nodemailer": "1.2.0",
-        "eslint-config-prettier": "9.1.0",
+        "eslint-config-prettier": "10.1.8",
         "grunt": "1.6.1",
         "grunt-cli": "1.5.0",
         "grunt-contrib-nodeunit": "5.0.0",
-        "grunt-eslint": "24.3.0",
+        "grunt-eslint": "26.0.0",
         "iconv": "3.0.1",
         "prettier": "^3.6.2",
         "random-message": "1.1.0"
