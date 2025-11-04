@@ -4,6 +4,13 @@
         "ecmaVersion": 2017
     },
     "rules": {
-        "no-useless-concat": 0
+        "no-useless-concat": 0,
+        "indent": "off",
+        "quotes": "off",
+        "linebreak-style": "off",
+        "semi": "off",
+        "comma-dangle": "off",
+        "comma-style": "off",
+        "arrow-parens": "off"
     }
 }

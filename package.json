@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "grunt",
+        "format": "prettier --write .",
         "update": "rm -rf node_modules package-lock.json && ncu -u && npm install"
     },
     "author": "Andris Reinman",
@@ -29,8 +30,10 @@
         "tlds": "1.261.0"
     },
     "devDependencies": {
+        "@eslint/eslintrc": "^3.3.1",
+        "@eslint/js": "^9.39.1",
         "ajv": "8.17.1",
-        "eslint": "8.57.0",
+        "eslint": "^9.39.1",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "9.1.0",
         "grunt": "1.6.1",
@@ -38,6 +41,7 @@
         "grunt-contrib-nodeunit": "5.0.0",
         "grunt-eslint": "24.3.0",
         "iconv": "3.0.1",
+        "prettier": "^3.6.2",
         "random-message": "1.1.0"
     },
     "repository": {
