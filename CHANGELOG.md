@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.1](https://github.com/nodemailer/mailparser/compare/mailparser-v3.8.0...mailparser-v3.8.1) (2025-11-05)
+
+
+### Bug Fixes
+
+* trigger new build ([7f2eb78](https://github.com/nodemailer/mailparser/commit/7f2eb78eda722e369b532b836e02b631d2cbb31c))
+
 ## [3.8.0](https://github.com/nodemailer/mailparser/compare/mailparser-v3.7.5...mailparser-v3.8.0) (2025-11-04)
 
 
