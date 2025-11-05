@@ -3,6 +3,7 @@
         ".": {
             "release-type": "node",
             "package-name": "mailparser",
+            "include-component-in-tag": false,
             "pull-request-title-pattern": "chore${scope}: release ${version} [skip-ci]"
         }
     }
