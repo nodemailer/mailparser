@@ -2,11 +2,10 @@
 
 ![Nodemailer](https://raw.githubusercontent.com/nodemailer/nodemailer/master/assets/nm_logo_200x136.png)
 
+> [!IMPORTANT]
+> This module is in maintenance mode. It will continue to receive security updates and critical bug fixes, but no new features or feature changes will be added. For new projects, please consider using [PostalMime](https://github.com/postalsys/postal-mime), which works in both Node.js and browser environments.
+
 Advanced email parser for Node.js. Everything is handled as a stream which should make it able to parse even very large messages (100MB+) with relatively low overhead.
-
-## Looking for a front-end solution?
-
-_mailparser_ is Node.js only library, so you can't use it reliably in the front-end or bundle with WebPack. If you do need a solution to parse emails in the front-end then use [PostalMime](https://www.npmjs.com/package/postal-mime).
 
 ## Installation
 
