@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.3](https://github.com/nodemailer/mailparser/compare/v3.9.2...v3.9.3) (2026-01-28)
+
+
+### Bug Fixes
+
+* escape URLs and link text in textToHtml to prevent XSS ([921a67d](https://github.com/nodemailer/mailparser/commit/921a67df4cfb38f0b411037d7b26fbd4d5411b08)), closes [#412](https://github.com/nodemailer/mailparser/issues/412)
+
 ## [3.9.2](https://github.com/nodemailer/mailparser/compare/v3.9.1...v3.9.2) (2026-01-28)
 
 
