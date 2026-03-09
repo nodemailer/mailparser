@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.9.4](https://github.com/nodemailer/mailparser/compare/v3.9.3...v3.9.4) (2026-03-09)
+
+
+### Bug Fixes
+
+* bump nodemailer to 8.0.2 for unquoted comma-in-display-name parsing ([dd71f08](https://github.com/nodemailer/mailparser/commit/dd71f0817fb229aa1ffb421b9384704e550993ca))
+* filter false values from empty References headers ([9884e5d](https://github.com/nodemailer/mailparser/commit/9884e5dd34b9dff9a45f6c205281a50d702a23b1)), closes [#385](https://github.com/nodemailer/mailparser/issues/385)
+* prevent RFC 2047 encoded-word address fabrication in decodeAddresses ([08b800c](https://github.com/nodemailer/mailparser/commit/08b800cd1c5a2ec2341ad4c7f25dc65f584b3999))
+
 ## [3.9.3](https://github.com/nodemailer/mailparser/compare/v3.9.2...v3.9.3) (2026-01-28)
 
 
