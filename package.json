@@ -22,7 +22,7 @@
         "he": "1.2.0",
         "html-to-text": "9.0.5",
         "iconv-lite": "0.7.2",
-        "libmime": "5.3.7",
+        "libmime": "5.3.8",
         "linkify-it": "5.0.0",
         "@zone-eu/mailsplit": "5.4.8",
         "nodemailer": "8.0.5",
