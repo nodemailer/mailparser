@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.10](https://github.com/nodemailer/mailparser/compare/v3.9.9...v3.9.10) (2026-06-15)
+
+
+### Bug Fixes
+
+* bump dependencies (nodemailer 9, eslint 10.5, prettier 3.8.4) ([262ecff](https://github.com/nodemailer/mailparser/commit/262ecffcd649a6b0d4164271cc7a2662f9789f64))
+
 ## [3.9.9](https://github.com/nodemailer/mailparser/compare/v3.9.8...v3.9.9) (2026-05-29)
 
 
