@@ -3,11 +3,17 @@ on:
     schedule:
         - cron: '30 1 * * *'
 
+permissions:
+    contents: read
+
 jobs:
     stale:
         runs-on: ubuntu-latest
+        permissions:
+            issues: write
+            pull-requests: write
         steps:
-            - uses: actions/stale@v8
+            - uses: actions/stale@v10
               with:
                   stale-issue-message: 'This issue is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 5 days.'
                   stale-pr-message: 'This PR is stale because it has been open 45 days with no activity. Remove stale label or comment or this will be closed in 10 days.'

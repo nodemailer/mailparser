@@ -1,0 +1,12 @@
+name: 'mailparser CodeQL config'
+
+# Exclude code that is not part of the published library from analysis.
+# These paths generate only false-positive noise:
+#   - test fixtures contain intentionally malformed and adversarial email
+#     samples used to exercise the parser
+#   - benchmark and example scripts are developer helpers, not shipped code
+paths-ignore:
+    - test
+    - '**/test/**'
+    - bench
+    - examples

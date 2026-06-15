@@ -4,3 +4,6 @@ test
 .eslintrc
 .travis.yml
 Gruntfile.js
+CLAUDE.md
+.ncurc.js
+.github
