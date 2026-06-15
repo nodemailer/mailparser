@@ -36,8 +36,9 @@ Report privately through one of the following channels:
 1. **GitHub Security Advisories (preferred).** Open a private report at
    <https://github.com/nodemailer/mailparser/security/advisories/new>. This keeps
    the discussion private until a fix is published and lets us credit you.
-2. **Email.** Send details to **andris@postalsys.com**. Encrypt sensitive
-   details if possible.
+2. **Email.** Send details to **andris@postalsys.com** (the contact listed in
+   [`SECURITY.txt`](SECURITY.txt)). Encrypt sensitive details if possible - our
+   PGP key fingerprint is `5D952A46E1D8C931F6364E01DC6C83F4D584D364`.
 
 When reporting, please include as much of the following as you can:
 

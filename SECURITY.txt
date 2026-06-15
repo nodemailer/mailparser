@@ -1,0 +1,27 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Contact: https://github.com/nodemailer/mailparser/security/advisories/new
+Contact: mailto:andris@postalsys.com
+Expires: 2027-06-01T00:00:00.000Z
+Encryption: https://keys.openpgp.org/vks/v1/by-fingerprint/5D952A46E1D8C931F6364E01DC6C83F4D584D364
+Preferred-Languages: en, et
+Canonical: https://github.com/nodemailer/mailparser/blob/master/SECURITY.txt
+Policy: https://github.com/nodemailer/mailparser/blob/master/SECURITY.md
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAEBCAA5FiEEXZUqRuHYyTH2Nk4B3GyD9NWE02QFAmowM98bFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMCwzAAoJENxsg/TVhNNkyvAP/3U2a9yOHw7nImBzCcFU
+/9vhdicyxkcnFxmwOi8A2ZcCBoysOMgRAgp5suHMLd8KNxcT/NPOnVGzWfZCUkoI
+CbQeGvmuCAXDKXXABPkEz11Yw1CiZ8oqzcJ4uRJ1on/MSZEQoVniGNYTLnvQEoH/
+sqLn0i7IqbIfC2tBHHYX0l8aycYvIiLHWrom2g8ux9q3ZQo8BPe5IlUCXvEcJgMH
+mdz0lb3pM0f6GrTH5d+LSbEk4ShcnkU/KVM4P2wnvdXbHtFfbgIQruQiSksjY5uw
+hgbNX5Rpsc/peB1LUwuvHLwfn9+W1ZA5dOnBqV+BfyKQ5muDrR/cAK8UrY9VVlaD
+HQK2biOfoC1pcaO3YH92ZsKFW+MeTiAOFL668r3uyqyAHXp17vP3AXWrJdcASXtE
+vVpueJPsi7nUufHWddEP+HIClOTrgAPBnma0fSUgR9YZCJvXB0Q/3ZGaDigBEgN9
+CGtaBP9OdruQSWx1CsVNq7Bw/VONXvN3ErUAS1LRhcuwry9Dac5ddOK2jwxZu/jx
+1t4g/WLyIYtRFDYsEaplGaTgIgDBdf53vOkKz5mnETf907UFr7aTMieI7r0lgjVT
+i7DjruA7qC1TKB8p0n0QK0eUjaI45kOKj76Ctu9CzG4nza98eWX+H2b4F87b86K5
+gCSGLFro2A55I1SaqTDe1cdP
+=4L6c
+-----END PGP SIGNATURE-----
