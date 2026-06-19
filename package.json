@@ -25,7 +25,7 @@
         "libmime": "5.3.8",
         "linkify-it": "5.0.1",
         "@zone-eu/mailsplit": "5.4.12",
-        "nodemailer": "9.0.0",
+        "nodemailer": "9.0.1",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
