@@ -113,6 +113,26 @@ Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
     });
 };
 
+module.exports['Parse iso-8859-8-i charset'] = test => {
+    let source = Buffer.concat([
+        Buffer.from(`Content-Type: text/plain; charset="iso-8859-8-i"
+
+`),
+        Buffer.from('+ezl7SDy5ezt', 'base64')
+    ]);
+
+    let expected = 'שלום עולם';
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+        test.equal(mail.text.trim(), expected);
+        test.ok(!mail.text.includes('\uFFFD'));
+
+        test.done();
+    });
+};
+
 module.exports['Parse encoded address string'] = test => {
     let source = Buffer.from(
         `From: test@example.com
