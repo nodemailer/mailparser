@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.12](https://github.com/nodemailer/mailparser/compare/v3.9.11...v3.9.12) (2026-06-25)
+
+
+### Bug Fixes
+
+* decode iso-8859-8-i and iso-8859-8-e charsets as iso-8859-8 ([3e4b7fc](https://github.com/nodemailer/mailparser/commit/3e4b7fc00429a85f6b4c41da13deaf5be3087eed))
+
 ## [3.9.11](https://github.com/nodemailer/mailparser/compare/v3.9.10...v3.9.11) (2026-06-19)
 
 
