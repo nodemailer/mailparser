@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.14](https://github.com/nodemailer/mailparser/compare/v3.9.13...v3.9.14) (2026-07-05)
+
+
+### Bug Fixes
+
+* update dependencies (@zone-eu/mailsplit 5.4.14) ([595b150](https://github.com/nodemailer/mailparser/commit/595b150e760af9c5044c4b3c53b3c7ca669f6057))
+
 ## [3.9.13](https://github.com/nodemailer/mailparser/compare/v3.9.12...v3.9.13) (2026-07-05)
 
 
