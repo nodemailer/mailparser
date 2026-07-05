@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.13](https://github.com/nodemailer/mailparser/compare/v3.9.12...v3.9.13) (2026-07-05)
+
+
+### Bug Fixes
+
+* update dependencies (nodemailer 9.0.3, iconv-lite 0.7.3, libmime 5.4.1) ([999e77b](https://github.com/nodemailer/mailparser/commit/999e77bf86f9e404bc9fb89cb5dc89cc1f84a577))
+
 ## [3.9.12](https://github.com/nodemailer/mailparser/compare/v3.9.11...v3.9.12) (2026-06-25)
 
 
