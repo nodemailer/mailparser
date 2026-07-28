@@ -33,7 +33,7 @@
         "@eslint/eslintrc": "3.3.6",
         "@eslint/js": "10.0.1",
         "ajv": "8.20.0",
-        "eslint": "10.7.0",
+        "eslint": "10.8.0",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "10.1.8",
         "grunt": "1.6.2",
@@ -41,7 +41,7 @@
         "grunt-contrib-nodeunit": "5.0.0",
         "grunt-eslint": "26.0.0",
         "iconv": "3.0.1",
-        "prettier": "3.9.5",
+        "prettier": "3.9.6",
         "random-message": "1.1.0"
     },
     "repository": {
