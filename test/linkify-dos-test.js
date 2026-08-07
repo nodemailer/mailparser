@@ -7,20 +7,21 @@ const MailParser = require('..').MailParser;
 // loop for seconds before the scan was bounded, so they are measured
 // synchronously - the assertion is reached whatever textToHtml does, unlike a
 // wall-clock check collected inside a parser callback which is never reached
-// while the event loop is blocked. They are sized so that unbounded scanning
-// overshoots the limit by several times while bounded scanning stays several
-// times below it.
-const STALL_LIMIT = 1500;
+// while the event loop is blocked. Each one is left as plain text now, so it
+// costs single-digit milliseconds while unbounded scanning needs upwards of
+// fifteen seconds. The limit sits far from both and cannot go flaky on a slow
+// machine. Shapes that the bounded scan does spend real time on are asserted on
+// their result instead of on the clock, see the budget tests below.
+const STALL_LIMIT = 2000;
 const stallers = {
     // linkify-it is quadratic in the length of a single whitespace-free run
-    'separator-heavy run': 'http://a.b/c?d='.repeat(16000),
+    'separator-heavy run': 'http://a.b/c?d='.repeat(32000),
     // ...and exponential in the number of "xn--" labels it has to regroup
-    'punycode label chain': 'xn--a.'.repeat(25) + 'xn',
-    // a length limit alone does not help, the runs below all stay under it
-    'many sub-limit runs': ('http://a.b/#'.repeat(170) + ' ').repeat(2000),
-    'many sub-limit label chains': ('xn--a.'.repeat(16) + 'xn ').repeat(500),
+    'punycode label chain': 'xn--a.'.repeat(27) + 'xn',
+    // a length limit alone does not help, these runs all stay under it
+    'many sub-limit label chains': ('xn--a.'.repeat(16) + 'xn ').repeat(1200),
     // trailing whitespace trimming used to rescan every space run per position
-    'interior whitespace run': 'a' + ' '.repeat(60000) + 'b'
+    'interior whitespace run': 'a' + ' '.repeat(120000) + 'b'
 };
 
 module.exports['Crafted text bodies must not stall linkification'] = test => {
@@ -36,19 +37,35 @@ module.exports['Crafted text bodies must not stall linkification'] = test => {
 };
 
 module.exports['Linkification budget is shared by all text parts'] = test => {
-    // a per-call budget would let a multipart message multiply it by part count,
-    // so these labels chain up to just inside the per-segment limit and the body
-    // is big enough for one part alone to use up the whole budget
-    let parser = new MailParser({});
-    let body = ('xn--a.'.repeat(6) + 'xn ').repeat(20000);
+    // A per-call budget would let a multipart message multiply it by part count.
+    // Counting links rather than timing keeps this a statement about the budget
+    // instead of about how fast the machine running it is. The labels chain up
+    // to just inside the per-segment limit, so a few parts use up the budget.
+    let body = ('xn--a.'.repeat(6) + 'xn https://example.com/a ').repeat(8000);
+    let countLinks = html => (html.match(/<a href=/g) || []).length;
 
-    let start = Date.now();
+    let perPart = countLinks(new MailParser({}).textToHtml(body));
+
+    let shared = new MailParser({});
+    let sharedTotal = 0;
     for (let i = 0; i < 8; i++) {
-        parser.textToHtml(body);
+        sharedTotal += countLinks(shared.textToHtml(body));
     }
-    let elapsed = Date.now() - start;
 
-    test.ok(elapsed < STALL_LIMIT, '8 parts took ' + elapsed + 'ms, expected under ' + STALL_LIMIT + 'ms');
+    test.ok(perPart > 0, 'a part on its own gets linkified');
+    test.ok(sharedTotal * 2 < 8 * perPart, '8 parts of one message linkified ' + sharedTotal + ' links, 8 separate messages would get ' + 8 * perPart);
+    test.done();
+};
+
+module.exports['A body of cheap segments still runs out of budget'] = test => {
+    // a per-segment length limit alone does not bound the scan - every run here
+    // stays well under it, only the work budget stops them from adding up
+    let runs = 2000;
+    let body = ('http://a.b/#'.repeat(170) + ' ').repeat(runs);
+    let links = (new MailParser({}).textToHtml(body).match(/<a href=/g) || []).length;
+
+    test.ok(links > 0, 'the runs at the start are linkified');
+    test.ok(links < runs / 4, 'scanning stopped after ' + links + ' of ' + runs + ' runs');
     test.done();
 };
 
