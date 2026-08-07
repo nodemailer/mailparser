@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.15](https://github.com/nodemailer/mailparser/compare/v3.9.14...v3.9.15) (2026-08-07)
+
+
+### Bug Fixes
+
+* update dependencies (@zone-eu/mailsplit 5.4.15, libmime 5.4.2, nodemailer 9.0.5) ([047379d](https://github.com/nodemailer/mailparser/commit/047379df5537d799e21b410a7c9019872579ff5a))
+
 ## [3.9.14](https://github.com/nodemailer/mailparser/compare/v3.9.13...v3.9.14) (2026-07-05)
 
 
