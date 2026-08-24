@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.9.16](https://github.com/nodemailer/mailparser/compare/v3.9.15...v3.9.16) (2026-08-24)
+
+
+### Bug Fixes
+
+* bound linkify-it scanning of untrusted text bodies ([1910471](https://github.com/nodemailer/mailparser/commit/1910471a4edd72249237ce7ad243228d61c4908f))
+* **deps:** update html-to-text to 10.0.1 ([308e1b2](https://github.com/nodemailer/mailparser/commit/308e1b2993e554470ecbd3570cdd18a394b866b3))
+
 ## [3.9.15](https://github.com/nodemailer/mailparser/compare/v3.9.14...v3.9.15) (2026-08-07)
 
 
