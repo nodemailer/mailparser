@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.19](https://github.com/nodemailer/mailparser/compare/v3.9.18...v3.9.19) (2026-08-31)
+
+
+### Bug Fixes
+
+* **deps:** update libmime and mailsplit for the CP932 extended areas ([0bbe7a3](https://github.com/nodemailer/mailparser/commit/0bbe7a358672f8fd3c47b002c95867d672a58d07))
+
 ## [3.9.18](https://github.com/nodemailer/mailparser/compare/v3.9.17...v3.9.18) (2026-08-31)
 
 
