@@ -25,12 +25,12 @@
         "libmime": "5.4.3",
         "linkify-it": "5.0.2",
         "@zone-eu/mailsplit": "5.4.16",
-        "nodemailer": "9.1.0",
+        "nodemailer": "9.1.1",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
     "devDependencies": {
-        "@eslint/eslintrc": "3.3.6",
+        "@eslint/eslintrc": "3.3.7",
         "@eslint/js": "10.0.1",
         "ajv": "8.20.0",
         "eslint": "10.9.1",
