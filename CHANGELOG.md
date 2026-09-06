@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.22](https://github.com/nodemailer/mailparser/compare/v3.9.21...v3.9.22) (2026-09-06)
+
+
+### Bug Fixes
+
+* declare the Node 20 floor this package already has ([e9de771](https://github.com/nodemailer/mailparser/commit/e9de7718eea4486ce8992c34660c37c7ca07c36d))
+
 ## [3.9.21](https://github.com/nodemailer/mailparser/compare/v3.9.20...v3.9.21) (2026-09-06)
 
 
