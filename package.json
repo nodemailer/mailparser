@@ -50,5 +50,8 @@
     },
     "bugs": {
         "url": "https://github.com/nodemailer/mailparser/issues"
+    },
+    "engines": {
+        "node": ">=20.0.0"
     }
 }
