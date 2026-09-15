@@ -18,14 +18,14 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "encoding-japanese": "2.3.0",
+        "encoding-japanese": "2.4.0",
         "he": "1.2.0",
         "html-to-text": "10.0.1",
         "iconv-lite": "0.7.3",
         "libmime": "5.4.3",
         "linkify-it": "5.0.2",
         "@zone-eu/mailsplit": "5.4.16",
-        "nodemailer": "10.0.9",
+        "nodemailer": "10.0.10",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
