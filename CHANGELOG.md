@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.28](https://github.com/nodemailer/mailparser/compare/v3.9.27...v3.9.28) (2026-09-15)
+
+
+### Bug Fixes
+
+* **deps:** update libmime to 5.4.4 and mailsplit to 5.4.17 ([8da897f](https://github.com/nodemailer/mailparser/commit/8da897ffb961f6967f57851131ee37600842afca))
+
 ## [3.9.27](https://github.com/nodemailer/mailparser/compare/v3.9.26...v3.9.27) (2026-09-15)
 
 
