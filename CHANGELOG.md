@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.27](https://github.com/nodemailer/mailparser/compare/v3.9.26...v3.9.27) (2026-09-15)
+
+
+### Bug Fixes
+
+* **deps:** update nodemailer to 10.0.10, encoding-japanese to 2.4.0 ([842904f](https://github.com/nodemailer/mailparser/commit/842904f1df3e2b1b1f07ad108575806efbcc55b5))
+
 ## [3.9.26](https://github.com/nodemailer/mailparser/compare/v3.9.25...v3.9.26) (2026-09-12)
 
 
