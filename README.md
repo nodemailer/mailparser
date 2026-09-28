@@ -25,6 +25,11 @@ const mailparser = require('mailparser');
 
 See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documentation and terms.
 
+### Limits
+
+- `simpleParser` replaces `cid:` image references in the HTML with `data:` URLs. The total length of the URLs written into the HTML is capped by the `maxInlinedImagesSize` option (default 20 MB, counted in characters of the inserted URLs). References past the cap stay as `cid:` links. The same cap applies to URLs returned from a custom `updateImageLinks()` callback.
+- `simpleParser` calls its callback, or settles its promise, exactly once. When `MailParser` reports a non-fatal error (for example HTML longer than `maxHtmlLengthToParse`), that error is what the caller receives. `MailParser` itself still emits the `'error'` event and then finishes parsing.
+
 ### License
 
 Licensed under MIT
