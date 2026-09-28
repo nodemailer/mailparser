@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.30](https://github.com/nodemailer/mailparser/compare/v3.9.29...v3.9.30) (2026-09-28)
+
+
+### Bug Fixes
+
+* cap inlined cid images, report late splitter errors, settle once, honour attachment backpressure, derive partId from the part number ([af3fe56](https://github.com/nodemailer/mailparser/commit/af3fe56719ae6bf5d867f22faf3bf81942659bdd))
+
 ## [3.9.29](https://github.com/nodemailer/mailparser/compare/v3.9.28...v3.9.29) (2026-09-27)
 
 
