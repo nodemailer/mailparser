@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.33](https://github.com/nodemailer/mailparser/compare/v3.9.32...v3.9.33) (2026-10-01)
+
+
+### Bug Fixes
+
+* report an unavailable checksum algorithm as a parser error ([dc24878](https://github.com/nodemailer/mailparser/commit/dc248783a735c379627c0afd76ee3d7ff5400ce0))
+
 ## [3.9.32](https://github.com/nodemailer/mailparser/compare/v3.9.31...v3.9.32) (2026-09-30)
 
 
