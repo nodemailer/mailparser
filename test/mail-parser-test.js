@@ -1,6 +1,7 @@
 'use strict';
 
 const MailParser = require('..').MailParser;
+const simpleParser = require('..').simpleParser;
 const iconv = require('iconv-lite');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -1496,6 +1497,32 @@ exports['Attachment info'] = {
             test.done();
         });
     },
+    'Attachment checksum: an unavailable algorithm is a parser error, not a crash': test => {
+        let encodedText =
+            'Content-Type: multipart/mixed; boundary=ABC\r\n' +
+            '\r\n' +
+            '--ABC\r\n' +
+            'Content-Type: application/octet-stream\r\n' +
+            'Content-Transfer-Encoding: base64\r\n' +
+            'Content-Disposition: attachment\r\n' +
+            '\r\n' +
+            'AAECAwQFBg==\r\n' +
+            '--ABC--';
+
+        test.expect(2);
+
+        simpleParser(Buffer.from(encodedText, 'utf-8'), { checksumAlgo: 'not-a-hash' })
+            .then(() => {
+                test.ok(false, 'should have rejected');
+                test.done();
+            })
+            .catch(err => {
+                test.ok(err instanceof Error);
+                test.ok(/not-a-hash/.test(err.message));
+                test.done();
+            });
+    },
+
     'Attachment checksum: sha256': test => {
         let encodedText =
                 'Content-type: multipart/mixed; boundary=ABC\r\n' +
