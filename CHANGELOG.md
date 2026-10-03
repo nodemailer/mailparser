@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.34](https://github.com/nodemailer/mailparser/compare/v3.9.33...v3.9.34) (2026-10-03)
+
+
+### Bug Fixes
+
+* **deps:** update nodemailer to 10.0.14 ([f79334d](https://github.com/nodemailer/mailparser/commit/f79334d4f2b1cd296a7b4770710ee5095a78c43a))
+
 ## [3.9.33](https://github.com/nodemailer/mailparser/compare/v3.9.32...v3.9.33) (2026-10-01)
 
 
