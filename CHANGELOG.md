@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.36](https://github.com/nodemailer/mailparser/compare/v3.9.35...v3.9.36) (2026-10-05)
+
+
+### Bug Fixes
+
+* **deps:** pin he back to 1.2.0, the last CommonJS release ([c1de2ad](https://github.com/nodemailer/mailparser/commit/c1de2adf42df903d928c3de607b58e3e5fee136c))
+
 ## [3.9.35](https://github.com/nodemailer/mailparser/compare/v3.9.34...v3.9.35) (2026-10-04)
 
 
