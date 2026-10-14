@@ -22,10 +22,10 @@
         "he": "1.2.0",
         "html-to-text": "10.0.1",
         "iconv-lite": "0.7.3",
-        "libmime": "5.4.7",
+        "libmime": "5.4.8",
         "linkify-it": "5.0.2",
-        "@zone-eu/mailsplit": "5.4.20",
-        "nodemailer": "10.1.0",
+        "@zone-eu/mailsplit": "5.4.21",
+        "nodemailer": "10.1.1",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
@@ -41,7 +41,7 @@
         "grunt-contrib-nodeunit": "5.0.0",
         "grunt-eslint": "27.0.0",
         "iconv": "3.0.1",
-        "prettier": "3.9.9",
+        "prettier": "3.9.10",
         "random-message": "1.1.0"
     },
     "repository": {
