@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.39](https://github.com/nodemailer/mailparser/compare/v3.9.38...v3.9.39) (2026-10-14)
+
+
+### Bug Fixes
+
+* **deps:** update nodemailer to 10.1.1, libmime to 5.4.8 and mailsplit to 5.4.21 ([43ddf3e](https://github.com/nodemailer/mailparser/commit/43ddf3e9214b2a14b20319d1679ffe001a3a6889))
+
 ## [3.9.38](https://github.com/nodemailer/mailparser/compare/v3.9.37...v3.9.38) (2026-10-10)
 
 
