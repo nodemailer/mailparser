@@ -18,7 +18,7 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "@zone-eu/mailsplit": "5.4.21",
+        "@zone-eu/mailsplit": "5.4.23",
         "encoding-japanese": "2.4.0",
         "he": "1.2.0",
         "html-to-text": "10.0.1",
