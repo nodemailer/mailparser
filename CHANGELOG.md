@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.9.40](https://github.com/nodemailer/mailparser/compare/v3.9.39...v3.9.40) (2026-10-16)
+
+
+### Bug Fixes
+
+* bump @zone-eu/mailsplit to 5.4.23 ([32adf4f](https://github.com/nodemailer/mailparser/commit/32adf4f9b7d10a95f98359de7476ebb7fe526cf0))
+* bump libmime to 5.4.9 and nodemailer to 10.1.2 ([a928892](https://github.com/nodemailer/mailparser/commit/a92889221c11eb81b06472f911672b71c288c4ef))
+* keep the message when its HTML can not be converted to text, and never turn a decoded display name into an address ([0d234fd](https://github.com/nodemailer/mailparser/commit/0d234fd3ab1207a617e3682b27c72f4902d76936))
+
 ## [3.9.39](https://github.com/nodemailer/mailparser/compare/v3.9.38...v3.9.39) (2026-10-14)
 
 
