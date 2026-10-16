@@ -276,7 +276,8 @@ exports['General tests'] = {
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.deepEqual(mailparser.inReplyTo, '<mail3>');
+            // the first occurrence of a singleton header is the one reported
+            test.deepEqual(mailparser.inReplyTo, '<mail1>');
             test.done();
         });
     },
@@ -1781,12 +1782,14 @@ exports['Out of memory error'] = test => {
         mailobj.text = data;
     });
     mailparser.on('error', err => {
-        test.equal(err.name, 'Error');
-        test.equal(err.message, 'HTML too long for parsing 1139579 bytes');
+        // HTML that is too long to convert is reported with the result, not as an error
+        test.ifError(err);
     });
     mailparser.on('end', () => {
-        test.equal('Invalid HTML content (too long)', mailobj.text.text);
-        test.equal(undefined, mailobj.text.html);
+        test.equal(mailobj.text.text, '');
+        test.equal(typeof mailobj.text.html, 'string');
+        test.equal(mailobj.text.html.length, 1139579);
+        test.equal(mailobj.text.textConversionError.message, 'HTML too long for parsing 1139579 bytes');
         test.done();
     });
 };

@@ -129,7 +129,7 @@ module.exports['Splitter errors after end of input'] = {
 };
 
 module.exports['Encoded-word display name check is linear'] = test => {
-    // "<a" followed by a long run of @ made /<[^<>]+@[^<>]+>/ backtrack quadratically
+    // "<a" followed by a long run of @ once made a bracketed-address regex backtrack quadratically
     let run = n => {
         let name = '=?utf-8?B?' + Buffer.from('<a' + '@'.repeat(n)).toString('base64') + '?=';
         let addresses = [{ name, address: '' }];
@@ -148,25 +148,115 @@ module.exports['Encoded-word display name check is linear'] = test => {
     test.ok(large < small * 3 + 50, `200k took ${large}ms, 100k took ${small}ms`);
     test.ok(large < 1000, `200k took ${large}ms`);
 
-    // still re-parses a real bracketed address
+    // a decoded bracketed address stays a display name, it is never parsed as an address
     let addresses = [{ name: '=?utf-8?B?' + Buffer.from('Name <user@example.com>').toString('base64') + '?=', address: '' }];
     new MailParser().decodeAddresses(addresses);
-    test.equal(addresses[0].address, 'user@example.com');
+    test.equal(addresses[0].address, '');
+    test.equal(addresses[0].name, 'Name <user@example.com>');
     test.done();
 };
 
-module.exports['simpleParser settles once on a non-fatal error'] = test => {
+module.exports['HTML too long to convert yields empty text and keeps the HTML'] = test => {
     let calls = [];
-    let html = 'Content-Type: text/html\r\n\r\n<p>' + 'x'.repeat(200) + '</p>\r\n';
-    simpleParser(html, { maxHtmlLengthToParse: 10 }, (err, mail) => {
+    let html = '<p>' + 'x'.repeat(200) + '</p>\n';
+    simpleParser('Content-Type: text/html\r\n\r\n' + html, { maxHtmlLengthToParse: 10 }, (err, mail) => {
         calls.push([err, mail]);
     });
     setTimeout(() => {
+        // used to be reported as an 'error' event, which rejected the whole message
         test.equal(calls.length, 1);
-        test.ok(calls[0][0] instanceof Error);
-        test.ok(/HTML too long/.test(calls[0][0].message));
+        test.ifError(calls[0][0]);
+        let mail = calls[0][1];
+        test.equal(mail.text, '');
+        test.equal(mail.html, html);
+        test.ok(mail.textConversionError instanceof Error);
+        test.ok(/HTML too long/.test(mail.textConversionError.message));
         test.done();
     }, 300);
+};
+
+module.exports['Deeply nested HTML is not converted to text but the message still parses'] = test => {
+    // 200k nested <b> made html-to-text throw after several seconds, and the 'error'
+    // event rejected the message without its text, headers or attachments
+    let html = '<b>'.repeat(200000) + 'deep' + '</b>'.repeat(200000);
+    let message = [
+        'Subject: nested',
+        'Content-Type: multipart/mixed; boundary=m',
+        '',
+        '--m',
+        'Content-Type: text/plain',
+        '',
+        'plain part',
+        '--m',
+        'Content-Type: text/html',
+        '',
+        html,
+        '--m',
+        'Content-Type: application/pdf; name=a.pdf',
+        'Content-Disposition: attachment; filename=a.pdf',
+        'Content-Transfer-Encoding: base64',
+        '',
+        'JVBERi0=',
+        '--m--',
+        ''
+    ].join('\r\n');
+    let start = Date.now();
+    simpleParser(message, (err, mail) => {
+        test.ifError(err);
+        let elapsed = Date.now() - start;
+        test.ok(elapsed < 2000, `took ${elapsed}ms`);
+        test.equal(mail.subject, 'nested');
+        test.equal(mail.text, 'plain part\n');
+        test.ok(mail.html.includes(html));
+        test.equal(mail.attachments.length, 1);
+        test.equal(mail.attachments[0].filename, 'a.pdf');
+        test.ok(mail.textConversionError instanceof Error);
+        test.ok(/nested deeper/.test(mail.textConversionError.message));
+
+        // a root HTML message gets an empty text instead
+        simpleParser('Content-Type: text/html\r\n\r\n' + html, (err, mail) => {
+            test.ifError(err);
+            test.equal(mail.text, '');
+            test.equal(mail.html, html);
+            test.ok(mail.textConversionError instanceof Error);
+
+            // sloppy markup with thousands of unclosed cells is not deep, so it still converts
+            let cells = '<table><tr>' + '<td>cell'.repeat(3000) + '</table>';
+            simpleParser('Content-Type: text/html\r\n\r\n' + cells, (err, mail) => {
+                test.ifError(err);
+                test.ok(!mail.textConversionError);
+                test.ok(mail.text.includes('cell'));
+                test.done();
+            });
+        });
+    });
+};
+
+module.exports['Repeated References headers are collected in linear time'] = test => {
+    // rebuilding the list with concat for every header took 1.8 s for 65k References lines
+    let run = n => {
+        let lines = [];
+        for (let i = 0; i < n; i++) {
+            lines.push({ key: 'references', line: `References: <${i}@example.com>` });
+        }
+        let parser = new MailParser();
+        let best = Infinity;
+        for (let i = 0; i < 3; i++) {
+            let start = process.hrtime.bigint();
+            let headers = parser.processHeaders(lines);
+            best = Math.min(best, Number(process.hrtime.bigint() - start) / 1e6);
+            test.equal(headers.get('references').length, n);
+        }
+        return best;
+    };
+
+    run(1000); // warm up
+    let small = run(12500);
+    let large = run(50000);
+    // quadrupling the input costs a linear implementation about 4x and a quadratic one about 16x
+    test.ok(large < small * 6 + 50, `50k took ${large}ms, 12.5k took ${small}ms`);
+    test.ok(large < 1000, `50k took ${large}ms`);
+    test.done();
 };
 
 module.exports['Attachment streams honour backpressure'] = test => {

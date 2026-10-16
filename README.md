@@ -28,7 +28,8 @@ See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documen
 ### Limits
 
 - `simpleParser` replaces `cid:` image references in the HTML with `data:` URLs. The total length of the URLs written into the HTML is capped by the `maxInlinedImagesSize` option (default 20 MB, counted in characters of the inserted URLs). References past the cap stay as `cid:` links. The same cap applies to URLs returned from a custom `updateImageLinks()` callback.
-- `simpleParser` calls its callback, or settles its promise, exactly once. When `MailParser` reports a non-fatal error (for example HTML longer than `maxHtmlLengthToParse`), that error is what the caller receives. `MailParser` itself still emits the `'error'` event and then finishes parsing.
+- `simpleParser` calls its callback, or settles its promise, exactly once. When `MailParser` reports a non-fatal error and then finishes parsing, that error is what the caller receives.
+- HTML that can not be converted to text (longer than `maxHtmlLengthToParse`, nested deeper than 1000 levels, or rejected by html-to-text) does not fail the message. `text` is empty, `html` is kept, and the reason is set as `textConversionError` on the result (and on the `text` object `MailParser` emits).
 
 ### License
 

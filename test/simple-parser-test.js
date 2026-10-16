@@ -165,12 +165,58 @@ test`
         test.ifError(err);
         test.ok(mail);
 
+        // the encoded word decodes into a display name only, in header order
         test.deepEqual(mail.to.value, [
-            { address: 'andris@tr.ee', name: '' },
-            { address: 'Rydelkalot@17guagua.com', name: 'Rydel' }
+            { address: '', name: '"Rydel" <Rydelkalot@17guagua.com>' },
+            { address: 'andris@tr.ee', name: '' }
         ]);
 
         test.done();
+    });
+};
+
+module.exports['Report the first occurrence of a duplicated singleton header'] = test => {
+    // mailsplit parses the body by the first Content-Type, and mail clients show the first
+    // From and Subject, so the header map must not report the last one instead
+    let source = Buffer.from(
+        'Subject: one\r\nSubject: two\r\nFrom: first@a.com\r\nFrom: last@b.com\r\nContent-Type: text/plain\r\nContent-Type: text/html\r\n\r\nbody'
+    );
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+
+        test.equal(mail.subject, 'one');
+        test.equal(mail.from.value[0].address, 'first@a.com');
+        test.equal(mail.headers.get('content-type').value, 'text/plain');
+        test.equal(mail.text, 'body');
+        test.ok(!mail.html);
+
+        test.done();
+    });
+};
+
+module.exports['Do not decode an RFC 2231 parameter a second time'] = test => {
+    // once decoded by libmime the value spells out an encoded word, a second pass would
+    // turn it into "invoice.exe" while a gateway that decodes once sees the encoded word
+    let source = Buffer.from(
+        "Content-Type: application/pdf; name*=utf-8''invoice%3D%3Futf-8%3FQ%3F%3D2Eexe%3F%3D\r\n" +
+            "Content-Disposition: attachment; filename*=utf-8''invoice%3D%3Futf-8%3FQ%3F%3D2Eexe%3F%3D\r\n\r\ntest"
+    );
+
+    simpleParser(source, {}, (err, mail) => {
+        test.ifError(err);
+        test.ok(mail);
+
+        test.equal(mail.headers.get('content-type').params.name, 'invoice=?utf-8?Q?=2Eexe?=');
+        test.equal(mail.headers.get('content-disposition').params.filename, 'invoice=?utf-8?Q?=2Eexe?=');
+
+        // a plain parameter is still decoded
+        simpleParser(Buffer.from('Content-Disposition: attachment; filename="=?utf-8?Q?invoice=2Etxt?="\r\n\r\ntest'), {}, (err, mail) => {
+            test.ifError(err);
+            test.equal(mail.headers.get('content-disposition').params.filename, 'invoice.txt');
+            test.done();
+        });
     });
 };
 
