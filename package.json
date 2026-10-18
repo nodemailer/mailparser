@@ -25,7 +25,7 @@
         "iconv-lite": "0.7.3",
         "libmime": "5.4.9",
         "linkify-it": "5.0.2",
-        "nodemailer": "10.1.2",
+        "nodemailer": "10.1.4",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
@@ -33,7 +33,7 @@
         "@eslint/eslintrc": "3.3.7",
         "@eslint/js": "10.0.1",
         "ajv": "8.20.0",
-        "eslint": "10.12.0",
+        "eslint": "10.13.0",
         "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "10.1.8",
         "grunt": "1.6.3",
