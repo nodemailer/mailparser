@@ -25,7 +25,7 @@
         "iconv-lite": "0.7.3",
         "libmime": "5.4.9",
         "linkify-it": "5.0.2",
-        "nodemailer": "10.1.4",
+        "nodemailer": "10.1.5",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
