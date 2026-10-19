@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.0](https://github.com/nodemailer/mailparser/compare/v3.9.47...v3.10.0) (2026-10-19)
+
+
+### Features
+
+* migrate to TypeScript with ES module and CommonJS builds ([1d9b23c](https://github.com/nodemailer/mailparser/commit/1d9b23c9fb4d760f4036a5416e4178cdfac07a0a))
+
 ## [3.9.47](https://github.com/nodemailer/mailparser/compare/v3.9.46...v3.9.47) (2026-10-19)
 
 
