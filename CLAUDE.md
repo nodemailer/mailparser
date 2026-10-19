@@ -42,7 +42,7 @@ Homepage and full docs: <https://nodemailer.com/extras/mailparser/>.
 ## Technology Stack
 
 - **Runtime**: Node.js >= 20 (CI tests on 20.x, 22.x and 24.x)
-- **Module system**: CommonJS only (`require`/`module.exports`) - see Packaging below
+- **Module system**: CommonJS only (`require`/`module.exports`) - see Platform constraints below
 - **Streaming**: Node `stream.Transform` throughout
 - **MIME splitting**: `@zone-eu/mailsplit`
 - **MIME/header decoding**: `libmime`, `nodemailer/lib/addressparser`
@@ -56,6 +56,7 @@ npm test                                  # Run the suite with Node's built-in t
 node --test test/simple-parser-test.js    # Run a single test file
 node --test --test-name-pattern="Parse spam" test/*-test.js   # Run tests matching a name
 npm run test:coverage                     # Run the suite under c8
+npm run test:cjs                          # Run the suite with require(esm) switched off
 npm run lint                              # ESLint (flat config in eslint.config.js)
 npm run lint:fix                          # ESLint with --fix
 npm run format                            # Format all files with Prettier
@@ -80,7 +81,8 @@ npm run update                            # Upgrade dependencies (ncu -u), reins
   fixing a parser bug, add a fixture that reproduces it plus a regression test,
   following the existing `issue-NNN-test.js` naming for issue-specific cases.
 - The suite is hermetic - no network or external services. CI runs lint,
-  format:check and the suite on Node 20, 22 and 24 (`.github/workflows/test.yml`).
+  format:check and the suite on Node 20, 22 and 24, plus `npm run test:cjs` on
+  Node 22 and 24 (`.github/workflows/test.yml`).
 
 ## Architecture Notes
 
@@ -95,13 +97,22 @@ npm run update                            # Upgrade dependencies (ncu -u), reins
   exhaust memory/CPU (watch for ReDoS in any regex over message content), or
   pollute prototypes. See `SECURITY.md` for the threat model.
 
-## Packaging and Distribution (important)
+## Platform constraints (important)
 
 mailparser is bundled into single-file executables with **[@yao-pkg/pkg]
 (https://github.com/yao-pkg/pkg)** by downstream projects (e.g. EmailEngine).
-`pkg` performs static analysis of `require()` calls and cannot bundle pure ESM.
-Therefore this package and its entire dependency tree **must stay
-CommonJS-compatible**:
+`pkg` snapshots a CommonJS `require()` graph and cannot load ES modules. Two rules
+follow:
+
+- **Node.js 20 is the minimum supported version.** Runtime code, tests and tooling
+  must work on Node 20, 22 and 24.
+- **The package and its entire runtime dependency tree must be genuinely
+  CommonJS-loadable**, with `require(esm)` switched off. Node 22+ (and 20.19) load
+  ES modules through `require()` by default, which hides an ESM-only dependency
+  until the pkg binary fails on it. A CommonJS entry that only wraps a dynamic
+  `import()` of ESM code does not count.
+
+What that means in practice:
 
 - The library is authored in CommonJS (`require`/`module.exports`). Do not convert
   it to ESM, and do not introduce `import`/`export` syntax, top-level `await`,
@@ -112,10 +123,14 @@ CommonJS-compatible**:
   a one-line reason.
 - Use static, literal `require()` paths so `pkg` can trace them. Avoid computed or
   conditional require paths.
-- **Never add a dependency (direct or transitive) that is pure ESM.** When updating
-  dependencies, if a package's newer major version moves to ESM-only, pin it back
-  and add its name to the `reject` list in `.ncurc.js` (which documents why). After
-  any dependency change, run `npm test` to confirm nothing broke.
+- **Never add or upgrade to a dependency (direct or transitive) that is pure ESM.**
+  When a package's newer major version moves to ESM-only, pin the last CommonJS
+  major: add its name to the `reject` list in `.ncurc.js` (or give it a `target`)
+  with a comment giving the reason.
+- **Check with `npm run test:cjs`** after any dependency change. It runs the whole
+  suite with `NODE_OPTIONS=--no-experimental-require-module`, so any ES module
+  reached through `require()` fails with `ERR_REQUIRE_ESM`. CI runs it on Node 22
+  and 24 (Node 20 has no such flag).
 
 ## Dependency Maintenance
 
@@ -124,7 +139,7 @@ CommonJS-compatible**:
   `upgrade: true`, so even a bare `ncu` rewrites `package.json` - run it
   deliberately.
 - The `reject` list in `.ncurc.js` exists to keep ESM-only releases out (see
-  Packaging above). Extend it rather than working around a broken upgrade.
+  Platform constraints above). Extend it rather than working around a broken upgrade.
 - After updating, run `npm test`. Check `npm audit` for **production**
   (`--omit=dev`) advisories; dev-only transitive advisories (e.g. `minimist` via the
   `random-message` benchmark helper) do not ship to consumers and should not be
