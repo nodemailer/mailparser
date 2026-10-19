@@ -1,11 +1,13 @@
 'use strict';
 
+const { describe, it } = require('node:test');
+
 const MailParser = require('..').MailParser;
 
-exports['General tests'] = {
-    'Simple with part as rfc822 of headers only': test => {
+describe('General tests', () => {
+    it('Simple with part as rfc822 of headers only', (t, done) => {
         if (Date.now() < 1) {
-            return test.done();
+            return done();
         }
         let encodedText = `Content-Type: multipart/mixed; boundary="ABC"
 
@@ -29,8 +31,8 @@ Subject: OK
         });
 
         mailparser.on('end', () => {
-            test.equal(mailparser.text, '\nSubject: OK\n');
-            test.done();
+            t.assert.strictEqual(mailparser.text, '\nSubject: OK\n');
+            done();
         });
-    }
-};
+    });
+});

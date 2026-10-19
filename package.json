@@ -4,8 +4,12 @@
     "description": "Parse e-mails",
     "main": "index.js",
     "scripts": {
-        "test": "grunt",
+        "test": "node --test test/*-test.js",
+        "test:coverage": "c8 npm test",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
+        "format:check": "prettier --check .",
         "update": "rm -rf node_modules package-lock.json && ncu -u && npm install"
     },
     "author": "Andris Reinman",
@@ -31,13 +35,10 @@
     },
     "devDependencies": {
         "@eslint/js": "10.0.1",
+        "c8": "12.0.0",
         "eslint": "10.13.0",
         "eslint-config-prettier": "10.1.8",
         "globals": "17.13.0",
-        "grunt": "1.6.3",
-        "grunt-cli": "1.5.0",
-        "grunt-contrib-nodeunit": "5.0.0",
-        "grunt-eslint": "27.0.0",
         "iconv": "3.0.1",
         "prettier": "3.9.10",
         "random-message": "1.1.0"

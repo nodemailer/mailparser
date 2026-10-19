@@ -1,11 +1,13 @@
 'use strict';
 
+const { describe, it } = require('node:test');
+
 const MailParser = require('..').MailParser;
 
-exports['General tests'] = {
-    'Simple with part as rfc822 of headers only': test => {
+describe('General tests', () => {
+    it('Simple with part as rfc822 of headers only', (t, done) => {
         if (Date.now() < 1) {
-            return test.done();
+            return done();
         }
         let encodedText = `Content-Type: text/plain
 References:
@@ -20,11 +22,11 @@ Hello world`,
         mailparser.end(mail);
         mailparser.on('data', () => false);
         mailparser.on('end', () => {
-            test.deepEqual(mailparser.headers.get('references'), [
+            t.assert.deepStrictEqual(mailparser.headers.get('references'), [
                 '<831872163.433861.2199124418162.JavaMail.otbatch@blabla.bla.bla.com>',
                 '<TY1PR0301MB1149CEFEA528CEA0045533B1FBA70@TY1PR0301MB1149.apcprd03.prod.outlook.com>'
             ]);
-            test.done();
+            done();
         });
-    }
-};
+    });
+});

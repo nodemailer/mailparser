@@ -1,39 +1,35 @@
 'use strict';
 
+const { test } = require('node:test');
+
 const simpleParser = require('..').simpleParser;
 
-module.exports['Throws TypeError with input === null'] = async test => {
+test('Throws TypeError with input === null', async t => {
     try {
         simpleParser(null);
 
         throw Error('Error not thrown.');
     } catch (error) {
-        test.equal(error.constructor.name, 'TypeError');
+        t.assert.strictEqual(error.constructor.name, 'TypeError');
     }
+});
 
-    test.done();
-};
-
-module.exports['Throws TypeError with input === undefined'] = async test => {
+test('Throws TypeError with input === undefined', async t => {
     try {
         simpleParser(undefined);
 
         throw Error('Error not thrown.');
     } catch (error) {
-        test.equal(error.constructor.name, 'TypeError');
+        t.assert.strictEqual(error.constructor.name, 'TypeError');
     }
+});
 
-    test.done();
-};
-
-module.exports['Throws TypeError without input'] = async test => {
+test('Throws TypeError without input', async t => {
     try {
         simpleParser();
 
         throw Error('Error not thrown.');
     } catch (error) {
-        test.equal(error.constructor.name, 'TypeError');
+        t.assert.strictEqual(error.constructor.name, 'TypeError');
     }
-
-    test.done();
-};
+});

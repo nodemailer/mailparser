@@ -1,18 +1,20 @@
 'use strict';
 
+const { test } = require('node:test');
+
 const simpleParser = require('..').simpleParser;
 const fs = require('fs');
 const Iconv = require('iconv').Iconv;
 
-module.exports['Parse message'] = test => {
+test('Parse message', (t, done) => {
     simpleParser(fs.createReadStream(__dirname + '/fixtures/nodemailer.eml'), (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.equal(mail.attachments.length, 4);
-        test.equal(mail.attachments[2].checksum, '2822cbcf68de083b96ac3921d0e308a2');
-        test.ok(mail.html.indexOf('data:image/png;base64,iVBORw0KGgoAAAANSU') >= 0);
-        test.equal(mail.subject, 'Nodemailer is unicode friendly ✔ (1476358788189)');
-        test.deepEqual(mail.to, {
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.strictEqual(mail.attachments.length, 4);
+        t.assert.strictEqual(mail.attachments[2].checksum, '2822cbcf68de083b96ac3921d0e308a2');
+        t.assert.ok(mail.html.indexOf('data:image/png;base64,iVBORw0KGgoAAAANSU') >= 0);
+        t.assert.strictEqual(mail.subject, 'Nodemailer is unicode friendly ✔ (1476358788189)');
+        t.assert.deepStrictEqual(mail.to, {
             value: [
                 // keep indent
                 {
@@ -27,33 +29,33 @@ module.exports['Parse message'] = test => {
             html: '<span class="mp_address_group"><span class="mp_address_name">Andris Reinman</span> &lt;<a href="mailto:andris+123@kreata.ee" class="mp_address_email">andris+123@kreata.ee</a>&gt;</span>, <span class="mp_address_group"><a href="mailto:andris.reinman@gmail.com" class="mp_address_email">andris.reinman@gmail.com</a></span>',
             text: '"Andris Reinman" <andris+123@kreata.ee>, andris.reinman@gmail.com'
         });
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse message with large plaintext content'] = test => {
+test('Parse message with large plaintext content', (t, done) => {
     simpleParser(fs.createReadStream(__dirname + '/fixtures/large_text.eml'), (err, mail) => {
-        test.ifError(err);
+        t.assert.ifError(err);
 
-        test.ok(mail);
-        test.ok(mail.textAsHtml);
-        test.ok(mail.text);
-        test.ok(!mail.html);
+        t.assert.ok(mail);
+        t.assert.ok(mail.textAsHtml);
+        t.assert.ok(mail.text);
+        t.assert.ok(!mail.html);
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse spam message'] = test => {
+test('Parse spam message', (t, done) => {
     simpleParser(fs.createReadStream(__dirname + '/fixtures/spam.eml'), (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.ok(mail.html.trim());
-        test.done();
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.ok(mail.html.trim());
+        done();
     });
-};
+});
 
-module.exports['Linkify <> enclosed link'] = test => {
+test('Linkify <> enclosed link', (t, done) => {
     let source = `Content-Type: text/plain; charset=utf-8
 Subject: linkify test
 
@@ -62,16 +64,16 @@ abc <https://www.gmail.com/> def @andrisreinman ghi`;
     let expectedTextAsHtml =
         '<p>abc &lt;<a href="https://www.gmail.com/">https://www.gmail.com/</a>&gt; def <a href="https://twitter.com/andrisreinman">@andrisreinman</a> ghi</p>';
     simpleParser(source, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
 
-        test.equal(mail.textAsHtml.trim(), expectedTextAsHtml);
+        t.assert.strictEqual(mail.textAsHtml.trim(), expectedTextAsHtml);
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse using Iconv'] = test => {
+test('Parse using Iconv', (t, done) => {
     let source = Buffer.concat([
         Buffer.from(`Content-Type: text/plain; charset=ISO-2022-JP
 Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
@@ -83,16 +85,16 @@ Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
     let expected = '学校技術員研修検討会報告';
 
     simpleParser(source, { Iconv }, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.equal(mail.headers.get('subject').trim(), expected);
-        test.equal(mail.text.trim(), expected);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.strictEqual(mail.headers.get('subject').trim(), expected);
+        t.assert.strictEqual(mail.text.trim(), expected);
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse using encoding-japanese'] = test => {
+test('Parse using encoding-japanese', (t, done) => {
     let source = Buffer.concat([
         Buffer.from(`Content-Type: text/plain; charset=ISO-2022-JP
 Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
@@ -104,16 +106,16 @@ Subject: =?ISO-2022-JP?B?GyRCM1g5OzU7PVEwdzgmPSQ4IUYkMnFKczlwGyhC?=
     let expected = '学校技術員研修検討会報告';
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.equal(mail.headers.get('subject').trim(), expected);
-        test.equal(mail.text.trim(), expected);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.strictEqual(mail.headers.get('subject').trim(), expected);
+        t.assert.strictEqual(mail.text.trim(), expected);
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse iso-8859-8-i charset'] = test => {
+test('Parse iso-8859-8-i charset', (t, done) => {
     let source = Buffer.concat([
         Buffer.from(`Content-Type: text/plain; charset="iso-8859-8-i"
 
@@ -124,16 +126,16 @@ module.exports['Parse iso-8859-8-i charset'] = test => {
     let expected = 'שלום עולם';
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.equal(mail.text.trim(), expected);
-        test.ok(!mail.text.includes('\uFFFD'));
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.strictEqual(mail.text.trim(), expected);
+        t.assert.ok(!mail.text.includes('\uFFFD'));
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse iso-8859-8-e charset'] = test => {
+test('Parse iso-8859-8-e charset', (t, done) => {
     let source = Buffer.concat([
         Buffer.from(`Content-Type: text/plain; charset="iso-8859-8-e"
 
@@ -144,16 +146,16 @@ module.exports['Parse iso-8859-8-e charset'] = test => {
     let expected = 'שלום עולם';
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.equal(mail.text.trim(), expected);
-        test.ok(!mail.text.includes('\uFFFD'));
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.strictEqual(mail.text.trim(), expected);
+        t.assert.ok(!mail.text.includes('\uFFFD'));
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Parse encoded address string'] = test => {
+test('Parse encoded address string', (t, done) => {
     let source = Buffer.from(
         `From: test@example.com
 To: =?utf-8?B?IlJ5ZGVsIiA8UnlkZWxrYWxvdEAxN2d1YWd1YS5jb20+?=, andris@tr.ee
@@ -162,20 +164,20 @@ test`
     );
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
 
         // the encoded word decodes into a display name only, in header order
-        test.deepEqual(mail.to.value, [
+        t.assert.deepStrictEqual(mail.to.value, [
             { address: '', name: '"Rydel" <Rydelkalot@17guagua.com>' },
             { address: 'andris@tr.ee', name: '' }
         ]);
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Report the first occurrence of a duplicated singleton header'] = test => {
+test('Report the first occurrence of a duplicated singleton header', (t, done) => {
     // mailsplit parses the body by the first Content-Type, and mail clients show the first
     // From and Subject, so the header map must not report the last one instead
     let source = Buffer.from(
@@ -183,20 +185,20 @@ module.exports['Report the first occurrence of a duplicated singleton header'] =
     );
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
 
-        test.equal(mail.subject, 'one');
-        test.equal(mail.from.value[0].address, 'first@a.com');
-        test.equal(mail.headers.get('content-type').value, 'text/plain');
-        test.equal(mail.text, 'body');
-        test.ok(!mail.html);
+        t.assert.strictEqual(mail.subject, 'one');
+        t.assert.strictEqual(mail.from.value[0].address, 'first@a.com');
+        t.assert.strictEqual(mail.headers.get('content-type').value, 'text/plain');
+        t.assert.strictEqual(mail.text, 'body');
+        t.assert.ok(!mail.html);
 
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['Do not decode an RFC 2231 parameter a second time'] = test => {
+test('Do not decode an RFC 2231 parameter a second time', (t, done) => {
     // once decoded by libmime the value spells out an encoded word, a second pass would
     // turn it into "invoice.exe" while a gateway that decodes once sees the encoded word
     let source = Buffer.from(
@@ -205,22 +207,22 @@ module.exports['Do not decode an RFC 2231 parameter a second time'] = test => {
     );
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
 
-        test.equal(mail.headers.get('content-type').params.name, 'invoice=?utf-8?Q?=2Eexe?=');
-        test.equal(mail.headers.get('content-disposition').params.filename, 'invoice=?utf-8?Q?=2Eexe?=');
+        t.assert.strictEqual(mail.headers.get('content-type').params.name, 'invoice=?utf-8?Q?=2Eexe?=');
+        t.assert.strictEqual(mail.headers.get('content-disposition').params.filename, 'invoice=?utf-8?Q?=2Eexe?=');
 
         // a plain parameter is still decoded
         simpleParser(Buffer.from('Content-Disposition: attachment; filename="=?utf-8?Q?invoice=2Etxt?="\r\n\r\ntest'), {}, (err, mail) => {
-            test.ifError(err);
-            test.equal(mail.headers.get('content-disposition').params.filename, 'invoice.txt');
-            test.done();
+            t.assert.ifError(err);
+            t.assert.strictEqual(mail.headers.get('content-disposition').params.filename, 'invoice.txt');
+            done();
         });
     });
-};
+});
 
-module.exports['Parse encoded content-disposition'] = test => {
+test('Parse encoded content-disposition', (t, done) => {
     let source = Buffer.from(
         `Content-Disposition: =?utf-8?Q?inline?=
 Subject: test
@@ -229,14 +231,14 @@ test`
     );
 
     simpleParser(source, {}, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
+        t.assert.ifError(err);
+        t.assert.ok(mail);
 
-        test.equal(mail.text, 'test');
+        t.assert.strictEqual(mail.text, 'test');
 
-        test.done();
+        done();
     });
-};
+});
 /*
 module.exports['Parse invalid date'] = test => {
     let source = Buffer.from(
@@ -272,14 +274,14 @@ const RFC_2822_date = {
 };
 
 for (const d in RFC_2822_date) {
-    module.exports[`Parses email date: ${d}`] = test => {
+    test(`Parses email date: ${d}`, (t, done) => {
         simpleParser(Buffer.from(`Date: ${d}\r\nSubject: test\r\n\r\ntest`), {}, (err, mail) => {
-            test.ifError(err);
-            test.ok(mail);
+            t.assert.ifError(err);
+            t.assert.ok(mail);
 
-            test.equal(mail.date.toISOString(), RFC_2822_date[d]);
+            t.assert.strictEqual(mail.date.toISOString(), RFC_2822_date[d]);
 
-            test.done();
+            done();
         });
-    };
+    });
 }

@@ -1,9 +1,11 @@
 'use strict';
 
+const { test } = require('node:test');
+
 const simpleParser = require('..').simpleParser;
 const Iconv = require('iconv').Iconv;
 
-module.exports['Does it finish?'] = test => {
+test('Does it finish?', (t, done) => {
     let source = Buffer.concat([
         Buffer.from(
             `From: Mail Delivery Subsystem <postmaster@gems.invalid.local>
@@ -33,10 +35,10 @@ Status: 5.1.1
     ]);
 
     simpleParser(source, { Iconv }, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.ok(mail.headers.get('subject').trim());
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.ok(mail.headers.get('subject').trim());
 
-        test.done();
+        done();
     });
-};
+});

@@ -1,5 +1,7 @@
 'use strict';
 
+const { test } = require('node:test');
+
 const simpleParser = require('..').simpleParser;
 const MailParser = require('..').MailParser;
 
@@ -24,19 +26,19 @@ const stallers = {
     'interior whitespace run': 'a' + ' '.repeat(120000) + 'b'
 };
 
-module.exports['Crafted text bodies must not stall linkification'] = test => {
+test('Crafted text bodies must not stall linkification', (t, done) => {
     Object.keys(stallers).forEach(name => {
         let parser = new MailParser({});
         let start = Date.now();
         parser.textToHtml(stallers[name]);
         let elapsed = Date.now() - start;
-        test.ok(elapsed < STALL_LIMIT, name + ' took ' + elapsed + 'ms, expected under ' + STALL_LIMIT + 'ms');
+        t.assert.ok(elapsed < STALL_LIMIT, name + ' took ' + elapsed + 'ms, expected under ' + STALL_LIMIT + 'ms');
     });
 
-    test.done();
-};
+    done();
+});
 
-module.exports['Linkification budget is shared by all text parts'] = test => {
+test('Linkification budget is shared by all text parts', (t, done) => {
     // A per-call budget would let a multipart message multiply it by part count.
     // Counting links rather than timing keeps this a statement about the budget
     // instead of about how fast the machine running it is. The labels chain up
@@ -52,24 +54,24 @@ module.exports['Linkification budget is shared by all text parts'] = test => {
         sharedTotal += countLinks(shared.textToHtml(body));
     }
 
-    test.ok(perPart > 0, 'a part on its own gets linkified');
-    test.ok(sharedTotal * 2 < 8 * perPart, '8 parts of one message linkified ' + sharedTotal + ' links, 8 separate messages would get ' + 8 * perPart);
-    test.done();
-};
+    t.assert.ok(perPart > 0, 'a part on its own gets linkified');
+    t.assert.ok(sharedTotal * 2 < 8 * perPart, '8 parts of one message linkified ' + sharedTotal + ' links, 8 separate messages would get ' + 8 * perPart);
+    done();
+});
 
-module.exports['A body of cheap segments still runs out of budget'] = test => {
+test('A body of cheap segments still runs out of budget', (t, done) => {
     // a per-segment length limit alone does not bound the scan - every run here
     // stays well under it, only the work budget stops them from adding up
     let runs = 2000;
     let body = ('http://a.b/#'.repeat(170) + ' ').repeat(runs);
     let links = (new MailParser({}).textToHtml(body).match(/<a href=/g) || []).length;
 
-    test.ok(links > 0, 'the runs at the start are linkified');
-    test.ok(links < runs / 4, 'scanning stopped after ' + links + ' of ' + runs + ' runs');
-    test.done();
-};
+    t.assert.ok(links > 0, 'the runs at the start are linkified');
+    t.assert.ok(links < runs / 4, 'scanning stopped after ' + links + ' of ' + runs + ' runs');
+    done();
+});
 
-module.exports['Linkification of the same text is reproducible'] = test => {
+test('Linkification of the same text is reproducible', (t, done) => {
     // the scan budget has to be deterministic, a wall-clock one would make the
     // same message linkify differently from run to run
     let body = ('xn--a.'.repeat(8) + 'xn https://example.com/a ').repeat(4000);
@@ -79,13 +81,13 @@ module.exports['Linkification of the same text is reproducible'] = test => {
         runs.push((new MailParser({}).textToHtml(body).match(/<a href=/g) || []).length);
     }
 
-    test.ok(runs[0] > 0, 'some links are found');
-    test.equal(runs[0], runs[1], 'run 1 and 2 found ' + runs[0] + ' vs ' + runs[1] + ' links');
-    test.equal(runs[0], runs[2], 'run 1 and 3 found ' + runs[0] + ' vs ' + runs[2] + ' links');
-    test.done();
-};
+    t.assert.ok(runs[0] > 0, 'some links are found');
+    t.assert.strictEqual(runs[0], runs[1], 'run 1 and 2 found ' + runs[0] + ' vs ' + runs[1] + ' links');
+    t.assert.strictEqual(runs[0], runs[2], 'run 1 and 3 found ' + runs[0] + ' vs ' + runs[2] + ' links');
+    done();
+});
 
-module.exports['Segment scanning finds the same links as scanning the whole text'] = test => {
+test('Segment scanning finds the same links as scanning the whole text', (t, done) => {
     // the scan runs on whitespace-delimited segments, so anything linkify-it
     // treats as part of a link must not be mistaken for a segment separator
     let cases = [
@@ -111,11 +113,11 @@ module.exports['Segment scanning finds the same links as scanning the whole text
     cases.forEach(entry => {
         let html = parser.textToHtml(entry[0]);
         let found = (html.match(/<a href="[^"]*"/g) || []).map(tag => tag.slice(9, -1));
-        test.deepEqual(found, entry[1], JSON.stringify(entry[0]));
+        t.assert.deepStrictEqual(found, entry[1], JSON.stringify(entry[0]));
     });
 
-    test.done();
-};
+    done();
+});
 
 // [body, substrings the output must contain, substrings it must not contain]
 const bodies = [
@@ -129,23 +131,23 @@ const bodies = [
     ['http://example.com/' + 'p'.repeat(5000), ['http://example.com/' + 'p'.repeat(5000)], ['<a href=']]
 ];
 
-module.exports['Ordinary bodies parse as expected'] = test => {
+test('Ordinary bodies parse as expected', (t, done) => {
     let pending = bodies.length;
 
     bodies.forEach(entry => {
         let source = Buffer.from('Content-Type: text/plain; charset=utf-8\r\n\r\n' + entry[0]);
         simpleParser(source, {}, (err, mail) => {
-            test.ifError(err);
-            entry[1].forEach(expected => test.ok(mail.textAsHtml.indexOf(expected) >= 0, 'missing ' + JSON.stringify(expected.slice(0, 60))));
-            entry[2].forEach(banned => test.ok(mail.textAsHtml.indexOf(banned) < 0, 'unexpected ' + JSON.stringify(banned.slice(0, 60))));
+            t.assert.ifError(err);
+            entry[1].forEach(expected => t.assert.ok(mail.textAsHtml.indexOf(expected) >= 0, 'missing ' + JSON.stringify(expected.slice(0, 60))));
+            entry[2].forEach(banned => t.assert.ok(mail.textAsHtml.indexOf(banned) < 0, 'unexpected ' + JSON.stringify(banned.slice(0, 60))));
             if (!--pending) {
-                test.done();
+                return done();
             }
         });
     });
-};
+});
 
-module.exports['A failing text conversion ends the stream instead of hanging it'] = test => {
+test('A failing text conversion ends the stream instead of hanging it', (t, done) => {
     let parser = new MailParser({});
     parser.getTextContent = () => {
         throw new Error('Failed to build text content');
@@ -153,14 +155,14 @@ module.exports['A failing text conversion ends the stream instead of hanging it'
 
     parser.on('data', () => false);
     parser.on('error', err => {
-        test.equal(err.message, 'Failed to build text content');
+        t.assert.strictEqual(err.message, 'Failed to build text content');
         // reporting the error without completing _flush would leave the stream
         // open forever, so check that it actually got torn down
         setTimeout(() => {
-            test.ok(parser.destroyed, 'stream must be destroyed, not left hanging');
-            test.done();
+            t.assert.ok(parser.destroyed, 'stream must be destroyed, not left hanging');
+            done();
         }, 50);
     });
 
     parser.end(Buffer.from('Content-Type: text/plain\r\n\r\nhello'));
-};
+});

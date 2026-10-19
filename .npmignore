@@ -1,9 +1,10 @@
 bench
 examples
 test
-.eslintrc
-.travis.yml
-Gruntfile.js
 CLAUDE.md
 .ncurc.js
 .github
+eslint.config.js
+.prettierrc.js
+.prettierignore
+coverage

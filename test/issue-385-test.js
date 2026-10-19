@@ -1,9 +1,11 @@
 'use strict';
 
+const { describe, it } = require('node:test');
+
 const { simpleParser } = require('..');
 
-module.exports['Issue 385'] = {
-    'should not include false for empty References header': test => {
+describe('Issue 385', () => {
+    it('should not include false for empty References header', (t, done) => {
         let raw = [
             'From: sender@example.com',
             'To: recipient@example.com',
@@ -17,9 +19,9 @@ module.exports['Issue 385'] = {
         ].join('\r\n');
 
         simpleParser(raw, (err, mail) => {
-            test.ifError(err);
-            test.equal(mail.references, '<some.message.id@example.com>');
-            test.done();
+            t.assert.ifError(err);
+            t.assert.strictEqual(mail.references, '<some.message.id@example.com>');
+            done();
         });
-    }
-};
+    });
+});

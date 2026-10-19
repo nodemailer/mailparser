@@ -1,15 +1,17 @@
 'use strict';
 
+const { test } = require('node:test');
+
 const simpleParser = require('..').simpleParser;
 
-module.exports['Quoted printable, DelSp'] = test => {
+test('Quoted printable, DelSp', (t, done) => {
     let encodedText = 'Content-Type: text/plain; format=flowed; delsp=yes\r\nContent-Transfer-Encoding: QUOTED-PRINTABLE\r\n\r\nFoo =\n\nBar =\n\nBaz';
     let mail = Buffer.from(encodedText, 'utf-8');
 
     simpleParser(mail, (err, mail) => {
-        test.ifError(err);
-        test.ok(mail);
-        test.equal(mail.text, 'FooBarBaz');
-        test.done();
+        t.assert.ifError(err);
+        t.assert.ok(mail);
+        t.assert.strictEqual(mail.text, 'FooBarBaz');
+        done();
     });
-};
+});

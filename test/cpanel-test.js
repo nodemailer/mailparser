@@ -1,8 +1,10 @@
 'use strict';
 
+const { test } = require('node:test');
+
 const MailParser = require('..').MailParser;
 
-exports['Simple with part as rfc822 with bad closing boundary 01'] = test => {
+test('Simple with part as rfc822 with bad closing boundary 01', (t, done) => {
     let encodedText = `Delivered-To: xxxx@gmail.com
 Date: Wed, 03 Jun 2020 22:50:46 GMT
 From: "cPanel on vps17201.sdfsfsd.com" <cpanel@sdfdsfs.sdfsdffs.com>
@@ -57,14 +59,14 @@ Z2xvcA==
     });
 
     mailparser.on('end', () => {
-        test.equal(mailparser.text, 'Test\n');
-        test.done();
+        t.assert.strictEqual(mailparser.text, 'Test\n');
+        done();
     });
 
     mailparser.end(mail);
-};
+});
 
-exports['Simple with part as rfc822 with bad closing boundary 02'] = test => {
+test('Simple with part as rfc822 with bad closing boundary 02', (t, done) => {
     let encodedText = `Delivered-To: xxxx@gmail.com
 Date: Wed, 03 Jun 2020 22:50:46 GMT
 From: "cPanel on vps17201.sdfsfsd.com" <cpanel@sdfdsfs.sdfsdffs.com>
@@ -117,7 +119,7 @@ Z2xvcA==
         }
     });
     mailparser.on('end', () => {
-        test.equal(mailparser.text, 'Test\n');
-        test.done();
+        t.assert.strictEqual(mailparser.text, 'Test\n');
+        done();
     });
-};
+});

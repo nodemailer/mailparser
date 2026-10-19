@@ -1,5 +1,7 @@
 'use strict';
 
+const { describe, it, test } = require('node:test');
+
 const simpleParser = require('..').simpleParser;
 const MailParser = require('..').MailParser;
 const { Readable } = require('stream');
@@ -31,44 +33,44 @@ function countOf(str, needle) {
     return str.split(needle).length - 1;
 }
 
-module.exports['cid inlining'] = {
-    'repeated references to a large image do not crash the process': test => {
+describe('cid inlining', () => {
+    it('repeated references to a large image do not crash the process', (t, done) => {
         // 1500 references to a 300 KB image used to build a ~600 MB string from
         // inside setImmediate, a RangeError nothing could catch
         let image = Buffer.alloc(300 * 1024, 7);
         let start = Date.now();
         simpleParser(cidMessage(image, 1500), (err, mail) => {
-            test.ifError(err);
+            t.assert.ifError(err);
             let dataUrlLength = ('data:image/png;base64,' + image.toString('base64')).length;
             let inlined = countOf(mail.html, 'data:image/png;base64,');
-            test.ok(inlined >= 1, 'first references are inlined');
-            test.equal(inlined, Math.floor((20 * 1024 * 1024) / dataUrlLength));
-            test.equal(inlined + countOf(mail.html, 'cid:img1'), 1500);
-            test.ok(Date.now() - start < 10000);
-            test.done();
+            t.assert.ok(inlined >= 1, 'first references are inlined');
+            t.assert.strictEqual(inlined, Math.floor((20 * 1024 * 1024) / dataUrlLength));
+            t.assert.strictEqual(inlined + countOf(mail.html, 'cid:img1'), 1500);
+            t.assert.ok(Date.now() - start < 10000);
+            done();
         });
-    },
+    });
 
-    'maxInlinedImagesSize caps inlined bytes': test => {
+    it('maxInlinedImagesSize caps inlined bytes', (t, done) => {
         let dataUrlLength = ('data:image/png;base64,' + PNG.toString('base64')).length;
         simpleParser(cidMessage(PNG, 5), { maxInlinedImagesSize: dataUrlLength * 2 + 1 }, (err, mail) => {
-            test.ifError(err);
-            test.equal(countOf(mail.html, 'data:image/png;base64,'), 2);
-            test.equal(countOf(mail.html, 'cid:img1'), 3);
-            test.done();
+            t.assert.ifError(err);
+            t.assert.strictEqual(countOf(mail.html, 'data:image/png;base64,'), 2);
+            t.assert.strictEqual(countOf(mail.html, 'cid:img1'), 3);
+            done();
         });
-    },
+    });
 
-    'ordinary repeated references are all inlined': test => {
+    it('ordinary repeated references are all inlined', (t, done) => {
         simpleParser(cidMessage(PNG, 5), (err, mail) => {
-            test.ifError(err);
-            test.equal(countOf(mail.html, 'data:image/png;base64,'), 5);
-            test.equal(countOf(mail.html, 'cid:'), 0);
-            test.done();
+            t.assert.ifError(err);
+            t.assert.strictEqual(countOf(mail.html, 'data:image/png;base64,'), 5);
+            t.assert.strictEqual(countOf(mail.html, 'cid:'), 0);
+            done();
         });
-    },
+    });
 
-    'a failing replacement is reported to the callback': test => {
+    it('a failing replacement is reported to the callback', (t, done) => {
         let parser = new MailParser();
         parser.on('data', data => {
             if (data.type === 'attachment') {
@@ -86,18 +88,18 @@ module.exports['cid inlining'] = {
             parser.updateImageLinks(
                 (attachment, done) => done(null, url),
                 (err, html) => {
-                    test.ok(err instanceof RangeError);
-                    test.equal(html, undefined);
-                    test.done();
+                    t.assert.ok(err instanceof RangeError);
+                    t.assert.strictEqual(html, undefined);
+                    done();
                 }
             );
         });
         parser.end(Buffer.from(cidMessage(PNG, 1)));
-    }
-};
+    });
+});
 
-module.exports['Splitter errors after end of input'] = {
-    'too many MIME nodes rejects': test => {
+describe('Splitter errors after end of input', () => {
+    it('too many MIME nodes rejects', (t, done) => {
         let lines = ['Content-Type: multipart/mixed; boundary=b', 'Subject: parts', ''];
         for (let i = 0; i < 1100; i++) {
             lines.push('--b', 'Content-Type: text/plain', '', 'part' + i);
@@ -105,30 +107,30 @@ module.exports['Splitter errors after end of input'] = {
         lines.push('--b--', '');
         simpleParser(lines.join('\r\n'))
             .then(mail => {
-                test.ok(false, 'resolved with a truncated message ending in ' + JSON.stringify(mail.text.slice(-10)));
-                test.done();
+                t.assert.ok(false, 'resolved with a truncated message ending in ' + JSON.stringify(mail.text.slice(-10)));
+                done();
             })
             .catch(err => {
-                test.equal(err.code, 'EMAXLEN');
-                test.done();
+                t.assert.strictEqual(err.code, 'EMAXLEN');
+                done();
             });
-    },
+    });
 
-    'oversized header block rejects': test => {
+    it('oversized header block rejects', (t, done) => {
         let message = 'Subject: big\r\nX-Big: ' + 'a'.repeat(1100 * 1024) + '\r\n\r\nbody\r\n';
         simpleParser(Buffer.from(message))
             .then(() => {
-                test.ok(false, 'resolved');
-                test.done();
+                t.assert.ok(false, 'resolved');
+                done();
             })
             .catch(err => {
-                test.equal(err.code, 'EMAXLEN');
-                test.done();
+                t.assert.strictEqual(err.code, 'EMAXLEN');
+                done();
             });
-    }
-};
+    });
+});
 
-module.exports['Encoded-word display name check is linear'] = test => {
+test('Encoded-word display name check is linear', (t, done) => {
     // "<a" followed by a long run of @ once made a bracketed-address regex backtrack quadratically
     let run = n => {
         let name = '=?utf-8?B?' + Buffer.from('<a' + '@'.repeat(n)).toString('base64') + '?=';
@@ -137,26 +139,26 @@ module.exports['Encoded-word display name check is linear'] = test => {
         let start = process.hrtime.bigint();
         parser.decodeAddresses(addresses);
         let elapsed = Number(process.hrtime.bigint() - start) / 1e6;
-        test.equal(addresses.length, 1);
-        test.equal(addresses[0].name, '<a' + '@'.repeat(n));
+        t.assert.strictEqual(addresses.length, 1);
+        t.assert.strictEqual(addresses[0].name, '<a' + '@'.repeat(n));
         return elapsed;
     };
 
     run(1000); // warm up
     let small = run(100000);
     let large = run(200000);
-    test.ok(large < small * 3 + 50, `200k took ${large}ms, 100k took ${small}ms`);
-    test.ok(large < 1000, `200k took ${large}ms`);
+    t.assert.ok(large < small * 3 + 50, `200k took ${large}ms, 100k took ${small}ms`);
+    t.assert.ok(large < 1000, `200k took ${large}ms`);
 
     // a decoded bracketed address stays a display name, it is never parsed as an address
     let addresses = [{ name: '=?utf-8?B?' + Buffer.from('Name <user@example.com>').toString('base64') + '?=', address: '' }];
     new MailParser().decodeAddresses(addresses);
-    test.equal(addresses[0].address, '');
-    test.equal(addresses[0].name, 'Name <user@example.com>');
-    test.done();
-};
+    t.assert.strictEqual(addresses[0].address, '');
+    t.assert.strictEqual(addresses[0].name, 'Name <user@example.com>');
+    done();
+});
 
-module.exports['HTML too long to convert yields empty text and keeps the HTML'] = test => {
+test('HTML too long to convert yields empty text and keeps the HTML', (t, done) => {
     let calls = [];
     let html = '<p>' + 'x'.repeat(200) + '</p>\n';
     simpleParser('Content-Type: text/html\r\n\r\n' + html, { maxHtmlLengthToParse: 10 }, (err, mail) => {
@@ -164,18 +166,18 @@ module.exports['HTML too long to convert yields empty text and keeps the HTML'] 
     });
     setTimeout(() => {
         // used to be reported as an 'error' event, which rejected the whole message
-        test.equal(calls.length, 1);
-        test.ifError(calls[0][0]);
+        t.assert.strictEqual(calls.length, 1);
+        t.assert.ifError(calls[0][0]);
         let mail = calls[0][1];
-        test.equal(mail.text, '');
-        test.equal(mail.html, html);
-        test.ok(mail.textConversionError instanceof Error);
-        test.ok(/HTML too long/.test(mail.textConversionError.message));
-        test.done();
+        t.assert.strictEqual(mail.text, '');
+        t.assert.strictEqual(mail.html, html);
+        t.assert.ok(mail.textConversionError instanceof Error);
+        t.assert.ok(/HTML too long/.test(mail.textConversionError.message));
+        done();
     }, 300);
-};
+});
 
-module.exports['Deeply nested HTML is not converted to text but the message still parses'] = test => {
+test('Deeply nested HTML is not converted to text but the message still parses', (t, done) => {
     // 200k nested <b> made html-to-text throw after several seconds, and the 'error'
     // event rejected the message without its text, headers or attachments
     let html = '<b>'.repeat(200000) + 'deep' + '</b>'.repeat(200000);
@@ -202,37 +204,37 @@ module.exports['Deeply nested HTML is not converted to text but the message stil
     ].join('\r\n');
     let start = Date.now();
     simpleParser(message, (err, mail) => {
-        test.ifError(err);
+        t.assert.ifError(err);
         let elapsed = Date.now() - start;
-        test.ok(elapsed < 2000, `took ${elapsed}ms`);
-        test.equal(mail.subject, 'nested');
-        test.equal(mail.text, 'plain part\n');
-        test.ok(mail.html.includes(html));
-        test.equal(mail.attachments.length, 1);
-        test.equal(mail.attachments[0].filename, 'a.pdf');
-        test.ok(mail.textConversionError instanceof Error);
-        test.ok(/nested deeper/.test(mail.textConversionError.message));
+        t.assert.ok(elapsed < 2000, `took ${elapsed}ms`);
+        t.assert.strictEqual(mail.subject, 'nested');
+        t.assert.strictEqual(mail.text, 'plain part\n');
+        t.assert.ok(mail.html.includes(html));
+        t.assert.strictEqual(mail.attachments.length, 1);
+        t.assert.strictEqual(mail.attachments[0].filename, 'a.pdf');
+        t.assert.ok(mail.textConversionError instanceof Error);
+        t.assert.ok(/nested deeper/.test(mail.textConversionError.message));
 
         // a root HTML message gets an empty text instead
         simpleParser('Content-Type: text/html\r\n\r\n' + html, (err, mail) => {
-            test.ifError(err);
-            test.equal(mail.text, '');
-            test.equal(mail.html, html);
-            test.ok(mail.textConversionError instanceof Error);
+            t.assert.ifError(err);
+            t.assert.strictEqual(mail.text, '');
+            t.assert.strictEqual(mail.html, html);
+            t.assert.ok(mail.textConversionError instanceof Error);
 
             // sloppy markup with thousands of unclosed cells is not deep, so it still converts
             let cells = '<table><tr>' + '<td>cell'.repeat(3000) + '</table>';
             simpleParser('Content-Type: text/html\r\n\r\n' + cells, (err, mail) => {
-                test.ifError(err);
-                test.ok(!mail.textConversionError);
-                test.ok(mail.text.includes('cell'));
-                test.done();
+                t.assert.ifError(err);
+                t.assert.ok(!mail.textConversionError);
+                t.assert.ok(mail.text.includes('cell'));
+                done();
             });
         });
     });
-};
+});
 
-module.exports['Repeated References headers are collected in linear time'] = test => {
+test('Repeated References headers are collected in linear time', (t, done) => {
     // rebuilding the list with concat for every header took 1.8 s for 65k References lines
     let run = n => {
         let lines = [];
@@ -245,7 +247,7 @@ module.exports['Repeated References headers are collected in linear time'] = tes
             let start = process.hrtime.bigint();
             let headers = parser.processHeaders(lines);
             best = Math.min(best, Number(process.hrtime.bigint() - start) / 1e6);
-            test.equal(headers.get('references').length, n);
+            t.assert.strictEqual(headers.get('references').length, n);
         }
         return best;
     };
@@ -254,12 +256,12 @@ module.exports['Repeated References headers are collected in linear time'] = tes
     let small = run(12500);
     let large = run(50000);
     // quadrupling the input costs a linear implementation about 4x and a quadratic one about 16x
-    test.ok(large < small * 6 + 50, `50k took ${large}ms, 12.5k took ${small}ms`);
-    test.ok(large < 1000, `50k took ${large}ms`);
-    test.done();
-};
+    t.assert.ok(large < small * 6 + 50, `50k took ${large}ms, 12.5k took ${small}ms`);
+    t.assert.ok(large < 1000, `50k took ${large}ms`);
+    done();
+});
 
-module.exports['Attachment streams honour backpressure'] = test => {
+test('Attachment streams honour backpressure', (t, done) => {
     let content = Buffer.alloc(2 * 1024 * 1024);
     for (let i = 0; i < content.length; i++) {
         content[i] = (i * 31) % 256;
@@ -303,14 +305,14 @@ module.exports['Attachment streams honour backpressure'] = test => {
     });
     parser.on('end', () => {
         // was the whole 2 MB attachment before
-        test.ok(buffered >= 0 && buffered < 512 * 1024, 'buffered ' + buffered + ' bytes while paused');
-        test.ok(received && received.equals(content), 'content is byte-identical');
-        test.done();
+        t.assert.ok(buffered >= 0 && buffered < 512 * 1024, 'buffered ' + buffered + ' bytes while paused');
+        t.assert.ok(received && received.equals(content), 'content is byte-identical');
+        done();
     });
     Readable.from(pieces).pipe(parser);
-};
+});
 
-module.exports['Attachment released without reading does not stall'] = test => {
+test('Attachment released without reading does not stall', (t, done) => {
     let message = Buffer.from(
         [
             'Content-Type: multipart/mixed; boundary=b',
@@ -346,27 +348,27 @@ module.exports['Attachment released without reading does not stall'] = test => {
         }
     });
     parser.on('end', () => {
-        test.equal(text, 'after');
-        test.done();
+        t.assert.strictEqual(text, 'after');
+        done();
     });
     Readable.from(pieces).pipe(parser);
-};
+});
 
-module.exports['List-__proto__ header does not replace the prototype'] = test => {
+test('List-__proto__ header does not replace the prototype', (t, done) => {
     simpleParser(
         'List-__proto__: <mailto:a@example.com>\r\nList-Constructor: <mailto:b@example.com>\r\nList-Help: <mailto:help@example.com>\r\n\r\nx\r\n',
         (err, mail) => {
-            test.ifError(err);
+            t.assert.ifError(err);
             let list = mail.headers.get('list');
-            test.equal(Object.getPrototypeOf(list), Object.prototype);
-            test.deepEqual(Object.keys(list), ['help']);
-            test.equal(list.help.mail, 'help@example.com');
-            test.done();
+            t.assert.strictEqual(Object.getPrototypeOf(list), Object.prototype);
+            t.assert.deepStrictEqual(Object.keys(list), ['help']);
+            t.assert.strictEqual(list.help.mail, 'help@example.com');
+            done();
         }
     );
-};
+});
 
-module.exports['partId follows the MIME tree for sibling multiparts'] = test => {
+test('partId follows the MIME tree for sibling multiparts', (t, done) => {
     let attachment = name => ['Content-Type: application/octet-stream', 'Content-Disposition: attachment; filename="' + name + '"', '', name];
     let message = []
         .concat(
@@ -382,26 +384,26 @@ module.exports['partId follows the MIME tree for sibling multiparts'] = test => 
         )
         .join('\r\n');
     simpleParser(message, (err, mail) => {
-        test.ifError(err);
-        test.deepEqual(
+        t.assert.ifError(err);
+        t.assert.deepStrictEqual(
             mail.attachments.map(a => a.filename + '=' + a.partId),
             ['a=1.1', 'b=1.2', 'c=2.1', 'd=3']
         );
-        test.done();
+        done();
     });
-};
+});
 
-module.exports['EUC-JP bodies decode through iconv-lite'] = test => {
+test('EUC-JP bodies decode through iconv-lite', (t, done) => {
     // "nihongo" in EUC-JP
     let body = Buffer.from([0xc6, 0xfc, 0xcb, 0xdc, 0xb8, 0xec]);
     let message = Buffer.concat([Buffer.from('Content-Type: text/plain; charset=EUC-JP\r\nContent-Transfer-Encoding: 8bit\r\n\r\n'), body]);
     simpleParser(message, (err, mail) => {
-        test.ifError(err);
-        test.equal(mail.text, Buffer.from('e697a5e69cace8aa9e', 'hex').toString());
+        t.assert.ifError(err);
+        t.assert.strictEqual(mail.text, Buffer.from('e697a5e69cace8aa9e', 'hex').toString());
         simpleParser(Buffer.concat([Buffer.from('Content-Type: text/plain; charset=eucjp\r\n\r\n'), body]), (err, mail) => {
-            test.ifError(err);
-            test.equal(mail.text, Buffer.from('e697a5e69cace8aa9e', 'hex').toString());
-            test.done();
+            t.assert.ifError(err);
+            t.assert.strictEqual(mail.text, Buffer.from('e697a5e69cace8aa9e', 'hex').toString());
+            done();
         });
     });
-};
+});
