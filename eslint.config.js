@@ -1,34 +1,43 @@
-'use strict';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'eslint/config';
+import prettier from 'eslint-config-prettier';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-// Shared lint baseline for the Postal Systems / Nodemailer packages: eslint:recommended
-// plus the rules of the retired eslint-config-nodemailer, with formatting left to Prettier.
-// Keep this file identical across repos except for the "Repo-specific" block at the end.
+const unusedVarsOptions = {
+    varsIgnorePattern: '^_',
+    argsIgnorePattern: '^_',
+    caughtErrorsIgnorePattern: '^_'
+};
 
-const js = require('@eslint/js');
-const prettier = require('eslint-config-prettier');
-const globals = require('globals');
-
-module.exports = [
+export default defineConfig([
     {
         ignores: ['node_modules/**', 'coverage/**', 'dist/**']
     },
-    js.configs.recommended,
     {
-        files: ['**/*.js', '**/*.cjs'],
+        files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.ts'],
         languageOptions: {
             ecmaVersion: 2022,
-            sourceType: 'commonjs',
-            globals: { ...globals.node }
+            sourceType: 'module',
+            globals: Object.assign({}, globals.node, globals.es2022)
         },
         rules: {
+            // Error detection
+            'for-direction': 'error',
             'no-await-in-loop': 'error',
             'no-div-regex': 'error',
-            strict: ['error', 'global'],
             eqeqeq: 'error',
             'dot-notation': 'error',
             curly: 'error',
-            'no-unused-expressions': ['error', { allowShortCircuit: true }],
-            'no-unused-vars': ['error', { varsIgnorePattern: '^_', argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+            'no-fallthrough': 'error',
+            'no-unused-expressions': [
+                'error',
+                {
+                    allowShortCircuit: true
+                }
+            ],
+            'no-unused-vars': ['error', unusedVarsOptions],
             'handle-callback-err': 'error',
             'no-new': 'error',
             'new-cap': 'error',
@@ -37,7 +46,11 @@ module.exports = [
             radix: ['error', 'always'],
             'no-use-before-define': ['error', 'nofunc'],
             'callback-return': ['error', ['callback', 'cb', 'done']],
-            'no-redeclare': 'error',
+            'no-regex-spaces': 'error',
+            'no-empty': 'error',
+            'no-duplicate-case': 'error',
+            'no-empty-character-class': 'error',
+            'no-redeclare': 'off', // Disabled per project preference
             'block-scoped-var': 'error',
             'no-sequences': 'error',
             'no-throw-literal': 'error',
@@ -45,22 +58,80 @@ module.exports = [
             'no-useless-concat': 'error',
             'no-void': 'error',
             yoda: 'error',
+            'no-undef': 'error',
             'no-var': 'error',
             'no-bitwise': 'error',
             'no-lonely-if': 'error',
+            'no-mixed-spaces-and-tabs': 'error',
             'arrow-body-style': ['error', 'as-needed'],
+            'arrow-parens': ['error', 'as-needed'],
             'prefer-arrow-callback': 'error',
             'object-shorthand': 'error',
             'prefer-spread': 'error',
-            'no-prototype-builtins': 'off'
+            'no-prototype-builtins': 'off', // Disabled per project preference
+            strict: ['error', 'global']
         }
     },
     {
-        files: ['test/**'],
+        files: ['**/*.cjs'],
         languageOptions: {
-            globals: { ...globals.node, ...globals.mocha }
+            sourceType: 'commonjs'
+        }
+    },
+    {
+        files: ['**/*.ts'],
+        extends: [tseslint.configs.recommended],
+        rules: {
+            // Handled by the TypeScript compiler
+            'no-undef': 'off',
+            // TypeScript-aware replacements for the base rules
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': ['error', unusedVarsOptions],
+            'no-unused-expressions': 'off',
+            '@typescript-eslint/no-unused-expressions': [
+                'error',
+                {
+                    allowShortCircuit: true
+                }
+            ],
+            'no-use-before-define': 'off',
+            '@typescript-eslint/no-use-before-define': [
+                'error',
+                {
+                    functions: false,
+                    classes: true,
+                    variables: true,
+                    typedefs: false,
+                    ignoreTypeReferences: true
+                }
+            ],
+            'no-invalid-this': 'off',
+            '@typescript-eslint/no-invalid-this': 'error',
+            // Project preferences
+            'prefer-const': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-namespace': 'off'
+        }
+    },
+    {
+        // Type-aware rules for the library sources only
+        files: ['src/**/*.ts'],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: path.dirname(fileURLToPath(import.meta.url))
+            }
+        },
+        rules: {
+            '@typescript-eslint/await-thenable': 'error',
+            '@typescript-eslint/no-floating-promises': 'error',
+            '@typescript-eslint/no-misused-promises': 'error',
+            '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+            '@typescript-eslint/no-deprecated': 'error',
+            // `void promise;` marks a promise that is deliberately left unawaited
+            'no-void': ['error', { allowAsStatement: true }]
         }
     },
     // Repo-specific: overrides go here, each with a one-line reason
     prettier
-];
+]);

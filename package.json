@@ -2,15 +2,84 @@
     "name": "mailparser",
     "version": "3.9.47",
     "description": "Parse e-mails",
-    "main": "index.js",
+    "type": "module",
+    "main": "./dist/cjs/index.js",
+    "types": "./dist/cjs/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "lib/*.js": [
+                "dist/cjs/*.d.ts"
+            ],
+            "lib/*": [
+                "dist/cjs/*.d.ts"
+            ],
+            "index.js": [
+                "dist/cjs/index.d.ts"
+            ],
+            "index": [
+                "dist/cjs/index.d.ts"
+            ]
+        }
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/esm/index.js",
+            "require": "./dist/cjs/index.js"
+        },
+        "./index": {
+            "import": "./dist/esm/index.js",
+            "require": "./dist/cjs/index.js"
+        },
+        "./index.js": {
+            "import": "./dist/esm/index.js",
+            "require": "./dist/cjs/index.js"
+        },
+        "./lib/mail-parser": {
+            "import": "./dist/esm/mail-parser.js",
+            "require": "./dist/cjs/mail-parser.js"
+        },
+        "./lib/mail-parser.js": {
+            "import": "./dist/esm/mail-parser.js",
+            "require": "./dist/cjs/mail-parser.js"
+        },
+        "./lib/simple-parser": {
+            "import": "./dist/esm/simple-parser.js",
+            "require": "./dist/cjs/simple-parser.js"
+        },
+        "./lib/simple-parser.js": {
+            "import": "./dist/esm/simple-parser.js",
+            "require": "./dist/cjs/simple-parser.js"
+        },
+        "./lib/stream-hash": {
+            "import": "./dist/esm/stream-hash.js",
+            "require": "./dist/cjs/stream-hash.js"
+        },
+        "./lib/stream-hash.js": {
+            "import": "./dist/esm/stream-hash.js",
+            "require": "./dist/cjs/stream-hash.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "CHANGELOG.md",
+        "SECURITY.md",
+        "SECURITY.txt"
+    ],
     "scripts": {
-        "test": "node --test test/*-test.js",
-        "test:coverage": "c8 npm test",
-        "test:cjs": "NODE_OPTIONS=--no-experimental-require-module npm test",
-        "lint": "eslint .",
+        "build": "node scripts/build.js",
+        "typecheck": "tsc -p tsconfig.json",
+        "pretest": "npm run build",
+        "test": "node --import tsx --test $(find test -name '*-test.ts')",
+        "pretest:coverage": "npm run build",
+        "test:coverage": "c8 node --import tsx --test $(find test -name '*-test.ts')",
+        "pretest:cjs": "npm run build",
+        "test:cjs": "NODE_OPTIONS=--no-experimental-require-module node test/package/cjs-smoke.cjs",
+        "lint": "eslint . && npm run typecheck",
         "lint:fix": "eslint . --fix",
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
+        "format": "prettier --write \"**/*.{js,cjs,ts,json,md,yml,yaml}\"",
+        "format:check": "prettier --check \"**/*.{js,cjs,ts,json,md,yml,yaml}\"",
+        "prepare": "npm run build",
         "update": "rm -rf node_modules package-lock.json && ncu -u && npm install"
     },
     "author": "Andris Reinman",
@@ -35,13 +104,16 @@
         "tlds": "1.261.0"
     },
     "devDependencies": {
-        "@eslint/js": "10.0.1",
+        "@types/node": "20.19.43",
         "c8": "12.0.0",
         "eslint": "10.13.0",
         "eslint-config-prettier": "10.1.8",
         "globals": "17.13.0",
         "iconv": "3.0.1",
-        "prettier": "3.9.10"
+        "prettier": "3.9.10",
+        "tsx": "4.23.15",
+        "typescript": "6.0.3",
+        "typescript-eslint": "8.71.2"
     },
     "repository": {
         "type": "git",

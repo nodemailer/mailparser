@@ -2,5 +2,5 @@
 
 MESSAGES=20000
 
-MESSAGES=$MESSAGES node passthrough.js
-MESSAGES=$MESSAGES node parse.js
+MESSAGES=$MESSAGES node passthrough.cjs
+MESSAGES=$MESSAGES node parse.cjs

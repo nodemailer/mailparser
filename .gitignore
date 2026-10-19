@@ -1,7 +1,8 @@
 node_modules
+coverage
+dist
+*.tgz
 .DS_Store
 npm-debug.log
 .npmrc
 .claude
-
-coverage

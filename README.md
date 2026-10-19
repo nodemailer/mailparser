@@ -21,6 +21,12 @@ next import the `mailparser` object into your script:
 const mailparser = require('mailparser');
 ```
 
+or, from an ES module or TypeScript (type declarations are included):
+
+```js
+import { simpleParser, MailParser } from 'mailparser';
+```
+
 ## Usage
 
 See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documentation and terms.
