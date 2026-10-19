@@ -20,7 +20,7 @@ Homepage and full docs: <https://nodemailer.com/extras/mailparser/>.
 
 - `index.js` - Public entry point, exports `{ MailParser, simpleParser }`
 - `/lib` - Library source
-- `/test` - Nodeunit-style tests and `.eml` fixtures
+- `/test` - `node:test` suites (`*-test.js`) and `.eml` fixtures
 - `/examples` - Standalone usage examples (not published to npm)
 - `/bench` - Benchmark scripts (not published to npm)
 
@@ -41,7 +41,7 @@ Homepage and full docs: <https://nodemailer.com/extras/mailparser/>.
 
 ## Technology Stack
 
-- **Runtime**: Node.js (CI tests on 22.x and 24.x)
+- **Runtime**: Node.js >= 20 (CI tests on 20.x, 22.x and 24.x)
 - **Module system**: CommonJS only (`require`/`module.exports`) - see Packaging below
 - **Streaming**: Node `stream.Transform` throughout
 - **MIME splitting**: `@zone-eu/mailsplit`
@@ -52,25 +52,35 @@ Homepage and full docs: <https://nodemailer.com/extras/mailparser/>.
 ## Development Commands
 
 ```
-npm test          # Run the full suite: ESLint + nodeunit tests (via Grunt)
-npm run format    # Format all code with Prettier
-npm run update    # Upgrade dependencies (ncu -u), reinstall, regenerate lockfile
+npm test                                  # Run the suite with Node's built-in test runner
+node --test test/simple-parser-test.js    # Run a single test file
+node --test --test-name-pattern="Parse spam" test/*-test.js   # Run tests matching a name
+npm run test:coverage                     # Run the suite under c8
+npm run lint                              # ESLint (flat config in eslint.config.js)
+npm run lint:fix                          # ESLint with --fix
+npm run format                            # Format all files with Prettier
+npm run format:check                      # Check formatting without writing
+npm run update                            # Upgrade dependencies (ncu -u), reinstall, regenerate lockfile
 ```
 
-There is no separate `lint` script - linting runs as the first Grunt task inside
-`npm test`. To lint only, run `npx grunt eslint`.
+`npm test` does not lint. CI runs `npm run lint`, `npm run format:check` and
+`npm test` as separate steps, so run all three before committing.
 
 ## Testing
 
-- Tests live in `/test`, named `*-test.js`, and use the **nodeunit** style
-  (`exports['name'] = test => { ...; test.equal(...); test.done(); }`).
-- `npm test` runs `grunt`, which runs `eslint:all` then `nodeunit:all`
-  (`test/**/*-test.js`). Lint failures fail the build before tests run.
+- Tests live in `/test`, named `*-test.js`, and use Node's built-in `node:test`
+  runner. Grouped suites use `describe`/`it`, flat files use `test`. Event-driven
+  tests take the `(t, done)` callback form and assert with `t.assert.*`
+  (`strictEqual`, `deepStrictEqual`, `ok`, `ifError`); `t.plan(n)` pins the
+  expected assertion count where a test had one.
+- `npm test` runs `node --test test/*-test.js`.
+- `test/simple-parser-test.js` and `test/issue-221-test.js` load the native `iconv`
+  devDependency to exercise the `Iconv` option. It is test-only and never ships.
 - Test inputs are real and adversarial `.eml` files under `test/fixtures/`. When
   fixing a parser bug, add a fixture that reproduces it plus a regression test,
   following the existing `issue-NNN-test.js` naming for issue-specific cases.
-- The suite is hermetic - no network or external services. Run `npm test` locally
-  before pushing; CI runs the same command on Node 22 and 24.
+- The suite is hermetic - no network or external services. CI runs lint,
+  format:check and the suite on Node 20, 22 and 24 (`.github/workflows/test.yml`).
 
 ## Architecture Notes
 
@@ -96,8 +106,10 @@ CommonJS-compatible**:
 - The library is authored in CommonJS (`require`/`module.exports`). Do not convert
   it to ESM, and do not introduce `import`/`export` syntax, top-level `await`,
   dynamic `import()`, or `import.meta`.
-- ESLint is configured for `sourceType: 'script'` and `ecmaVersion: 2017`; keep new
-  code within that syntax level so it lints and stays broadly compatible.
+- ESLint uses the shared flat config (`eslint.config.js`, `sourceType: 'commonjs'`,
+  `ecmaVersion: 2022`). Keep it identical to the other Postal Systems / Nodemailer
+  packages; repo-specific overrides go only in its "Repo-specific" block, each with
+  a one-line reason.
 - Use static, literal `require()` paths so `pkg` can trace them. Avoid computed or
   conditional require paths.
 - **Never add a dependency (direct or transitive) that is pure ESM.** When updating
@@ -114,9 +126,10 @@ CommonJS-compatible**:
 - The `reject` list in `.ncurc.js` exists to keep ESM-only releases out (see
   Packaging above). Extend it rather than working around a broken upgrade.
 - After updating, run `npm test`. Check `npm audit` for **production**
-  (`--omit=dev`) advisories; dev-only transitive advisories (e.g. from the Grunt
-  test tooling) do not ship to consumers and should not be force-fixed if doing so
-  breaks the toolchain.
+  (`--omit=dev`) advisories; dev-only transitive advisories (e.g. `minimist` via the
+  `random-message` benchmark helper) do not ship to consumers and should not be
+  force-fixed if doing so breaks the toolchain.
+- devDependencies are pinned to exact versions (no `^` or `~`).
 
 ## Releases
 
@@ -141,7 +154,7 @@ CommonJS-compatible**:
   `fix:` or `feat:` prefix - those must run so the release workflow is triggered.
 - After making code changes:
     1. Run `/simplify` to review changed code for reuse, quality, and efficiency.
-    2. Run `npm run format` and `npm test` (lint runs inside `npm test`).
+    2. Run `npm run format`, `npm run lint` and `npm test`.
     3. Run `/security-review` to check for security issues before committing.
 - After pushing, check the GitHub Actions runs for the push (e.g.
   `gh run list --branch master`) and report their status. If a run fails for a
