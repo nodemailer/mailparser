@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.47](https://github.com/nodemailer/mailparser/compare/v3.9.46...v3.9.47) (2026-10-19)
+
+
+### Bug Fixes
+
+* bump libmime to 5.5.2 ([7df8fed](https://github.com/nodemailer/mailparser/commit/7df8fedfd28efd23f76b5efb3d23d46b43c65ea9))
+
 ## [3.9.46](https://github.com/nodemailer/mailparser/compare/v3.9.45...v3.9.46) (2026-10-18)
 
 
