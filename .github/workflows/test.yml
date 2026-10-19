@@ -32,3 +32,7 @@ jobs:
             - run: npm run lint
             - run: npm run format:check
             - run: npm test
+            # The suite again with require(esm) switched off, the way EmailEngine's pkg binary loads
+            # the package; Node 20 has no such flag to set
+            - run: npm run test:cjs
+              if: matrix.node != '20.x'
