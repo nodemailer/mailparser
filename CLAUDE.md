@@ -141,9 +141,10 @@ What that means in practice:
 - The `reject` list in `.ncurc.js` exists to keep ESM-only releases out (see
   Platform constraints above). Extend it rather than working around a broken upgrade.
 - After updating, run `npm test`. Check `npm audit` for **production**
-  (`--omit=dev`) advisories; dev-only transitive advisories (e.g. `minimist` via the
-  `random-message` benchmark helper) do not ship to consumers and should not be
-  force-fixed if doing so breaks the toolchain.
+  (`--omit=dev`) advisories; dev-only transitive advisories do not ship to consumers
+  and should not be force-fixed if doing so breaks the toolchain. Prefer dropping an
+  abandoned devDependency over pinning its subtree (the benchmarks carry their own
+  `bench/random-message.js` for that reason).
 - devDependencies are pinned to exact versions (no `^` or `~`).
 
 ## Releases

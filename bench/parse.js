@@ -3,7 +3,7 @@
 'use strict';
 
 const MailParser = require('../index.js').MailParser;
-const randomMessage = require('random-message');
+const randomMessage = require('./random-message');
 const messages = Number(process.env.MESSAGES) || 10000;
 
 const Transform = require('stream').Transform;
