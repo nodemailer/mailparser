@@ -143,7 +143,7 @@ exports['General tests'] = {
     },
 
     'HeaderLines event': test => {
-        let encodedText = 'X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\n' + 'Subject: ABCDEF',
+        let encodedText = 'X-Test: =?UTF-8?Q?=C3=95=C3=84?= =?UTF-8?Q?=C3=96=C3=9C?=\r\nSubject: ABCDEF',
             mail = Buffer.from(encodedText, 'utf-8');
 
         test.expect(3);
@@ -384,7 +384,7 @@ exports['Text encodings'] = {
     },
 
     'Punycode Address': test => {
-        let encodedText = 'From: "Sender" <sender@xn--mnchen-ost-9db.test.fm>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
+        let encodedText = 'From: "Sender" <sender@xn--mnchen-ost-9db.test.fm>\r\nTo: "Test Recipient" <to@email.com>\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -398,7 +398,7 @@ exports['Text encodings'] = {
     },
 
     'Punycode Address: Invalid': test => {
-        let encodedText = 'From: "Postmaster" <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\n' + 'To: "Test Recipient" <to@email.com>\r\n',
+        let encodedText = 'From: "Postmaster" <postmaster@xn--mnchen-ost-9db-test-fm.bounce-mta.com>\r\nTo: "Test Recipient" <to@email.com>\r\n',
             mail = Buffer.from(encodedText, 'utf-8');
 
         let mailparser = new MailParser();
@@ -1675,7 +1675,7 @@ exports['Advanced nested HTML'] = test => {
 };
 
 exports['Skip html to text'] = test => {
-    let encodedText = Buffer.from('Content-type: text/html; charset=utf-8\r\n' + '\r\n' + '<div>text</div>'),
+    let encodedText = Buffer.from('Content-type: text/html; charset=utf-8\r\n\r\n<div>text</div>'),
         mail = Buffer.from(encodedText, 'utf-8');
 
     test.expect(2);

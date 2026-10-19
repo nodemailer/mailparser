@@ -30,12 +30,10 @@
         "tlds": "1.261.0"
     },
     "devDependencies": {
-        "@eslint/eslintrc": "3.3.7",
         "@eslint/js": "10.0.1",
-        "ajv": "8.20.0",
         "eslint": "10.13.0",
-        "eslint-config-nodemailer": "1.2.0",
         "eslint-config-prettier": "10.1.8",
+        "globals": "17.13.0",
         "grunt": "1.6.3",
         "grunt-cli": "1.5.0",
         "grunt-contrib-nodeunit": "5.0.0",
