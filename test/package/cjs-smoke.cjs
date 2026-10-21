@@ -58,7 +58,7 @@ const message = [
 async function run() {
     const mailparser = require(entry);
     assert.strictEqual(require.resolve('mailparser'), entry);
-    assert.deepStrictEqual(Object.keys(mailparser), ['MailParser', 'simpleParser']);
+    assert.deepStrictEqual(Object.keys(mailparser), ['MailParser', 'simpleParser', 'parseAddressHeader']);
     assert.strictEqual(mailparser.default, mailparser);
 
     // Every path the exports map publishes, the way deep imports load them
@@ -89,6 +89,11 @@ async function run() {
     assert.strictEqual(mail.attachments[1].contentType, 'application/pdf');
     assert.strictEqual(mail.attachments[1].content.toString(), '%PDF-1.4 smoke');
     assert.strictEqual(mail.attachments[1].checksum, require('node:crypto').createHash('md5').update('%PDF-1.4 smoke').digest('hex'));
+
+    // The address header parser, through addressparser, libmime and punycode
+    const parsed = mailparser.parseAddressHeader('=?utf-8?Q?J=C3=B5geva?= <sender@xn--mnchen-3ya.example>');
+    assert.deepStrictEqual(parsed.value, [{ address: 'sender@münchen.example', name: 'Jõgeva' }]);
+    assert.strictEqual(parsed.text, '"Jõgeva" <sender@münchen.example>');
 
     // The streaming parser, fed from a stream
     const seen = [];

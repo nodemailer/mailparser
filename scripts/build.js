@@ -40,7 +40,8 @@ function listFiles(dir, ext) {
 // compiled consumer resolved to the exports object, and a test double installed
 // through either import style was seen by the other. Pointing `default` at the
 // exports object keeps that. The alias is non-enumerable so that the enumerable
-// keys of the module are MailParser and simpleParser, as before.
+// keys of the module are its named exports (MailParser and simpleParser, as before, plus
+// parseAddressHeader).
 const ENTRY_POINT_MODULE = 'index.js';
 const ENTRY_POINT_SHIM = "Object.defineProperty(exports, 'default', { value: exports, enumerable: false, writable: true, configurable: true });\n";
 

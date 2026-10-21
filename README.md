@@ -24,12 +24,35 @@ const mailparser = require('mailparser');
 or, from an ES module or TypeScript (type declarations are included):
 
 ```js
-import { simpleParser, MailParser } from 'mailparser';
+import { simpleParser, MailParser, parseAddressHeader } from 'mailparser';
 ```
 
 ## Usage
 
 See [mailparser homepage](https://nodemailer.com/extras/mailparser/) for documentation and terms.
+
+### Parsing an address header
+
+`parseAddressHeader(value, [options])` parses the value of an address header (`From`, `To`, `Cc`, `Reply-To` and the like) into the same `{ value, html, text }` object `MailParser` and `simpleParser` produce for one, for when the header comes from somewhere else than a message being parsed, for example an IMAP `HEADER.FIELDS` fetch.
+
+```js
+const { parseAddressHeader } = require('mailparser');
+
+parseAddressHeader('=?utf-8?Q?J=C3=B5geva?= <info@xn--mnchen-3ya.example>, Team: a@example.com;');
+// {
+//   value: [
+//     { address: 'info@münchen.example', name: 'Jõgeva' },
+//     { name: 'Team', group: [{ address: 'a@example.com', name: '' }] }
+//   ],
+//   html: '<span class="mp_address_group">...',
+//   text: '"Jõgeva" <info@münchen.example>, "Team": a@example.com;'
+// }
+```
+
+- **value** - the header value without the `Name:` prefix, as a string. Folded lines are fine, raw 8-bit bytes have to be decoded into the string first. An array of values (a repeated header) is parsed one value at a time and the addresses are listed in order. An empty or missing value gives an empty list
+- **options.flatten** - if `true`, every group is replaced with its members and the group names are dropped, so `value` lists mailboxes only
+
+Each entry of `value` has a `name` (an empty string when there is none, encoded words decoded) and either an `address` (a punycode domain decoded to Unicode) or, for a group, a `group` list of the same entries. RFC 2047 does not allow encoded words in the address itself, so an address part hiding one is kept only when it decodes to a plain `local@domain`, otherwise `address` is an empty string; a display name that decodes to something looking like an address stays a name.
 
 ### Character sets
 

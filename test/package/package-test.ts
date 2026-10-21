@@ -96,7 +96,7 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
 
         it('keeps the shape of the pre-TypeScript module', () => {
             const mailparser = require(packageName);
-            assert.deepEqual(Object.keys(mailparser), ['MailParser', 'simpleParser']);
+            assert.deepEqual(Object.keys(mailparser), ['MailParser', 'simpleParser', 'parseAddressHeader']);
             assert.equal(typeof mailparser.simpleParser, 'function');
             assert.equal(mailparser.simpleParser.length, 3);
             assert.equal(Object.getPrototypeOf(mailparser.MailParser.prototype), Transform.prototype);
@@ -139,6 +139,7 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
             assert.equal(typeof mailparser.simpleParser, 'function');
             assert.equal(mailparser.default.simpleParser, mailparser.simpleParser);
             assert.equal(mailparser.default.MailParser, mailparser.MailParser);
+            assert.equal(mailparser.default.parseAddressHeader, mailparser.parseAddressHeader);
             const load = (subpath: string) => import(packageName + subpath);
             const [index, indexJs, mailParser, mailParserJs, simpleParser, simpleParserJs, streamHash, streamHashJs] = await Promise.all(
                 [
@@ -174,19 +175,31 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
     describe('type declarations', { concurrency: true }, () => {
         it('keep the internals and the untyped dependencies out', () => {
             for (const format of ['esm', 'cjs']) {
-                const declarations = ['index', 'mail-parser', 'simple-parser', 'types']
+                const declarations = ['index', 'mail-parser', 'simple-parser', 'types', 'address-header']
                     .map(file => fs.readFileSync(path.join(root, 'dist', format, file + '.d.ts'), 'utf8'))
                     .join('\n');
-                for (const hidden of ['processChunk', 'ParserNode', 'attachmentList', 'linkify', "'he'", 'html-to-text', 'punycode.js', 'tlds']) {
+                for (const hidden of [
+                    'processChunk',
+                    'decodeAddresses',
+                    'formatAddressesHTML',
+                    'formatAddressesText',
+                    'ParserNode',
+                    'attachmentList',
+                    'linkify',
+                    "'he'",
+                    'html-to-text',
+                    'punycode.js',
+                    'tlds'
+                ]) {
                     assert.ok(!declarations.includes(hidden), `${format} declares ${hidden}`);
                 }
             }
         });
 
         const esmConsumer = `
-import { simpleParser, MailParser } from 'mailparser';
+import { simpleParser, MailParser, parseAddressHeader } from 'mailparser';
 import mailparser from 'mailparser';
-import type { AddressObject, Attachment, AttachmentStream, HeaderValue, MessageText, ParsedMail, SimpleParserOptions } from 'mailparser';
+import type { AddressObject, Attachment, AttachmentStream, EmailAddress, HeaderValue, MessageText, ParseAddressHeaderOptions, ParsedMail, SimpleParserOptions } from 'mailparser';
 
 export async function run(source: Buffer): Promise<string[]> {
     const options: SimpleParserOptions = { keepCidLinks: true, skipTextLinks: true, checksumAlgo: 'sha256', formatDateString: date => date.toISOString() };
@@ -210,7 +223,11 @@ export async function run(source: Buffer): Promise<string[]> {
         }
     });
     parser.end(source);
-    void [from, html, content, subject];
+
+    const addressOptions: ParseAddressHeaderOptions = { flatten: true };
+    const parsedTo: AddressObject = parseAddressHeader('a@example.com, Group: b@example.com;', addressOptions);
+    const repeated: EmailAddress[] = mailparser.parseAddressHeader(['a@example.com', 'b@example.com']).value;
+    void [from, html, content, subject, parsedTo.text, repeated[0]?.address];
     return attachments.map(attachment => attachment.checksum);
 }
 `;
@@ -222,7 +239,8 @@ export async function run(source: Buffer): Promise<string | undefined> {
     const parser: mailparser.MailParser = new mailparser.MailParser();
     parser.end(source);
     const mail: mailparser.ParsedMail = await mailparser.simpleParser(source);
-    return mail.subject;
+    const from: mailparser.AddressObject = mailparser.parseAddressHeader('a@example.com');
+    return mail.subject + from.text;
 }
 `;
 

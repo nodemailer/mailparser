@@ -3,30 +3,10 @@ import assert from 'node:assert/strict';
 import iconv from 'iconv-lite';
 import iconvModule from 'iconv';
 import { MailParser, simpleParser } from '../src/index.js';
+import { createRandom, PROPERTY_ITERATIONS, PROPERTY_SEED } from './helpers/random.js';
+import type { Random } from './helpers/random.js';
 
 const { Iconv } = iconvModule;
-
-// mulberry32, a small seeded PRNG (the one libmime's property tests use), so a failing case can
-// be reproduced from its seed. Not for anything but reproducible test input
-function createRandom(seed: number) {
-    /* eslint-disable no-bitwise */
-    let state = seed >>> 0;
-    let next = () => {
-        state = (state + 0x6d2b79f5) >>> 0;
-        let t = state;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-    /* eslint-enable no-bitwise */
-    return {
-        next,
-        int: (min: number, max: number) => min + Math.floor(next() * (max - min + 1)),
-        pick: <T>(list: readonly T[]): T => list[Math.floor(next() * list.length)]!
-    };
-}
-
-type Random = ReturnType<typeof createRandom>;
 
 type TransferEncoding = '8bit' | 'base64' | 'quoted-printable';
 
@@ -186,10 +166,6 @@ describe('Body charset decoding', () => {
 });
 
 describe('Body charset decoding properties', () => {
-    // PROPERTY_SEED and PROPERTY_ITERATIONS rerun a reported failure or make a longer soak run
-    const SEED = Number(process.env.PROPERTY_SEED) || 20261021;
-    const ITERATIONS = Number(process.env.PROPERTY_ITERATIONS) || 40;
-
     // characters with one, two, three and four byte encodings in the charsets below, plus line
     // breaks and the ASCII punctuation the double byte decoders cut at
     const ALPHABETS: Record<string, string> = {
@@ -206,13 +182,7 @@ describe('Body charset decoding properties', () => {
     };
 
     function randomText(random: Random, alphabet: string): string {
-        let chars = Array.from(alphabet);
-        let length = random.int(1, 1200);
-        let text = '';
-        for (let i = 0; i < length; i++) {
-            text += random.pick(chars);
-        }
-        return text;
+        return random.string(alphabet, random.int(1, 1200));
     }
 
     function randomChunker(random: Random) {
@@ -223,15 +193,15 @@ describe('Body charset decoding properties', () => {
     for (let charset of Object.keys(ALPHABETS)) {
         it(`random ${charset} bodies decode the same in random chunks as at once`, async () => {
             let checks: Promise<void>[] = [];
-            for (let seed = 1; seed <= ITERATIONS; seed++) {
-                let random = createRandom(SEED + seed * 7919 + charset.length);
+            for (let seed = 1; seed <= PROPERTY_ITERATIONS; seed++) {
+                let random = createRandom(PROPERTY_SEED + seed * 7919 + charset.length);
                 let text = randomText(random, ALPHABETS[charset]!);
                 let body = iconv.encode(text, charset);
                 let encoding = random.pick(['8bit', 'base64', 'quoted-printable'] as const);
                 let message = textMessage(charset, body, 'text/plain', encoding);
                 // the one-shot decode, with the line endings normalized the way the parser does
                 let expected = iconv.decode(body, charset).replace(/\r?\n/g, '\n');
-                let at = `${charset} ${encoding} case ${seed} (PROPERTY_SEED=${SEED})`;
+                let at = `${charset} ${encoding} case ${seed} (PROPERTY_SEED=${PROPERTY_SEED})`;
 
                 checks.push(
                     Promise.all([parseInChunks(message, [message.length]), parseInChunks(message, randomChunker(random))]).then(([oneShot, chunked]) => {

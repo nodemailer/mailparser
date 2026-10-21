@@ -40,6 +40,18 @@ export interface AddressObject {
 }
 
 /**
+ * Options for `parseAddressHeader`.
+ */
+export interface ParseAddressHeaderOptions {
+    /**
+     * Replace every group with its members, so the result lists mailboxes only and the group names
+     * are dropped.
+     * @default false
+     */
+    flatten?: boolean;
+}
+
+/**
  * One entry of the combined `list` header, built from a `List-*` header such as `List-Unsubscribe`.
  */
 export interface ListHeaderEntry {

@@ -23,8 +23,10 @@ ES modules in `dist/esm/` and CommonJS in `dist/cjs/`, each with type declaratio
 Both `require('mailparser')` and `import { simpleParser } from 'mailparser'` work.
 The layout follows `../nodemailer` and `../imapflow`.
 
-- `src/index.ts` - Public entry point. Named exports `MailParser` and `simpleParser`,
-  the public types, and a default export object with both functions
+- `src/index.ts` - Public entry point. Named exports `MailParser`, `simpleParser` and
+  `parseAddressHeader`, the public types, and a default export object with all three
+- `src/address-header.ts` - `parseAddressHeader()` and the address decoding and formatting
+  helpers `MailParser` uses for its own address headers (the helpers are `@internal`)
 - `src/types.ts` - The public option and result types (`MailParserOptions`,
   `SimpleParserOptions`, `ParsedMail`, `Attachment`, `AttachmentStream`, `MessageText`,
   `Headers`, `HeaderValue`, `AddressObject` and the rest). Keep them accurate to what
@@ -57,7 +59,7 @@ The layout follows `../nodemailer` and `../imapflow`.
 maps the same deep paths for consumers on the legacy node10 resolution. Never drop one.
 
 The CommonJS build keeps the pre-TypeScript shapes: `require('mailparser')` is an object
-whose enumerable keys are `MailParser` and `simpleParser` (its `default` is a
+whose enumerable keys are `MailParser`, `simpleParser` and `parseAddressHeader` (its `default` is a
 non-enumerable alias of the module itself), and the `lib/*` paths return the class or
 function directly (`module.exports = exports.default`, with a non-enumerable `.default`).
 `scripts/build.js` does that rewrite and fails the build if a default-export module also

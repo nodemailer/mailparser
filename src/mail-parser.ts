@@ -5,11 +5,11 @@ import { htmlToText } from 'html-to-text';
 import libmime from 'libmime';
 import linkifyIt from 'linkify-it';
 import addressparser from 'nodemailer/lib/addressparser';
-import punycode from 'punycode.js';
 import { Transform } from 'node:stream';
 import type { TransformCallback } from 'node:stream';
 import tlds from './tlds.cjs';
 import StreamHash from './stream-hash.js';
+import { decodeAddresses, formatAddressesHTML, formatAddressesText } from './address-header.js';
 import type {
     AddressObject,
     AttachmentStream,
@@ -815,49 +815,7 @@ class MailParser extends Transform {
 
     /** @internal */
     decodeAddresses(addresses: EmailAddress[]): void {
-        for (let i = 0; i < addresses.length; i++) {
-            let address = addresses[i];
-            address.name = (address.name || '').toString().trim();
-
-            // An encoded word decodes into the display name and nothing else, whatever it
-            // decodes to. RFC 2047 section 5 keeps encoded words out of the addr-spec, so a
-            // name that decodes to "CEO" <ceo@bank.com> is still only a name: parsing it
-            // again would report an address the header never carried
-            if (address.name) {
-                try {
-                    address.name = this.libmime.decodeWords(address.name);
-                } catch {
-                    //ignore, keep as is
-                }
-            }
-            // Security fix: detect RFC 2047 encoded-words in the address field.
-            // Per RFC 2047 Section 5, encoded-words MUST NOT appear in addr-spec.
-            // If found, decode and validate; reject if result is not a simple local@domain.
-            if (address.address && /[=]\?[^?]+\?[BbQq]\?[^?]*\?[=]/.test(address.address)) {
-                try {
-                    let decodedAddr = this.libmime.decodeWords(address.address);
-                    if (/^[^\s@]+@[^\s@]+$/.test(decodedAddr) && !/[=]\?/.test(decodedAddr)) {
-                        address.address = decodedAddr;
-                    } else {
-                        address.address = '';
-                    }
-                } catch {
-                    address.address = '';
-                }
-            }
-            if (address.address && /@xn--/.test(address.address)) {
-                try {
-                    address.address =
-                        address.address.slice(0, address.address.lastIndexOf('@') + 1) +
-                        punycode.toUnicode(address.address.slice(address.address.lastIndexOf('@') + 1));
-                } catch {
-                    // Not a valid punycode string; keep as is
-                }
-            }
-            if (address.group) {
-                this.decodeAddresses(address.group);
-            }
-        }
+        decodeAddresses(addresses, this.libmime);
     }
 
     /** @internal */
@@ -1336,57 +1294,14 @@ class MailParser extends Transform {
      * Formats parsed addresses for an HTML context, every value HTML-escaped.
      */
     getAddressesHTML(value: EmailAddress | EmailAddress[]): string {
-        let formatSingleLevel = (addresses: EmailAddress[]): string =>
-            addresses
-                .map(address => {
-                    let str = '<span class="mp_address_group">';
-                    if (address.name) {
-                        str += '<span class="mp_address_name">' + he.encode(address.name) + (address.group ? ': ' : '') + '</span>';
-                    }
-                    if (address.address) {
-                        let link = '<a href="mailto:' + he.encode(address.address) + '" class="mp_address_email">' + he.encode(address.address) + '</a>';
-                        if (address.name) {
-                            str += ' &lt;' + link + '&gt;';
-                        } else {
-                            str += link;
-                        }
-                    }
-                    if (address.group) {
-                        str += formatSingleLevel(address.group) + ';';
-                    }
-                    return str + '</span>';
-                })
-                .join(', ');
-        return formatSingleLevel(([] as EmailAddress[]).concat(value || []));
+        return formatAddressesHTML(value);
     }
 
     /**
      * Formats parsed addresses as plain text, display names quoted.
      */
     getAddressesText(value: EmailAddress | EmailAddress[]): string {
-        let formatSingleLevel = (addresses: EmailAddress[]): string =>
-            addresses
-                .map(address => {
-                    let str = '';
-                    if (address.name) {
-                        // a quoted-string, so a quote or backslash inside the name is escaped
-                        str += `"${address.name.replace(/["\\]/g, '\\$&')}"` + (address.group ? ': ' : '');
-                    }
-                    if (address.address) {
-                        let link = address.address;
-                        if (address.name) {
-                            str += ' <' + link + '>';
-                        } else {
-                            str += link;
-                        }
-                    }
-                    if (address.group) {
-                        str += formatSingleLevel(address.group) + ';';
-                    }
-                    return str;
-                })
-                .join(', ');
-        return formatSingleLevel(([] as EmailAddress[]).concat(value || []));
+        return formatAddressesText(value);
     }
 
     /**
