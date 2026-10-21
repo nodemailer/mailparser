@@ -1,6 +1,6 @@
 {
     "name": "mailparser",
-    "version": "3.12.1",
+    "version": "3.12.2",
     "description": "Parse e-mails",
     "type": "module",
     "main": "./dist/cjs/index.js",

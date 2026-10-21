@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.12.2](https://github.com/nodemailer/mailparser/compare/v3.12.1...v3.12.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* the html and text forms parseAddressHeader() builds lazily can be assigned again ([bc6c421](https://github.com/nodemailer/mailparser/commit/bc6c4215c531a448c71540027c5ade74b4d60fab))
+
 ## [3.12.1](https://github.com/nodemailer/mailparser/compare/v3.12.0...v3.12.1) (2026-10-21)
 
 
