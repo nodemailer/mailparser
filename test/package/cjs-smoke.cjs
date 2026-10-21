@@ -72,7 +72,7 @@ async function run() {
     assert.ok(Object.getPrototypeOf(mailparser.MailParser.prototype) === Transform.prototype);
 
     // simpleParser, through every runtime dependency: libmime, mailsplit, nodemailer's
-    // addressparser, punycode, iconv-lite, encoding-japanese, html-to-text, he, linkify-it and tlds
+    // addressparser, punycode, iconv-lite and encoding-japanese (through libmime), html-to-text, he, linkify-it and tlds
     const mail = await mailparser.simpleParser(message);
     assert.strictEqual(mail.subject, 'Tere, maailm');
     assert.strictEqual(mail.from.value[0].name, 'Jõgeva');

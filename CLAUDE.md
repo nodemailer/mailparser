@@ -68,8 +68,8 @@ grows named runtime exports, so keep `mail-parser.ts`, `simple-parser.ts` and
 
 - `src/mail-parser.ts` - The `MailParser` Transform stream. Wraps `@zone-eu/mailsplit`
   to walk the MIME tree, decodes headers (`libmime`) and addresses
-  (`nodemailer/lib/addressparser`), handles charset conversion (`iconv-lite`,
-  `encoding-japanese`), `format=flowed` text, HTML-to-text conversion
+  (`nodemailer/lib/addressparser`), decodes text bodies through libmime's
+  `createDecodeStream()` (or the native `Iconv` option), `format=flowed` text, HTML-to-text conversion
   (`html-to-text`), entity decoding (`he`), and link detection (`linkify-it` +
   `tlds`). This is where almost all parsing logic lives. Processing methods and state
   are tagged `@internal` and stripped from the declarations; the event and `read()`
@@ -93,7 +93,8 @@ grows named runtime exports, so keep `mail-parser.ts`, `simple-parser.ts` and
 - **Streaming**: Node `stream.Transform` throughout
 - **MIME splitting**: `@zone-eu/mailsplit`
 - **MIME/header decoding**: `libmime`, `nodemailer/lib/addressparser`
-- **Charset handling**: `iconv-lite`, `encoding-japanese`
+- **Charset handling**: `libmime` (`createDecodeStream()`, which uses `iconv-lite` and
+  `encoding-japanese`); `iconv-lite` is also a devDependency the tests encode fixtures with
 - **HTML**: `html-to-text`, `he`, `linkify-it`, `tlds`
 
 ## Development Commands

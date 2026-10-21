@@ -29,8 +29,9 @@ module.exports = {
             return 'minor';
         }
         // iconv-lite 1.0 (in alpha since 2026-10) requires Node 22 and moves to ES modules, relying on
-        // require(esm). That breaks the Node 20 floor and the CommonJS-only rule EmailEngine's pkg
-        // binary depends on, so stay on 0.x: 'minor' still takes new 0.x releases.
+        // require(esm). It is only a devDependency now (the tests encode fixtures with it, libmime
+        // decodes with its own copy), but the tests run on Node 20 and should encode with the
+        // release line libmime decodes with, so stay on 0.x: 'minor' still takes new 0.x releases.
         if (name === 'iconv-lite') {
             return 'minor';
         }

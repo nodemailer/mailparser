@@ -1,9 +1,7 @@
 import mailsplit from '@zone-eu/mailsplit';
 import FlowedDecoder from '@zone-eu/mailsplit/lib/flowed-decoder.js';
-import encodingJapanese from 'encoding-japanese';
 import he from 'he';
 import { htmlToText } from 'html-to-text';
-import iconv from 'iconv-lite';
 import libmime from 'libmime';
 import linkifyIt from 'linkify-it';
 import addressparser from 'nodemailer/lib/addressparser';
@@ -214,6 +212,16 @@ function exceedsHtmlNestingDepth(html: string, maxDepth: number): boolean {
     return false;
 }
 
+// Charsets a body is never decoded from, matched the way iconv-lite and node-iconv compare names
+// (case and punctuation ignored). UTF-7 can carry markup past a filter that looks for "<" (a body
+// of +ADw-script+AD4- decodes to <script>), base64 and hex are transfer encodings. libmime's decode
+// stream refuses the same names, this check applies the refusal to the native Iconv option as well
+const REFUSED_CHARSET = /^(?:(?:cs)?unicode11)?utf7(?:imap)?$|^base64$|^hex$/;
+
+function isRefusedCharset(charset: string): boolean {
+    return REFUSED_CHARSET.test((charset || '').toLowerCase().replace(/[^a-z0-9]/g, ''));
+}
+
 class IconvDecoder extends Transform {
     stream: NodeJS.ReadWriteStream;
     inputEnded: boolean;
@@ -250,50 +258,6 @@ class IconvDecoder extends Transform {
     override _flush(done: TransformCallback): void {
         this.endCb = done;
         this.stream.end();
-    }
-}
-
-class JPDecoder extends Transform {
-    charset: string;
-    chunks: Buffer[];
-    chunklen: number;
-
-    constructor(charset: string) {
-        super();
-
-        this.charset = charset;
-        this.chunks = [];
-        this.chunklen = 0;
-    }
-
-    override _transform(chunk: Buffer | string, encoding: BufferEncoding, done: TransformCallback): void {
-        if (typeof chunk === 'string') {
-            chunk = Buffer.from(chunk, encoding);
-        }
-
-        this.chunks.push(chunk);
-        this.chunklen += chunk.length;
-        done();
-    }
-
-    override _flush(done: TransformCallback): void {
-        let input = Buffer.concat(this.chunks, this.chunklen);
-        try {
-            let output: string | Buffer = encodingJapanese.convert(input, {
-                to: 'UNICODE', // to_encoding
-                from: this.charset as encodingJapanese.Encoding, // from_encoding
-                type: 'string'
-            });
-            if (typeof output === 'string') {
-                output = Buffer.from(output);
-            }
-            this.push(output);
-        } catch {
-            // keep as is on errors
-            this.push(input);
-        }
-
-        done();
     }
 }
 
@@ -488,6 +452,10 @@ class MailParser extends Transform {
             // create wrapper
             return {
                 decodeStream(charset) {
+                    if (isRefusedCharset(charset)) {
+                        // the same refusal as without the Iconv option, see below
+                        return libmime.createDecodeStream(charset);
+                    }
                     // node-iconv resolves its own charset aliases and needs charset-specific
                     // fixups (see IconvDecoder, eg. ks_c_5601-1987), so pass the charset through as is
                     return new IconvDecoder(Iconv, charset);
@@ -496,14 +464,12 @@ class MailParser extends Transform {
         } else {
             return {
                 decodeStream(charset) {
-                    // resolve charset aliases (eg. iso-8859-8-i -> ISO-8859-8) via libmime's canonical table
-                    charset = libmime.normalizeCharset((charset || 'ascii').toString());
-                    if (/^jis|^iso-?2022-?jp/i.test(charset)) {
-                        // special case not supported by iconv-lite
-                        return new JPDecoder(charset);
-                    }
-
-                    return iconv.decodeStream(charset);
+                    // libmime resolves charset aliases (eg. iso-8859-8-i -> ISO-8859-8), decodes the
+                    // Japanese charsets iconv-lite lacks and keeps a multibyte character split across
+                    // chunks intact. A charset it does not know or refuses (UTF-7, which would turn
+                    // +ADw-script+AD4- into <script>, and the base64 and hex transfer encodings) is
+                    // decoded as UTF-8 with invalid bytes replaced, the same as encoded words get
+                    return libmime.createDecodeStream(charset || 'ascii');
                 }
             };
         }
