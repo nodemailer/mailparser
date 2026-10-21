@@ -148,9 +148,21 @@ export function parseAddressHeader(value: string | string[] | null | undefined, 
             addresses.push(address);
         }
     }
-    return {
-        value: addresses,
-        html: formatAddressesHTML(addresses),
-        text: formatAddressesText(addresses)
-    };
+    return withLazyFormats(addresses);
+}
+
+/**
+ * The AddressObject for parsed addresses, with `html` and `text` built on first read: a caller
+ * that only wants the addresses (eg. for an SMTP envelope) pays for neither. Both stay ordinary
+ * enumerable properties to read, compare and serialize.
+ */
+function withLazyFormats(addresses: EmailAddress[]): AddressObject {
+    let html: string | undefined;
+    let text: string | undefined;
+    const result = { value: addresses } as AddressObject;
+    Object.defineProperties(result, {
+        html: { enumerable: true, get: () => (html ??= formatAddressesHTML(addresses)) },
+        text: { enumerable: true, get: () => (text ??= formatAddressesText(addresses)) }
+    });
+    return result;
 }

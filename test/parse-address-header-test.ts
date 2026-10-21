@@ -90,6 +90,14 @@ describe('parseAddressHeader', () => {
         ]);
     });
 
+    it('builds html and text only when read, as ordinary enumerable values', () => {
+        const parsed = parseAddressHeader('"Doe, John" <john@example.com>');
+        assert.deepEqual(Object.keys(parsed), ['value', 'html', 'text']);
+        assert.equal(parsed.text, '"Doe, John" <john@example.com>');
+        assert.equal(parsed.html, parsed.html, 'read twice, the same value');
+        assert.deepEqual(JSON.parse(JSON.stringify(parsed)), { value: parsed.value, html: parsed.html, text: parsed.text });
+    });
+
     it('flattens groups into their members with the flatten option', () => {
         let parsed = parseAddressHeader('Team: a@example.com, ' + b64word('Bob') + ' <b@example.com>;, Empty:;, c@example.com', { flatten: true });
         assert.deepEqual(parsed.value, [
