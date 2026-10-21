@@ -1123,7 +1123,8 @@ class MailParser extends Transform {
                         }
                     } as unknown as AttachmentStream;
 
-                    let algo = this.options.checksumAlgo || 'md5';
+                    // false skips hashing, checksum is then left unset
+                    let algo = this.options.checksumAlgo === false ? false : this.options.checksumAlgo || 'md5';
                     let hasher: StreamHash;
                     try {
                         hasher = new StreamHash(attachment, algo);

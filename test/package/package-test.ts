@@ -212,7 +212,10 @@ export async function run(source: Buffer): Promise<string[]> {
     const subject: HeaderValue | undefined = mail.headers.get('subject');
     simpleParser(source, (err: Error | null, parsed: ParsedMail) => void [err, parsed.subject]);
 
-    const parser = new MailParser({ skipHtmlToText: true });
+    const unhashed: SimpleParserOptions = { checksumAlgo: false };
+    void unhashed;
+
+    const parser = new MailParser({ skipHtmlToText: true, checksumAlgo: false });
     parser.on('headers', headers => void headers.get('date'));
     parser.on('data', (data: AttachmentStream | MessageText) => {
         if (data.type === 'attachment') {

@@ -142,7 +142,10 @@ export interface AttachmentStream extends AttachmentCommon {
      * message. Must be called for every attachment. Set to `null` once called.
      */
     release: (() => void) | null;
-    /** The hex encoded checksum of the content (md5 unless `checksumAlgo` says otherwise). Set once `content` has ended. */
+    /**
+     * The hex encoded checksum of the content (md5 unless `checksumAlgo` says otherwise). Set once
+     * `content` has ended, never when `checksumAlgo` is `false`.
+     */
     checksum?: string;
     /** The size of the decoded content in bytes. Set once `content` has ended. */
     size?: number;
@@ -156,7 +159,11 @@ export interface Attachment extends AttachmentCommon {
     content: Buffer;
     /** Always `null`, `simpleParser` has released the attachment already. */
     release: null;
-    /** The hex encoded checksum of the content (md5 unless `checksumAlgo` says otherwise). */
+    /**
+     * The hex encoded checksum of the content (md5 unless `checksumAlgo` says otherwise). Not set when
+     * `checksumAlgo` is `false`: the type keeps it a string so code written for the default does not
+     * have to check it, so a caller that turns hashing off must not read it.
+     */
     checksum: string;
     /** The size of the decoded content in bytes. */
     size: number;
@@ -242,10 +249,11 @@ export interface MailParserOptions {
     Iconv?: IconvConstructor;
     /**
      * The hash algorithm for attachment checksums, any name `crypto.createHash()` accepts. An algorithm
-     * that is not available makes the parser emit an error.
+     * that is not available makes the parser emit an error. `false` skips hashing attachments
+     * altogether, and their `checksum` is then not set (`size` still is).
      * @default 'md5'
      */
-    checksumAlgo?: string;
+    checksumAlgo?: string | false;
     /**
      * The longest the URLs `updateImageLinks()` writes into the HTML may be in total, in characters.
      * References past the limit are left as `cid:` links.
