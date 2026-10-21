@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.12.1](https://github.com/nodemailer/mailparser/compare/v3.12.0...v3.12.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* parseAddressHeader() builds the html and text forms only when they are read ([e08de61](https://github.com/nodemailer/mailparser/commit/e08de61740d04bdd534f8006d5b88eba6e4f89ed))
+
 ## [3.12.0](https://github.com/nodemailer/mailparser/compare/v3.11.0...v3.12.0) (2026-10-21)
 
 
