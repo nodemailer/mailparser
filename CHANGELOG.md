@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.11.0](https://github.com/nodemailer/mailparser/compare/v3.10.0...v3.11.0) (2026-10-21)
+
+
+### Features
+
+* accept checksumAlgo: false to skip hashing attachments ([21f806c](https://github.com/nodemailer/mailparser/commit/21f806cd03b0b98644ad7a5b95678cc259f838db))
+* export parseAddressHeader() for parsing an address header value ([8ac364e](https://github.com/nodemailer/mailparser/commit/8ac364e330fbc815b45986a0f64251b382b88421))
+
+
+### Bug Fixes
+
+* decode text bodies with libmime's decode stream ([b9a5e41](https://github.com/nodemailer/mailparser/commit/b9a5e4125f1bf0a4aa88d275da5fbdb282cb779c))
+
 ## [3.10.0](https://github.com/nodemailer/mailparser/compare/v3.9.47...v3.10.0) (2026-10-19)
 
 
