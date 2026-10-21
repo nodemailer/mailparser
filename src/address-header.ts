@@ -13,7 +13,7 @@ const ENCODED_WORD = /[=]\?[^?]+\?[BbQq]\?[^?]*\?[=]/;
  *
  * @internal
  */
-export function decodeAddresses(addresses: EmailAddress[], decoder: { decodeWords(str: string): string } = libmime): void {
+export function decodeAddresses(addresses: EmailAddress[], decoder: { decodeWords(str: string): string } = libmime, decodePunycode = true): void {
     for (let address of addresses) {
         address.name = (address.name || '').toString().trim();
 
@@ -43,7 +43,7 @@ export function decodeAddresses(addresses: EmailAddress[], decoder: { decodeWord
                 address.address = '';
             }
         }
-        if (address.address && /@xn--/.test(address.address)) {
+        if (decodePunycode && address.address && /@xn--/.test(address.address)) {
             try {
                 address.address =
                     address.address.slice(0, address.address.lastIndexOf('@') + 1) +
@@ -53,7 +53,7 @@ export function decodeAddresses(addresses: EmailAddress[], decoder: { decodeWord
             }
         }
         if (address.group) {
-            decodeAddresses(address.group, decoder);
+            decodeAddresses(address.group, decoder, decodePunycode);
         }
     }
 }
@@ -122,7 +122,8 @@ export function formatAddressesText(value: EmailAddress | EmailAddress[]): strin
 /**
  * Parses the value of an address header (`From`, `To`, `Cc`, `Reply-To` and the like) into the
  * {@link AddressObject} `MailParser` and `simpleParser` produce for one: display names have their
- * encoded words decoded, an internationalized (punycode) domain is decoded to Unicode, and an
+ * encoded words decoded, an internationalized (punycode) domain is decoded to Unicode (unless
+ * `decodePunycode` is false), and an
  * address part that hides an encoded word is dropped unless it decodes to a plain `local@domain`
  * (RFC 2047 keeps encoded words out of the address, so `=?utf-8?B?...?=@example.com` naming
  * another address is not taken at its word).
@@ -142,7 +143,7 @@ export function parseAddressHeader(value: string | string[] | null | undefined, 
             continue;
         }
         let parsed = addressparser(entry, { flatten: !!options?.flatten }) as unknown as EmailAddress[];
-        decodeAddresses(parsed);
+        decodeAddresses(parsed, libmime, options?.decodePunycode !== false);
         for (let address of parsed) {
             addresses.push(address);
         }

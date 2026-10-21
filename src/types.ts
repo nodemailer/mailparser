@@ -49,6 +49,13 @@ export interface ParseAddressHeaderOptions {
      * @default false
      */
     flatten?: boolean;
+    /**
+     * Decode an internationalized (punycode) domain to Unicode. Set to false to keep the domain as
+     * it appears in the header, for an address that is going to be used to send mail, such as an
+     * SMTP envelope, where the ASCII form is the one every server accepts.
+     * @default true
+     */
+    decodePunycode?: boolean;
 }
 
 /**

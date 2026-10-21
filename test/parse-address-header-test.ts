@@ -77,6 +77,19 @@ describe('parseAddressHeader', () => {
         assert.match(parsed.html, /^<span class="mp_address_group"><span class="mp_address_name">T&#xF6;&#xF6;: <\/span>/);
     });
 
+    it('keeps a punycode domain as it is with decodePunycode: false, groups included', () => {
+        const header = 'a@xn--mnchen-3ya.de, Team: b@xn--mnchen-3ya.de;';
+        const addresses = (parsed: ReturnType<typeof parseAddressHeader>) =>
+            parsed.value.map(entry => entry.address || entry.group?.map(member => member.address));
+
+        assert.deepEqual(addresses(parseAddressHeader(header)), ['a@m\u00fcnchen.de', ['b@m\u00fcnchen.de']]);
+        assert.deepEqual(addresses(parseAddressHeader(header, { decodePunycode: false })), ['a@xn--mnchen-3ya.de', ['b@xn--mnchen-3ya.de']]);
+        assert.deepEqual(parseAddressHeader(header, { decodePunycode: false, flatten: true }).value, [
+            { address: 'a@xn--mnchen-3ya.de', name: '' },
+            { address: 'b@xn--mnchen-3ya.de', name: '' }
+        ]);
+    });
+
     it('flattens groups into their members with the flatten option', () => {
         let parsed = parseAddressHeader('Team: a@example.com, ' + b64word('Bob') + ' <b@example.com>;, Empty:;, c@example.com', { flatten: true });
         assert.deepEqual(parsed.value, [
