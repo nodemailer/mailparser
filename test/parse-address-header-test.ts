@@ -96,6 +96,12 @@ describe('parseAddressHeader', () => {
         assert.equal(parsed.text, '"Doe, John" <john@example.com>');
         assert.equal(parsed.html, parsed.html, 'read twice, the same value');
         assert.deepEqual(JSON.parse(JSON.stringify(parsed)), { value: parsed.value, html: parsed.html, text: parsed.text });
+
+        // assignable, as plain values were
+        parsed.text = 'replaced';
+        parsed.html = '<b>replaced</b>';
+        assert.equal(parsed.text, 'replaced');
+        assert.equal(parsed.html, '<b>replaced</b>');
     });
 
     it('flattens groups into their members with the flatten option', () => {
