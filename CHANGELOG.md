@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.12.0](https://github.com/nodemailer/mailparser/compare/v3.11.0...v3.12.0) (2026-10-21)
+
+
+### Features
+
+* parseAddressHeader() accepts decodePunycode: false to keep IDN domains in ASCII form ([0652c3f](https://github.com/nodemailer/mailparser/commit/0652c3fca470d975aed0e6ec5b1a4ca8e53d95f1))
+
 ## [3.11.0](https://github.com/nodemailer/mailparser/compare/v3.10.0...v3.11.0) (2026-10-21)
 
 
