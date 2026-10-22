@@ -415,7 +415,7 @@ test('the comments of a Content-Type are not part of its parameters', (t: TestCo
     });
 });
 
-test('a boundary followed by a comment or opening with a parenthesis delimits the parts', (t: TestContext, done) => {
+test('a boundary followed by a comment or opening with a parenthesis delimits the parts', async (t: TestContext) => {
     // `boundary=b (comment)` is the boundary b to Python and postal-mime, and `boundary=(c)b`
     // the boundary (c)b, so the parts they find under the delimiter lines a sender writes for
     // them are found here as well, instead of staying hidden in the data of the root part
@@ -424,21 +424,17 @@ test('a boundary followed by a comment or opening with a parenthesis delimits th
         `--${line}\r\nContent-Type: text/html\r\n\r\n<p>html</p>\r\n` +
         `--${line}\r\nContent-Type: application/octet-stream; name=x.exe\r\n\r\nMZ\r\n` +
         `--${line}--\r\n`;
-    simpleParser(message('b (comment)', 'b'), (err, mail: any) => {
-        t.assert.ifError(err);
-        t.assert.strictEqual(mail.html, '<p>html</p>');
+    let cases = [
+        ['b (comment)', 'b'],
+        ['(c)b', '(c)b']
+    ];
+    let mails: any[] = await Promise.all(cases.map(([boundary, line]) => simpleParser(message(boundary, line))));
+    mails.forEach((mail, i) => {
+        t.assert.strictEqual(mail.html, '<p>html</p>', cases[i][0]);
         t.assert.deepStrictEqual(
             mail.attachments.map((a: any) => a.filename),
-            ['x.exe']
+            ['x.exe'],
+            cases[i][0]
         );
-        simpleParser(message('(c)b', '(c)b'), (err, mail: any) => {
-            t.assert.ifError(err);
-            t.assert.strictEqual(mail.html, '<p>html</p>');
-            t.assert.deepStrictEqual(
-                mail.attachments.map((a: any) => a.filename),
-                ['x.exe']
-            );
-            done();
-        });
     });
 });

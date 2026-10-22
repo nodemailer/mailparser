@@ -584,7 +584,8 @@ class MailParser extends Transform {
                     let rfc2231 = rfc2231ParamNames(value);
                     // The comments of a MIME header are not part of its value, so they are
                     // dropped as mailsplit drops them for the structure: `boundary=b (comment)`
-                    // names the boundary `b`. A DKIM-Signature has no comments to drop
+                    // names the boundary `b`. A DKIM-Signature is a tag list without comment
+                    // syntax, so a parenthesis in a tag value is data
                     value = this.libmime.parseHeaderValue(value, { stripComments: key !== 'dkim-signature' });
                     if (value.value) {
                         value.value = this.libmime.decodeWords(value.value);
