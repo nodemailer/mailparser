@@ -404,3 +404,14 @@ test('EUC-JP bodies decode through iconv-lite', (t: TestContext, done) => {
         });
     });
 });
+
+test('the comments of a Content-Type are not part of its parameters', (t: TestContext, done) => {
+    // `boundary=b (comment)` names the boundary b to Python and postal-mime, and now to the
+    // headers map here as well, in step with the structure mailsplit splits
+    simpleParser('Content-Type: multipart/mixed; boundary=b (comment)\r\nSubject: s\r\n\r\n--b\r\n\r\nx\r\n--b--\r\n', (err, mail: any) => {
+        t.assert.ifError(err);
+        t.assert.deepStrictEqual(mail.headers.get('content-type'), { value: 'multipart/mixed', params: { boundary: 'b' } });
+        done();
+    });
+});
+
