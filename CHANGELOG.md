@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.12.3](https://github.com/nodemailer/mailparser/compare/v3.12.2...v3.12.3) (2026-10-22)
+
+
+### Bug Fixes
+
+* **deps:** bump mailsplit to 5.4.28 and libmime to 5.6.3 ([996a18f](https://github.com/nodemailer/mailparser/commit/996a18f06a8a7e93c3042e293a35f3abb4d159bf))
+* **deps:** bump mailsplit to 5.4.29, which reads an RFC 2231 filename the same way ([7ccd32b](https://github.com/nodemailer/mailparser/commit/7ccd32b72a1321543a02bddbfe0ef2c372ec0e0f))
+* drop the comments of a Content-Type or Content-Disposition in the headers map ([eaf345b](https://github.com/nodemailer/mailparser/commit/eaf345b8bb9c94866da3bf1722aede6a88a7e11b))
+* tell an RFC 2231 parameter apart by what libmime decoded, not by a second scan of the header ([eba8da2](https://github.com/nodemailer/mailparser/commit/eba8da294cd077d4816398a5499b14f1a79031d5))
+
 ## [3.12.2](https://github.com/nodemailer/mailparser/compare/v3.12.1...v3.12.2) (2026-10-21)
 
 
