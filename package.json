@@ -92,7 +92,7 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "@zone-eu/mailsplit": "5.4.28",
+        "@zone-eu/mailsplit": "5.4.29",
         "he": "1.2.0",
         "html-to-text": "10.0.1",
         "libmime": "5.6.3",
