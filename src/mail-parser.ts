@@ -93,50 +93,6 @@ linkify.add('@', {
     }
 });
 
-// Lists the parameters a header value gives in RFC 2231 form (name*=, name*0= or
-// name*0*=). libmime decodes those while parsing the header, so the result must not go
-// through decodeWords as well: filename*=utf-8''a%3D%3Futf-8%3FQ%3F%3D2Eexe%3F%3D would
-// otherwise come out as "a.exe" while a parser that decodes once sees the encoded word.
-function rfc2231ParamNames(value: string): Set<string> {
-    let names = new Set<string>();
-    let quote = false;
-    let escaped = false;
-    let start = 0;
-
-    let addSegment = (end: number) => {
-        let segment = value.substring(start, end);
-        let eq = segment.indexOf('=');
-        if (eq < 0) {
-            return;
-        }
-        let match = segment
-            .substring(0, eq)
-            .trim()
-            .toLowerCase()
-            .match(/^(.+?)\*(\d+\*?)?$/);
-        if (match) {
-            names.add(match[1]);
-        }
-    };
-
-    for (let i = 0; i < value.length; i++) {
-        let chr = value.charAt(i);
-        if (escaped) {
-            escaped = false;
-        } else if (chr === '\\') {
-            escaped = true;
-        } else if (chr === '"') {
-            quote = !quote;
-        } else if (chr === ';' && !quote) {
-            addSegment(i);
-            start = i + 1;
-        }
-    }
-    addSegment(value.length);
-
-    return names;
-}
-
 // Deepest element nesting html-to-text is asked to convert. htmlparser2 keeps its open
 // element stack at the front of an array, so parsing alone is quadratic in the nesting
 // depth (200k nested <b> took 9 s), and html-to-text's recursive walk overflows the call
@@ -580,13 +536,18 @@ class MailParser extends Transform {
                 case 'content-type':
                 case 'content-disposition':
                 case 'dkim-signature': {
-                    // a parameter given in RFC 2231 form is decoded by parseHeaderValue already
-                    let rfc2231 = rfc2231ParamNames(value);
                     // The comments of a MIME header are not part of its value, so they are
                     // dropped as mailsplit drops them for the structure: `boundary=b (comment)`
                     // names the boundary `b`. A DKIM-Signature is a tag list without comment
                     // syntax, so a parenthesis in a tag value is data
                     value = this.libmime.parseHeaderValue(value, { stripComments: key !== 'dkim-signature' });
+                    // A parameter given in RFC 2231 form was decoded by parseHeaderValue already,
+                    // which names it in decodedParams, and must not go through decodeWords as
+                    // well: filename*=utf-8''a%3D%3Futf-8%3FQ%3F%3D2Eexe%3F%3D would otherwise come
+                    // out as a.exe while a parser that decodes once sees the encoded word. A
+                    // second scan of the raw header for the name used to decide this, and read
+                    // `(c)filename*=` as `(c)filename` once the comment was dropped from the real one
+                    let rfc2231 = new Set<string>(value.decodedParams);
                     if (value.value) {
                         value.value = this.libmime.decodeWords(value.value);
                     }

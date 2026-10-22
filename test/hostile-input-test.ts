@@ -438,3 +438,23 @@ test('a boundary followed by a comment or opening with a parenthesis delimits th
         );
     });
 });
+
+test('an RFC 2231 parameter is decoded once however the comments around its name are written', async (t: TestContext) => {
+    // libmime decodes the continuation while parsing, so the name must not go through
+    // decodeWords again: decoded once, a%3D%3Futf-8%3FQ%3F%3D2Eexe%3F%3D is the name
+    // a=?utf-8?Q?=2Eexe?= that Python and postal-mime show, decoded twice it is a.exe. A
+    // second scan of the raw header for the name read `(c)filename*=` as `(c)filename` once
+    // the comment was dropped from the real parameter, and decoded it again, in the headers
+    // map here and in the attachment mailsplit named
+    let encoded = "utf-8''a%3D%3Futf-8%3FQ%3F%3D2Eexe%3F%3D";
+    let once = 'a=?utf-8?Q?=2Eexe?=';
+    let message = (disposition: string) =>
+        'Content-Type: multipart/mixed; boundary=b\r\n\r\n' +
+        `--b\r\nContent-Type: application/octet-stream\r\nContent-Disposition: ${disposition}\r\n\r\nMZ\r\n--b--\r\n`;
+    let cases = [`attachment; filename*=${encoded}`, `attachment; (c)filename*=${encoded}`, `attachment; filename*(c)=${encoded}`];
+    let mails: any[] = await Promise.all(cases.map(disposition => simpleParser(message(disposition))));
+    mails.forEach((mail, i) => {
+        t.assert.strictEqual(mail.attachments[0].filename, once, cases[i]);
+        t.assert.strictEqual(mail.attachments[0].headers.get('content-disposition').params.filename, once, cases[i]);
+    });
+});
