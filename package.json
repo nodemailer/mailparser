@@ -92,12 +92,12 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "@zone-eu/mailsplit": "5.4.27",
+        "@zone-eu/mailsplit": "5.4.28",
         "he": "1.2.0",
         "html-to-text": "10.0.1",
-        "libmime": "5.6.0",
+        "libmime": "5.6.3",
         "linkify-it": "5.0.2",
-        "nodemailer": "10.1.7",
+        "nodemailer": "10.2.0",
         "punycode.js": "2.3.1",
         "tlds": "1.261.0"
     },
@@ -112,7 +112,7 @@
         "prettier": "3.9.10",
         "tsx": "4.23.15",
         "typescript": "6.0.3",
-        "typescript-eslint": "8.71.2"
+        "typescript-eslint": "8.72.0"
     },
     "repository": {
         "type": "git",
