@@ -10,6 +10,7 @@ import type { TransformCallback } from 'node:stream';
 import tlds from './tlds.cjs';
 import StreamHash from './stream-hash.js';
 import { decodeAddresses, formatAddressesHTML, formatAddressesText } from './address-header.js';
+import { getOtp } from './otp-token.js';
 import type {
     AddressObject,
     AttachmentStream,
@@ -20,7 +21,8 @@ import type {
     IconvConstructor,
     ListHeaderEntry,
     MailParserOptions,
-    MessageText
+    MessageText,
+    Otp
 } from './types.js';
 
 const { Splitter, ChunkedPassthrough } = mailsplit;
@@ -290,6 +292,13 @@ class MailParser extends Transform {
     inReplyTo?: string;
     /** The `Reply-To` header, set once the headers have been parsed. */
     replyTo?: AddressObject;
+    /**
+     * One-time passcode from the `OTP-Token` header, set once the headers have been parsed if the
+     * message has a valid one. The header is not authenticated, see `ParsedMail.otp`.
+     *
+     * @experimental
+     */
+    otp?: Otp;
 
     /** @internal */
     chunkedPassthrough: Transform;
@@ -1041,6 +1050,10 @@ class MailParser extends Transform {
                             (this as any)[key.replace(/-([a-z])/g, (m, c: string) => c.toUpperCase())] = node.headers.get(key);
                         }
                     });
+                    let otp = getOtp(node.headerLines);
+                    if (otp) {
+                        this.otp = otp;
+                    }
                     this.emit('headers', node.headers);
 
                     if (node.headerLines) {

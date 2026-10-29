@@ -113,6 +113,18 @@ export type HeaderLines = ReadonlyArray<{
 }>;
 
 /**
+ * A one-time passcode from the `OTP-Token` header (draft-goto-otp-token), so that a mail
+ * client can offer it for the origin it is bound to. The header is set by the sender and not
+ * authenticated by the parser, check the DKIM signature of the message before trusting it.
+ */
+export interface Otp {
+    /** The passcode, printable ASCII. */
+    code: string;
+    /** Canonical ASCII serialization of the origin the code is bound to, eg. `https://example.com`. */
+    origin: string;
+}
+
+/**
  * The properties every attachment has, whether streamed by {@link MailParser} or buffered by
  * `simpleParser`.
  */
@@ -344,6 +356,16 @@ export interface ParsedMail {
     inReplyTo?: string;
     /** The `Reply-To` header. */
     replyTo?: AddressObject;
+    /**
+     * One-time passcode from the `OTP-Token` header of the message. Set only when the header
+     * section has exactly one `OTP-Token` header and it is valid. The header is not
+     * authenticated, verify that the message is signed by the domain of the origin before
+     * trusting it.
+     *
+     * @experimental The header is defined by an Internet-Draft, so this property may change
+     * in a minor release when the draft does.
+     */
+    otp?: Otp;
 }
 
 /**

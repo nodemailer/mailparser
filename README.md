@@ -54,6 +54,17 @@ parseAddressHeader('=?utf-8?Q?J=C3=B5geva?= <info@xn--mnchen-3ya.example>, Team:
 
 Each entry of `value` has a `name` (an empty string when there is none, encoded words decoded) and either an `address` (a punycode domain decoded to Unicode) or, for a group, a `group` list of the same entries. RFC 2047 does not allow encoded words in the address itself, so an address part hiding one is kept only when it decodes to a plain `local@domain`, otherwise `address` is an empty string; a display name that decodes to something looking like an address stays a name.
 
+### One-time passcodes
+
+A message with an `OTP-Token` header ([draft-goto-otp-token](https://datatracker.ietf.org/doc/draft-goto-otp-token/), the header Nodemailer sets with its `otp` option) gets an `otp` property on the `simpleParser` result and on the `MailParser` instance, an object with `code` (the passcode) and `origin` (the origin it is bound to, such as `"https://example.com"`).
+
+```js
+const mail = await simpleParser('OTP-Token: "123456"; origin="https://example.com"\r\nSubject: Code\r\n\r\nYour code is 123456');
+// mail.otp: { code: '123456', origin: 'https://example.com' }
+```
+
+`otp` is set only when the message header has exactly one `OTP-Token` header and its value is valid: a structured field String with an `origin` parameter holding a canonical `https` origin, or an `http` origin on a loopback host. An `OTP-Token` header of a MIME part or a forwarded message is ignored. The header is not authenticated, so check that the message carries a valid DKIM signature from the domain of the origin before offering the code. The header comes from an Internet-Draft, so `otp` is experimental and may change in a minor release when the draft does.
+
 ### Character sets
 
 Text bodies are decoded with libmime's `createDecodeStream()`, which resolves charset aliases, decodes the Japanese charsets iconv-lite does not support (ISO-2022-JP and friends) and keeps a multibyte character that is split across chunks intact. A body in a charset that is not known, or one that is refused, is decoded as UTF-8 with invalid bytes replaced by U+FFFD, the same fallback encoded words in headers get. The refused charsets are UTF-7 (and its aliases), which can carry markup past a filter that looks for `<` (`+ADw-script+AD4-` decodes to `<script>`), and the base64 and hex transfer encodings. A UTF-7 body therefore keeps its `+ADw-` sequences as literal text. The refusal applies with the `Iconv` option as well.

@@ -74,6 +74,9 @@ function simpleParser(
     parser.on('headers', headers => {
         mail.headers = headers;
         mail.headerLines = parser.headerLines;
+        if (parser.otp) {
+            mail.otp = parser.otp;
+        }
     });
 
     let reading = false;

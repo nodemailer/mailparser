@@ -199,7 +199,7 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
         const esmConsumer = `
 import { simpleParser, MailParser, parseAddressHeader } from 'mailparser';
 import mailparser from 'mailparser';
-import type { AddressObject, Attachment, AttachmentStream, EmailAddress, HeaderValue, MessageText, ParseAddressHeaderOptions, ParsedMail, SimpleParserOptions } from 'mailparser';
+import type { AddressObject, Attachment, AttachmentStream, EmailAddress, HeaderValue, MessageText, Otp, ParseAddressHeaderOptions, ParsedMail, SimpleParserOptions } from 'mailparser';
 
 export async function run(source: Buffer): Promise<string[]> {
     const options: SimpleParserOptions = { keepCidLinks: true, skipTextLinks: true, checksumAlgo: 'sha256', formatDateString: date => date.toISOString() };
@@ -210,6 +210,7 @@ export async function run(source: Buffer): Promise<string[]> {
     const attachments: Attachment[] = mail.attachments;
     const content: Buffer = attachments[0]!.content;
     const subject: HeaderValue | undefined = mail.headers.get('subject');
+    const otp: Otp | undefined = mail.otp;
     simpleParser(source, (err: Error | null, parsed: ParsedMail) => void [err, parsed.subject]);
 
     const unhashed: SimpleParserOptions = { checksumAlgo: false };
@@ -230,7 +231,7 @@ export async function run(source: Buffer): Promise<string[]> {
     const addressOptions: ParseAddressHeaderOptions = { flatten: true };
     const parsedTo: AddressObject = parseAddressHeader('a@example.com, Group: b@example.com;', addressOptions);
     const repeated: EmailAddress[] = mailparser.parseAddressHeader(['a@example.com', 'b@example.com']).value;
-    void [from, html, content, subject, parsedTo.text, repeated[0]?.address];
+    void [from, html, content, subject, otp?.code, otp?.origin, parser.otp, parsedTo.text, repeated[0]?.address];
     return attachments.map(attachment => attachment.checksum);
 }
 `;
