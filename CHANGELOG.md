@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.14.0](https://github.com/nodemailer/mailparser/compare/v3.13.0...v3.14.0) (2026-10-29)
+
+
+### Features
+
+* export parseOtpToken for OTP-Token values read outside the parser ([fda26b2](https://github.com/nodemailer/mailparser/commit/fda26b2c1a14927b17a16a42d406576f21de4fc4))
+
 ## [3.13.0](https://github.com/nodemailer/mailparser/compare/v3.12.4...v3.13.0) (2026-10-29)
 
 
