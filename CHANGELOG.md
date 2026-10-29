@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.13.0](https://github.com/nodemailer/mailparser/compare/v3.12.4...v3.13.0) (2026-10-29)
+
+
+### Features
+
+* parse the OTP-Token header into mail.otp ([bc20682](https://github.com/nodemailer/mailparser/commit/bc206829c8cc287b7d980d604d0a3fbe6cbc0179))
+
+
+### Bug Fixes
+
+* update dependencies ([f94b954](https://github.com/nodemailer/mailparser/commit/f94b954efcdf63d117097ebdecf79acb71e81bfa))
+
 ## [3.12.4](https://github.com/nodemailer/mailparser/compare/v3.12.3...v3.12.4) (2026-10-22)
 
 
