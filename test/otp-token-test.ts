@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import type { TestContext } from 'node:test';
 import nodemailer from 'nodemailer';
-import { MailParser, simpleParser } from '../src/index.js';
+import { MailParser, parseOtpToken, simpleParser } from '../src/index.js';
 import { getOtp, isOtpOrigin, parseStringItem } from '../src/otp-token.js';
 
 // OTP-Token header, draft-goto-otp-token-01
@@ -247,4 +247,20 @@ test('parseStringItem reads parameters', (t: TestContext) => {
             ['c', true]
         ]
     );
+});
+
+test('parseOtpToken() reads the raw values of a header section', (t: TestContext) => {
+    t.assert.deepStrictEqual(parseOtpToken('"123456"; origin="https://example.com"'), EXAMPLE);
+    t.assert.deepStrictEqual(parseOtpToken([' "123456";\r\n origin="https://example.com" ']), EXAMPLE);
+});
+
+test('parseOtpToken() returns nothing for more than one value, none or an invalid one', (t: TestContext) => {
+    const value = '"123456"; origin="https://example.com"';
+    t.assert.strictEqual(parseOtpToken([value, value]), undefined);
+    t.assert.strictEqual(parseOtpToken([]), undefined);
+    t.assert.strictEqual(parseOtpToken(undefined), undefined);
+    t.assert.strictEqual(parseOtpToken('"123456"; origin="http://example.com"'), undefined);
+    t.assert.strictEqual(parseOtpToken('"123456"'), undefined);
+    t.assert.strictEqual(parseOtpToken('"' + '1'.repeat(9000) + '"; origin="https://example.com"'), undefined);
+    t.assert.strictEqual(parseOtpToken([42 as unknown as string]), undefined);
 });

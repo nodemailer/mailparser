@@ -96,7 +96,7 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
 
         it('keeps the shape of the pre-TypeScript module', () => {
             const mailparser = require(packageName);
-            assert.deepEqual(Object.keys(mailparser), ['MailParser', 'simpleParser', 'parseAddressHeader']);
+            assert.deepEqual(Object.keys(mailparser), ['MailParser', 'simpleParser', 'parseAddressHeader', 'parseOtpToken']);
             assert.equal(typeof mailparser.simpleParser, 'function');
             assert.equal(mailparser.simpleParser.length, 3);
             assert.equal(Object.getPrototypeOf(mailparser.MailParser.prototype), Transform.prototype);
@@ -140,6 +140,7 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
             assert.equal(mailparser.default.simpleParser, mailparser.simpleParser);
             assert.equal(mailparser.default.MailParser, mailparser.MailParser);
             assert.equal(mailparser.default.parseAddressHeader, mailparser.parseAddressHeader);
+            assert.equal(mailparser.default.parseOtpToken, mailparser.parseOtpToken);
             const load = (subpath: string) => import(packageName + subpath);
             const [index, indexJs, mailParser, mailParserJs, simpleParser, simpleParserJs, streamHash, streamHashJs] = await Promise.all(
                 [
@@ -197,7 +198,7 @@ describe('Built package', { timeout: 120 * 1000, skip: hasDist ? false : 'dist/ 
         });
 
         const esmConsumer = `
-import { simpleParser, MailParser, parseAddressHeader } from 'mailparser';
+import { simpleParser, MailParser, parseAddressHeader, parseOtpToken } from 'mailparser';
 import mailparser from 'mailparser';
 import type { AddressObject, Attachment, AttachmentStream, EmailAddress, HeaderValue, MessageText, Otp, ParseAddressHeaderOptions, ParsedMail, SimpleParserOptions } from 'mailparser';
 
@@ -231,7 +232,8 @@ export async function run(source: Buffer): Promise<string[]> {
     const addressOptions: ParseAddressHeaderOptions = { flatten: true };
     const parsedTo: AddressObject = parseAddressHeader('a@example.com, Group: b@example.com;', addressOptions);
     const repeated: EmailAddress[] = mailparser.parseAddressHeader(['a@example.com', 'b@example.com']).value;
-    void [from, html, content, subject, otp?.code, otp?.origin, parser.otp, parsedTo.text, repeated[0]?.address];
+    const headerOtp: Otp | undefined = parseOtpToken(['"123456"; origin="https://example.com"']);
+    void [from, html, content, subject, otp?.code, otp?.origin, parser.otp, parsedTo.text, repeated[0]?.address, headerOtp?.code];
     return attachments.map(attachment => attachment.checksum);
 }
 `;

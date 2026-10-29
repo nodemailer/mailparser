@@ -58,7 +58,7 @@ const message = [
 async function run() {
     const mailparser = require(entry);
     assert.strictEqual(require.resolve('mailparser'), entry);
-    assert.deepStrictEqual(Object.keys(mailparser), ['MailParser', 'simpleParser', 'parseAddressHeader']);
+    assert.deepStrictEqual(Object.keys(mailparser), ['MailParser', 'simpleParser', 'parseAddressHeader', 'parseOtpToken']);
     assert.strictEqual(mailparser.default, mailparser);
 
     // Every path the exports map publishes, the way deep imports load them

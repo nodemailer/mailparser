@@ -24,7 +24,7 @@ const mailparser = require('mailparser');
 or, from an ES module or TypeScript (type declarations are included):
 
 ```js
-import { simpleParser, MailParser, parseAddressHeader } from 'mailparser';
+import { simpleParser, MailParser, parseAddressHeader, parseOtpToken } from 'mailparser';
 ```
 
 ## Usage
@@ -64,6 +64,15 @@ const mail = await simpleParser('OTP-Token: "123456"; origin="https://example.co
 ```
 
 `otp` is set only when the message header has exactly one `OTP-Token` header and its value is valid: a structured field String with an `origin` parameter holding a canonical `https` origin, or an `http` origin on a loopback host. An `OTP-Token` header of a MIME part or a forwarded message is ignored. The header is not authenticated, so check that the message carries a valid DKIM signature from the domain of the origin before offering the code. The header comes from an Internet-Draft, so `otp` is experimental and may change in a minor release when the draft does.
+
+For a header that comes from somewhere else than a message being parsed, such as an IMAP `HEADER.FIELDS` fetch or a provider API, `parseOtpToken(values)` takes the raw values of every `OTP-Token` header of the message's own header section (a string or an array) and returns the same `{ code, origin }` object, or `undefined`. The same rules apply, so more than one value returns `undefined`.
+
+```js
+const { parseOtpToken } = require('mailparser');
+
+parseOtpToken(['"123456"; origin="https://example.com"']);
+// { code: '123456', origin: 'https://example.com' }
+```
 
 ### Character sets
 

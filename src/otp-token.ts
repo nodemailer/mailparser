@@ -148,12 +148,12 @@ export function isOtpOrigin(origin: string): boolean {
 const OTP_HEADER = /^otp-token:/i;
 
 /**
- * Returns the unfolded value of a raw header line without the whitespace around it, or null
- * if the value is longer than the field size limit
+ * Returns the value of a header without its line breaks and the whitespace around it, or null if
+ * the value is longer than the field size limit
  */
-function getFieldValue(line: string): string | null {
+function getFieldValue(value: string): string | null {
     // unfolding removes the line breaks and keeps the whitespace that follows them (RFC 5322 2.2.3)
-    const value = line.slice(line.indexOf(':') + 1).replace(/\r?\n/g, '');
+    value = value.replace(/\r?\n/g, '');
     let start = 0;
     let end = value.length;
     while (start < end && (value[start] === ' ' || value[start] === '\t')) {
@@ -166,27 +166,19 @@ function getFieldValue(line: string): string | null {
 }
 
 /**
- * Returns the one-time passcode from the OTP-Token header of a message, following the
- * receiver steps of the draft (section 3.2), or undefined if the message has no valid one.
- * Only the header of the message itself counts, the draft has an OTP-Token in a MIME part
- * ignored, and more than one OTP-Token header makes the message have none
- * @internal
+ * Returns the one-time passcode from the values of the `OTP-Token` headers of a message header
+ * section, following the receiver steps of the draft (section 3.2), or undefined if there is no
+ * valid one. Pass every `OTP-Token` value of the message's own header section, not of a MIME
+ * part: more than one makes the message have none. The values are the raw ones, with any
+ * folding left in and no encoded words decoded
  */
-export function getOtp(headerLines: HeaderLines): Otp | undefined {
-    let otpLine: string | undefined;
-    for (const { line } of headerLines) {
-        if (OTP_HEADER.test(line)) {
-            if (otpLine !== undefined) {
-                return undefined;
-            }
-            otpLine = line;
-        }
-    }
-    if (otpLine === undefined) {
+export function parseOtpToken(values: string | string[] | undefined): Otp | undefined {
+    const list = typeof values === 'string' ? [values] : values;
+    if (!Array.isArray(list) || list.length !== 1 || typeof list[0] !== 'string') {
         return undefined;
     }
 
-    const value = getFieldValue(otpLine);
+    const value = getFieldValue(list[0]);
     const parsed = value === null ? null : parseStringItem(value);
     const origin = parsed?.params.get('origin');
 
@@ -196,4 +188,15 @@ export function getOtp(headerLines: HeaderLines): Otp | undefined {
     }
 
     return { code: parsed.value, origin };
+}
+
+/**
+ * Returns the one-time passcode from the OTP-Token header of a message, or undefined if the
+ * message has no valid one. Only the header of the message itself counts, the draft has an
+ * OTP-Token in a MIME part ignored
+ * @internal
+ */
+export function getOtp(headerLines: HeaderLines): Otp | undefined {
+    const values = headerLines.filter(({ line }) => OTP_HEADER.test(line)).map(({ line }) => line.slice(line.indexOf(':') + 1));
+    return values.length ? parseOtpToken(values) : undefined;
 }
