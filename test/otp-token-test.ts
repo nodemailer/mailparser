@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import type { TestContext } from 'node:test';
+import nodemailer from 'nodemailer';
 import { MailParser, simpleParser } from '../src/index.js';
 import { getOtp, isOtpOrigin, parseStringItem } from '../src/otp-token.js';
 
@@ -13,6 +14,19 @@ const otpOf = async (...headers: string[]) => (await simpleParser(message(...hea
 
 test('reads the passcode and origin of the OTP-Token header', async (t: TestContext) => {
     t.assert.deepStrictEqual(await otpOf('OTP-Token: "123456"; origin="https://example.com"'), EXAMPLE);
+});
+
+test('reads the header nodemailer sets with its otp option', async (t: TestContext) => {
+    const transport = nodemailer.createTransport({ streamTransport: true, buffer: true });
+    const info = await transport.sendMail({
+        from: 'sender@example.com',
+        to: 'recipient@example.com',
+        subject: 'Code',
+        text: 'Your code is 12 "34',
+        otp: { code: '12 "34', origin: 'https://Example.com/login' }
+    });
+    const mail = await simpleParser(info.message as Buffer);
+    t.assert.deepStrictEqual(mail.otp, { code: '12 "34', origin: 'https://example.com' });
 });
 
 test('keeps the raw header value in headers', async (t: TestContext) => {
