@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.14.3](https://github.com/nodemailer/mailparser/compare/v3.14.2...v3.14.3) (2026-11-10)
+
+
+### Bug Fixes
+
+* update dependencies ([76cdfce](https://github.com/nodemailer/mailparser/commit/76cdfce245775bdbc71293734e05b6113fa4133d))
+
 ## [3.14.2](https://github.com/nodemailer/mailparser/compare/v3.14.1...v3.14.2) (2026-11-04)
 
 
