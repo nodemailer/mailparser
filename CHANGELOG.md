@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.14.5](https://github.com/nodemailer/mailparser/compare/v3.14.4...v3.14.5) (2026-11-16)
+
+
+### Bug Fixes
+
+* move link detection to linkify-it 6 ([6527e91](https://github.com/nodemailer/mailparser/commit/6527e9131c5a58a0497d2990cfae2bcf7e58ab13))
+
 ## [3.14.4](https://github.com/nodemailer/mailparser/compare/v3.14.3...v3.14.4) (2026-11-15)
 
 
