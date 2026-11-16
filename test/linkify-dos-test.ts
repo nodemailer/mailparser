@@ -94,8 +94,8 @@ test('Segment scanning finds the same links as scanning the whole text', (t: Tes
         // angle brackets are allowed inside paths and in the userinfo part
         ['Docs: http://example.com/wiki/Foo_(bar<baz) ok', ['http://example.com/wiki/Foo_(bar<baz)']],
         ['http://svc<token@api.example.com/v1/resource', ['http://svc<token@api.example.com/v1/resource']],
-        // ...and a link may not start or end at one, so these have no links
-        ['go example.com<foo end', []],
+        // ...but a host ends at one (since linkify-it 6, as it does at ">"), and a link may not end in a dot before one
+        ['go example.com<foo end', ['http://example.com']],
         ['Meeting notes at example.com.<see attachment>', []],
         ['Contact @support<support@example.com> today', ['mailto:support@example.com']],
         // U+FF5C terminates a host for linkify-it but is not whitespace
@@ -162,4 +162,38 @@ test('A failing text conversion ends the stream instead of hanging it', (t: Test
     });
 
     parser.end(Buffer.from('Content-Type: text/plain\r\n\r\nhello'));
+});
+
+test('Link detection keeps the behavior mailparser configures on top of linkify-it', (t: TestContext, done) => {
+    let cases: Array<[string, string[]]> = [
+        // links without a scheme, which linkify-it 6 does not find by default
+        ['see example.com and www.example.org/path', ['http://example.com', 'http://www.example.org/path']],
+        ['host 192.0.2.10/status', ['http://192.0.2.10/status']],
+        ['onion address abc.onion', ['http://abc.onion']],
+        // userinfo stays part of the link
+        ['open http://user:pw@example.com/x now', ['http://user:pw@example.com/x']],
+        // git: validates like http:, ftp: is switched off
+        ['clone git://github.com/a/b.git', ['git://github.com/a/b.git']],
+        ['get ftp://example.com/file', []],
+        // an apostrophe inside a local part is fine, a quote around an address is not part of it
+        ["mail o'brien@example.com", ["mailto:o'brien@example.com"]],
+        ["contact 'andris@example.com'", []],
+        // a path in front of an at sign is not the local part of an address
+        ['see usr/lib/addons/langpack-de@firefox.example.com/install.rdf', []],
+        // closing quotes are not part of a link
+        ['read “https://example.com/quoted” and «https://example.com/x»', ['https://example.com/quoted', 'https://example.com/x']],
+        // bracketed IPv6 hosts
+        ['call https://[2001:db8::1]:8080/x', ['https://[2001:db8::1]:8080/x']],
+        // the address in an href, not the attribute name in front of it
+        ['<a href="mailto:bob@example.org">', ['mailto:bob@example.org']]
+    ];
+
+    let parser: any = new MailParser({});
+    cases.forEach(([text, expected]) => {
+        let html = parser.textToHtml(text);
+        let found = (html.match(/<a href="[^"]*"/g) || []).map((tag: string) => tag.slice(9, -1).replace(/&#x27;|&#39;|&apos;/g, "'"));
+        t.assert.deepStrictEqual(found, expected, JSON.stringify(text));
+    });
+
+    done();
 });

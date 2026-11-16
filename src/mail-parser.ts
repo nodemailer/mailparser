@@ -3,7 +3,7 @@ import FlowedDecoder from '@zone-eu/mailsplit/lib/flowed-decoder.js';
 import he from 'he';
 import { htmlToText } from 'html-to-text';
 import libmime from 'libmime';
-import linkifyIt from 'linkify-it';
+import { LinkifyIt, REBuilder, type Match as LinkifyMatch } from 'linkify-it';
 import addressparser from 'nodemailer/lib/addressparser';
 import { Transform } from 'node:stream';
 import type { TransformCallback } from 'node:stream';
@@ -55,14 +55,35 @@ const MAX_INLINED_IMAGES_SIZE = 20 * 1024 * 1024;
 // List-* header names that must not become keys of the plain list object
 const UNSAFE_LIST_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
-const linkify = linkifyIt();
+// Characters linkify-it 6 accepts in the local part of a schemaless address, less the slash, and
+// less the apostrophe as the first character. With them a path such as
+// usr/lib/addons/langpack-de@firefox.example.com/install.rdf, or a quoted
+// 'user@example.com', became a mailto: link that started with the slash path or the
+// quote. linkify-it 5 never linked either, and an apostrophe inside a name (o'brien@...) still works.
+const MAIL_NAME_CHARS = '-!#$%&*+=?^_`{|}~a-zA-Z0-9';
+const MAIL_NAME = new RegExp(`[${MAIL_NAME_CHARS}](?:[${MAIL_NAME_CHARS}']|[.](?=[${MAIL_NAME_CHARS}'])){0,63}`);
+
+class MailNameREBuilder extends REBuilder {
+    override get_mail_name(): RegExp {
+        return MAIL_NAME;
+    }
+}
+
+const linkify = new LinkifyIt({
+    // links without a scheme (example.com, www.example.org), which linkify-it 6 no longer finds by default
+    fuzzyLink: true,
+    fuzzyEmail: true,
+    fuzzyIP: true,
+    // user:password@ in a URL stays part of the link, as it always was before linkify-it 6
+    urlAuth: true,
+    rebuilder: new MailNameREBuilder()
+});
 
 linkify
     .tlds(tlds) // Reload with full tlds list
     .tlds('onion', true) // Add unofficial `.onion` domain
-    .add('git:', 'http:') // Add `git:` ptotocol as "alias"
-    .add('ftp:', null) // Disable `ftp:` ptotocol
-    .set({ fuzzyIP: true, fuzzyLink: true, fuzzyEmail: true });
+    .add('git:', { validate: (text, pos, self) => self.testSchemaAt(text, 'http:', pos) }) // `git:` links validate like `http:` ones
+    .add('ftp:', null); // Disable `ftp:` protocol
 
 // Characters linkify-it accepts inside a host name: letters, digits, a dash,
 // and anything non-ASCII (its label pattern takes any character that is not
@@ -73,24 +94,26 @@ function isHostChar(code: number): boolean {
 
 // twitter linkifier from
 // https://github.com/markdown-it/linkify-it#example-2-add-twitter-mentions-handler
+let twitterHandle: RegExp | undefined;
 linkify.add('@', {
     validate(text, pos, self) {
         let tail = text.slice(pos);
 
-        if (!self.re.twitter) {
-            self.re.twitter = new RegExp('^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')');
+        if (!twitterHandle) {
+            twitterHandle = new RegExp('^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')');
         }
-        if (self.re.twitter.test(tail)) {
+        let handle = tail.match(twitterHandle);
+        if (handle) {
             // Linkifier allows punctuation chars before prefix,
             // but we additionally disable `@` ("@@mention" is invalid)
             if (pos >= 2 && text[pos - 2] === '@') {
-                return false;
+                return 0;
             }
-            return tail.match(self.re.twitter)![0].length;
+            return handle[0].length;
         }
         return 0;
     },
-    normalize(match: linkifyIt.Match) {
+    normalize(match: LinkifyMatch) {
         match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
     }
 });
@@ -1365,9 +1388,8 @@ class MailParser extends Transform {
     }
 
     // Tells whether a text segment is worth handing to linkify-it, see
-    // MAX_LINKIFY_* above. Note that linkify.pretest() can not be used for this
-    // - it is a quick deny that also denies links its own matcher finds, eg. a
-    // host followed by a fullwidth vertical bar.
+    // MAX_LINKIFY_* above. It is also the only quick deny: linkify-it 6 has no
+    // pretest(), and its test() is a full scan, as expensive as match().
     /** @internal */
     canScanSegment(segment: string): boolean {
         // every link linkify-it can find contains at least one of these
@@ -1397,7 +1419,7 @@ class MailParser extends Transform {
     findLinks(str: string): Array<{ index: number; lastIndex: number; text: string; url: string }> {
         let links: Array<{ index: number; lastIndex: number; text: string; url: string }> = [];
 
-        if (this.linkifyWork >= MAX_LINKIFY_WORK || !linkify.pretest(str)) {
+        if (this.linkifyWork >= MAX_LINKIFY_WORK) {
             return links;
         }
 

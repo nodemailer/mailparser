@@ -32,7 +32,7 @@ The layout follows `../nodemailer` and `../imapflow`.
   `Headers`, `HeaderValue`, `AddressObject` and the rest). Keep them accurate to what
   the code produces; the names follow the old `@types/mailparser` where that cost nothing
 - `src/vendor-types.d.ts` - Minimal ambient declarations for the runtime dependencies
-  that ship without types (`he`, `html-to-text`, `linkify-it`, `punycode.js`). Nothing
+  that ship without types (`he`, `html-to-text`, `punycode.js`). Nothing
   from them may reach the public declarations (`test/package/package-test.ts` checks)
 - `src/tlds.cjs` (+ `src/tlds.d.cts`) - Hand-written CommonJS file that loads the `tlds`
   list. The package ships it as `index.json`, which an ES module can only import with an
