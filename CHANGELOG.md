@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.15.0](https://github.com/nodemailer/mailparser/compare/v3.14.5...v3.15.0) (2026-11-20)
+
+
+### Features
+
+* defaultTextCharset option for text bodies that name no charset ([872c2de](https://github.com/nodemailer/mailparser/commit/872c2de2470923ba8a0e1780a85e28b3f8f1dd31)), closes [#480](https://github.com/nodemailer/mailparser/issues/480)
+
+
+### Bug Fixes
+
+* update dependencies ([e2cc3ed](https://github.com/nodemailer/mailparser/commit/e2cc3edbf8656627ee2c01de139db0c7040346a7))
+
 ## [3.14.5](https://github.com/nodemailer/mailparser/compare/v3.14.4...v3.14.5) (2026-11-16)
 
 
