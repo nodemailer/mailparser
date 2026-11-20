@@ -261,6 +261,13 @@ export interface MailParserOptions {
      */
     keepDeliveryStatus?: boolean;
     /**
+     * The charset of a text body whose `Content-Type` names none, for a source known to send such
+     * bodies in a legacy charset (eg. `'windows-1252'`). A body that declares its charset is decoded
+     * from that charset regardless.
+     * @default 'utf-8'
+     */
+    defaultTextCharset?: string;
+    /**
      * Decode the character sets of text bodies with the native `iconv` module instead of libmime's
      * decoder (`iconv-lite`). Pass the `Iconv` class: `{ Iconv: require('iconv').Iconv }`. Bodies
      * declared as UTF-7 are never decoded from it either way, see the note on charsets in the README.

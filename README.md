@@ -78,6 +78,8 @@ parseOtpToken(['"123456"; origin="https://example.com"']);
 
 Text bodies are decoded with libmime's `createDecodeStream()`, which resolves charset aliases, decodes the Japanese charsets iconv-lite does not support (ISO-2022-JP and friends) and keeps a multibyte character that is split across chunks intact. A body in a charset that is not known, or one that is refused, is decoded as UTF-8 with invalid bytes replaced by U+FFFD, the same fallback encoded words in headers get. The refused charsets are UTF-7 (and its aliases), which can carry markup past a filter that looks for `<` (`+ADw-script+AD4-` decodes to `<script>`), and the base64 and hex transfer encodings. A UTF-7 body therefore keeps its `+ADw-` sequences as literal text. The refusal applies with the `Iconv` option as well.
 
+A text body whose `Content-Type` names no charset is decoded as UTF-8. When a source is known to send such bodies in a legacy charset, name it with the `defaultTextCharset` option (for example `simpleParser(source, { defaultTextCharset: 'windows-1252' })`). A body that declares its charset is decoded from that charset regardless of the option.
+
 ### Attachment checksums
 
 Every attachment gets a `checksum` (hex, md5 unless the `checksumAlgo` option names another algorithm `crypto.createHash()` accepts) and a `size`. Set `checksumAlgo: false` to skip hashing altogether, for example where MD5 is not available (FIPS mode) or the checksum is not used. `checksum` is then not set on the attachments, `size` still is.

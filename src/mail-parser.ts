@@ -1218,8 +1218,7 @@ class MailParser extends Transform {
                         node.contentStream = flowDecoder;
                     }
 
-                    let charset = node.charset || 'utf-8';
-                    //charset = charset || 'windows-1257';
+                    let charset = node.charset || this.options.defaultTextCharset || 'utf-8';
 
                     if (!['ascii', 'usascii', 'utf8'].includes(charset.toLowerCase().replace(/[^a-z0-9]+/g, ''))) {
                         try {
